@@ -1,0 +1,26 @@
+---
+const { meeting } = Astro.props;
+---
+
+<div class="relative rounded-lg shadow overflow-hidden">
+  <img src={meeting.image} alt={meeting.name} class="w-full h-48 object-cover" />
+  <div class="absolute bottom-0 left-0 p-4 text-white bg-gradient-to-t from-black/60 to-transparent">
+    <h3 class="text-lg font-bold">{meeting.name}</h3>
+    <p class="text-sm">{new Date(meeting.date).toLocaleDateString('ko-KR')}</p>
+    <p class="text-xs">{meeting.location} {meeting.course}</p>
+  </div>
+</div>
+
+{meeting.awards?.length > 0 && (
+  <ul class="mt-4 text-sm text-gray-800 bg-white rounded-lg p-3 shadow-inner">
+    {meeting.awards.map(award => (
+      <li class="flex justify-between border-b py-1" style="border-color: #eee;">
+        <span class="font-medium">{award.title}</span>
+        <span>
+          {award.name}
+          {award.generation && ` (${award.generation}기)`}
+        </span>
+      </li>
+    ))}
+  </ul>
+)}

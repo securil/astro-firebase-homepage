@@ -1,0 +1,107 @@
+---
+// src/components/UpcomingMeetings.astro
+import * as dataService from '../lib/dataService.js';
+import MeetingCard from './ui/MeetingCard.astro';
+
+// 테스트 데이터 (실제 데이터 가져오기가 실패할 경우 사용)
+const testMeetings = [
+  {
+    id: 1,
+    date: new Date(2024, 3, 22).toISOString(), // 4월
+    name: "4월 정기 모임",
+    event_no: 241,
+    type: "regular",
+    status: "예정",
+    location: "용인 CC",
+    course: "서코스",
+    participants: [],
+    description: "4월 정기 모임입니다."
+  },
+  {
+    id: 2,
+    date: new Date(2024, 4, 27).toISOString(), // 5월
+    name: "5월 정기 모임",
+    event_no: 242,
+    type: "regular",
+    status: "예정",
+    location: "레이크사이드 CC",
+    course: "마운틴",
+    participants: [],
+    description: "5월 정기 모임입니다."
+  },
+  {
+    id: 3,
+    date: new Date(2024, 5, 24).toISOString(), // 6월
+    name: "6월 정기 모임",
+    event_no: 243,
+    type: "regular",
+    status: "예정",
+    location: "남서울 CC",
+    course: "남코스",
+    participants: [],
+    description: "6월 정기 모임입니다."
+  }
+];
+
+// 현재 날짜 기준으로 다가오는 모임 3개만 가져오기
+let upcomingMeetings = [];
+
+try {
+  // 실제 데이터 가져오기
+  const fetchedMeetings = await dataService.getMeetings(true);
+  
+  if (fetchedMeetings && fetchedMeetings.length > 0) {
+    upcomingMeetings = fetchedMeetings;
+    console.log("Fetched meetings:", upcomingMeetings);
+  } else {
+    // 실제 데이터가 없으면 테스트 데이터 사용
+    upcomingMeetings = testMeetings;
+    console.log("Using test meetings data");
+  }
+} catch (error) {
+  console.error("Error fetching meetings:", error);
+  // 오류 발생 시 테스트 데이터 사용
+  upcomingMeetings = testMeetings;
+  console.log("Using test meetings data due to error");
+}
+
+// 날짜 필터링 로직 변경 - 테스트 데이터 사용 시 모든 데이터 표시
+const currentDate = new Date();
+// 개발용: 현재 날짜를 조금 과거로 설정 (테스트 데이터가 표시되도록)
+currentDate.setMonth(currentDate.getMonth() - 6);
+
+const filteredMeetings = upcomingMeetings
+  .filter(meeting => {
+    const meetingDate = new Date(meeting.date);
+    return meetingDate >= currentDate;
+  })
+  .sort((a, b) => new Date(a.date) - new Date(b.date))
+  .slice(0, 3);
+
+console.log("Filtered meetings:", filteredMeetings);
+---
+
+<section class="py-16 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center mb-2">다가오는 모임</h2>
+    <div class="w-24 h-1 bg-primary mx-auto mb-10"></div>
+    
+    {filteredMeetings.length > 0 ? (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {filteredMeetings.map(meeting => (
+          <MeetingCard meeting={meeting} showDetailLink={true} />
+        ))}
+      </div>
+    ) : (
+      <div class="text-center py-8">
+        <p class="text-xl text-gray-500">예정된 모임이 없습니다.</p>
+      </div>
+    )}
+    
+    <div class="text-center mt-10">
+      <a href="/schedule" class="inline-block bg-primary hover:bg-primary-dark text-white font-bold py-3 px-6 rounded-lg transition duration-300">
+        모든 일정 보기
+      </a>
+    </div>
+  </div>
+</section>

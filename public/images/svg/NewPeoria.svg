@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <style>
+    .pulse-ring {
+      animation-name: pulsate;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-timing-function: ease-out;
+      fill-opacity: 0;
+      stroke: rgba(0, 196, 154, 0.5);
+      stroke-width: 2;
+    }
+    
+    .pulse-ring-2 {
+      animation-delay: 1.3s;
+    }
+    
+    .pulse-ring-3 {
+      animation-delay: 2.6s;
+    }
+    
+    .shimmer {
+      animation: shimmer 4s infinite;
+    }
+    
+    @keyframes pulsate {
+      0% {
+        transform: scale(0.5);
+        stroke-opacity: 0.8;
+      }
+      70% {
+        transform: scale(1);
+        stroke-opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        stroke-opacity: 0;
+      }
+    }
+    
+    @keyframes shimmer {
+      0% {
+        fill-opacity: 0.7;
+      }
+      50% {
+        fill-opacity: 1;
+      }
+      100% {
+        fill-opacity: 0.7;
+      }
+    }
+  </style>
+  
+  <!-- 펄스 링 -->
+  <circle class="pulse-ring" cx="100" cy="100" r="40" />
+  <circle class="pulse-ring pulse-ring-2" cx="100" cy="100" r="40" />
+  <circle class="pulse-ring pulse-ring-3" cx="100" cy="100" r="40" />
+  
+  <!-- 왕관 아이콘 -->
+  <defs>
+    <linearGradient id="superiorGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#005A87" />
+      <stop offset="100%" stop-color="#00C49A" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- 왕관 기본 모양 -->
+  <path d="M75,115 L85,90 L100,105 L115,90 L125,115 L75,115 Z" fill="url(#superiorGradient)" filter="url(#glow)"/>
+  
+  <!-- 왕관 꼭대기 장식 -->
+  <circle cx="85" cy="90" r="5" fill="url(#superiorGradient)"/>
+  <circle cx="100" cy="105" r="5" fill="url(#superiorGradient)"/>
+  <circle cx="115" cy="90" r="5" fill="url(#superiorGradient)"/>
+  
+  <!-- 왕관 베이스 -->
+  <rect x="70" y="115" width="60" height="10" rx="2" fill="url(#superiorGradient)"/>
+  
+  <!-- 장식 요소 -->
+  <circle class="shimmer" cx="100" cy="95" r="3" fill="#FFFFFF"/>
+  
+  <!-- 아이콘 이름 -->
+  <text x="100" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333">심페리오 크라운</text>
+</svg>
