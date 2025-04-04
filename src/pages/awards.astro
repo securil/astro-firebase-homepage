@@ -1,596 +1,94 @@
 ---
-// src/pages/awards.astro
-import MainLayout from '../layouts/MainLayout.astro';
+import Layout from '../layouts/MainLayout.astro';
 import Banner from '../components/Banner.astro';
 import AwardCard from '../components/ui/AwardCard.astro';
-import * as dataService from '../lib/dataService.js';
-import { collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
-import { db } from '../lib/firebase.js';
+import { getYearlyMeetings, getMembersMap, getSpecialAwardsByMeetingId, CATEGORY_MAP } from '../lib/service/awards-util.js';
 
-// 선택된 년도 파라미터 가져오기 (기본값: 2024)
-// URL에서 연도 파라미터 가져오기
-const { searchParams } = Astro.url;
-const yearParam = searchParams.get('year');
-const selectedYear = yearParam ? parseInt(yearParam) : 2024;
+const { year } = Astro.params;
+const selectedYear = Number(year) || 2024;
+const meetings = (await getYearlyMeetings(selectedYear)).reverse();
+const membersMap = await getMembersMap();
 
-// 가능한 년도 목록 (수상내역이 있는 년도들)
-const availableYears = [2022, 2023, 2024, 2025];
+for (let meeting of meetings) {
+  const date = new Date(meeting.date);
+  const month = date.getMonth() + 1;
 
-// 모임 일정과 동일하게 월별 순서 정의 (3, 4, 5, 6, 8, 9, 10, 11월)
-const monthOrder = [3, 4, 5, 6, 8, 9, 10, 11];
+  meeting.image =
+    month === 9 ? '/images/golf-course-sep.webp'
+    : month === 10 ? '/images/golf-course-oct.webp'
+    : month === 11 ? '/images/golf-course-nov.webp'
+    : '/images/golf-course-default.webp';
 
-// 표시할 월별 배치 정의 - 고정된 3열 구조
-const displayStructure = [
-  { row: 1, months: [3, 4, 5] },    // 1열: 3, 4, 5월
-  { row: 2, months: [6, 8, 9] },    // 2열: 6, 8, 9월
-  { row: 3, months: [10, 11] }      // 3열: 10, 11월
-];
+  const awardsRaw = await getSpecialAwardsByMeetingId(meeting.id);
+  meeting.awards = {};
 
-// 각 월별 모임 데이터 매핑할 객체 초기화
-const monthlyMeetings = {};
+  for (const category of Object.keys(CATEGORY_MAP)) {
+    const award = awardsRaw.find(a => a.category === category);
+    const memberId = award?.member_id;
+    const member = memberId ? membersMap[memberId] : null;
 
-// 회원 정보 저장용 맵
-let membersMap = {};
-
-try {
-  // 각 월에 대한 기본 이미지 경로 정의 (순서대로 적용)
-  const monthImages = {
-    3: "/images/meetings/1.jpg",
-    4: "/images/meetings/2.jpg",
-    5: "/images/meetings/3.jpg",
-    6: "/images/meetings/4.jpg",
-    8: "/images/meetings/5.jpg",
-    9: "/images/golf-course-sep.webp",
-    10: "/images/golf-course-oct.webp",
-    11: "/images/golf-course-nov.webp"
-  };
-  
-  // 1. 모든 회원 정보 가져오기 (ID로 매핑)
-  const members = await dataService.getMembers();
-  membersMap = members.reduce((acc, member) => {
-    acc[member.id] = member;
-    return acc;
-  }, {});
-  
-  console.log(`회원 정보 ${Object.keys(membersMap).length}명 로드 완료`);
-  
-  // 2. 선택된 연도의 모임 정보 가져오기
-  const allMeetings = await dataService.getMeetings() || [];
-  
-  // 선택된 연도의 완료된 모임만 필터링
-  const yearStart = new Date(selectedYear, 0, 1);
-  const yearEnd = new Date(selectedYear + 1, 0, 1);
-  
-  const yearMeetings = allMeetings
-    .filter(meeting => {
-      const meetingDate = new Date(meeting.date);
-      return meeting.status === '완료' && 
-             meetingDate >= yearStart && 
-             meetingDate < yearEnd;
-    })
-    .sort((a, b) => new Date(a.date) - new Date(b.date)); // 날짜순 정렬
-  
-  console.log(`${selectedYear}년 완료된 모임 ${yearMeetings.length}개 로드 완료`);
-  
-  // 3. 월별로 모임 데이터 그룹화
-  for (const meeting of yearMeetings) {
-    const meetingDate = new Date(meeting.date);
-    const month = meetingDate.getMonth() + 1; // 1-12 (1월-12월)
-    
-    // 해당 월 배열에 포함된 경우만 처리
-    if (!displayStructure.some(row => row.months.includes(month))) {
-      continue;
-    }
-    
-    console.log(`${month}월 모임 처리 중: ${meeting.name} (ID: ${meeting.id}, event_no: ${meeting.event_no || 'N/A'})`);
-    
-    // 이미지 설정 - 미리 정의된 월별 이미지 사용
-    const image = monthImages[month] || "/images/golf-course-default.webp";
-    
-    // 기본 수상 내역 객체 생성 (기본값 - 모두 "미정"으로 설정)
-    const defaultMemberName = "미정";
-    const defaultAwards = {
-      medallist_male: {
-        title: "메달리스트 (남성)",
-        iconPath: "/images/svg/medallist1.svg",
-        memberName: defaultMemberName,
-        generation: "",
-        score: null
-      },
-      medallist_female: {
-        title: "메달리스트 (여성)",
-        iconPath: "/images/svg/medallist2.svg",
-        memberName: defaultMemberName,
-        generation: "",
-        score: null
-      },
-      new_peoria: {
-        title: "심페리오 우승",
-        iconPath: "/images/svg/NewPeoria.svg",
-        memberName: defaultMemberName,
-        generation: "",
-        score: null
-      },
-      longest_male: {
-        title: "롱기스트 (남성)",
-        iconPath: "/images/svg/longest1.svg",
-        memberName: defaultMemberName,
-        generation: "",
-        score: null
-      },
-      longest_female: {
-        title: "롱기스트 (여성)",
-        iconPath: "/images/svg/longest2.svg",
-        memberName: defaultMemberName,
-        generation: "",
-        score: null
-      },
-      nearest_male: {
-        title: "니어리스트 (남성)",
-        iconPath: "/images/svg/nearest1.svg",
-        memberName: defaultMemberName,
-        generation: "",
-        score: null
-      },
-      nearest_female: {
-        title: "니어리스트 (여성)",
-        iconPath: "/images/svg/nearest2.svg",
-        memberName: defaultMemberName,
-        generation: "",
-        score: null
-      }
-    };
-    
-    // 4. 메달리스트 정보 가져오기 (상위 3명)
-    // 중요: event_no를 사용하여 스코어 조회
-    const meetingId = meeting.id;
-    const meetingEventNo = meeting.event_no;
-    let topScores = [];
-    
-    if (meetingEventNo) {
-      topScores = await dataService.getTopScoresByMeeting(meetingEventNo, 3);
-      console.log(`모임 ${meeting.name}(event_no:${meetingEventNo}) 메달리스트 ${topScores.length}명 로드 완료`);
-    }
-    
-    // event_no가 다른 경우 추가 시도 (ID로 시도)
-    if (topScores.length === 0 && meetingId !== meetingEventNo) {
-      console.log(`event_no로 스코어를 찾지 못했으므로 ID로 시도: ${meetingId}`);
-      const idScores = await dataService.getTopScoresByMeeting(meetingId, 3);
-      if (idScores.length > 0) {
-        console.log(`ID로 ${idScores.length}개의 스코어를 찾았습니다`);
-        topScores = idScores;
-      }
-    }
-    
-    // 메달리스트 정보 설정 (상위 3명)
-    if (topScores.length > 0) {
-      // 메달리스트 (1위)
-      const medalMale = topScores[0];
-      if (medalMale) {
-        const memberInfo = membersMap[medalMale.member_id] || {};
-        defaultAwards.medallist_male = {
-          title: "메달리스트 (남성)",
-          iconPath: "/images/svg/medallist1.svg",
-          memberName: medalMale.member_name || memberInfo.name || "미정",
-          generation: memberInfo.generation || "",
-          score: medalMale.gross_score ? `${medalMale.gross_score}타` : null
-        };
-      }
-      
-      // 메달리스트 (2위)
-      if (topScores.length > 1) {
-        const medalFemale = topScores[1];
-        if (medalFemale) {
-          const memberInfo = membersMap[medalFemale.member_id] || {};
-          defaultAwards.medallist_female = {
-            title: "메달리스트 (여성)",
-            iconPath: "/images/svg/medallist2.svg",
-            memberName: medalFemale.member_name || memberInfo.name || "미정",
-            generation: memberInfo.generation || "",
-            score: medalFemale.gross_score ? `${medalFemale.gross_score}타` : null
-          };
-        }
-      }
-    }
-    
-    // 5. 특별상 데이터 직접 쿼리하여 확실하게 가져오기
-    let specialAwards = [];
-    try {
-      // 중요: meeting.event_no 사용 (special_awards의 meeting_id는 숫자 필드)
-      if (meetingEventNo) {
-        const specialAwardsQuery = query(
-          collection(db, 'special_awards'),
-          where('meeting_id', '==', meetingEventNo)
-        );
-        
-        const specialAwardsSnapshot = await getDocs(specialAwardsQuery);
-        specialAwards = specialAwardsSnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        
-        console.log(`모임 ${meeting.name} 특별상 ${specialAwards.length}개 로드 완료 (event_no: ${meetingEventNo})`);
-      }
-      
-      // event_no와 다른 ID로도 시도
-      if (specialAwards.length === 0 && meetingId !== meetingEventNo) {
-        console.log(`event_no로 특별상을 찾지 못했으므로 ID로 시도: ${meetingId}`);
-        const idSpecialAwardsQuery = query(
-          collection(db, 'special_awards'),
-          where('meeting_id', '==', meetingId)
-        );
-        
-        const idSpecialAwardsSnapshot = await getDocs(idSpecialAwardsQuery);
-        specialAwards = idSpecialAwardsSnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        
-        if (specialAwards.length > 0) {
-          console.log(`ID로 ${specialAwards.length}개의 특별상을 찾았습니다`);
-        }
-      }
-      
-      // 특별상 정보 설정
-      for (const award of specialAwards) {
-        try {
-          // 회원 ID로 회원 정보 조회
-          const memberId = award.member_id;
-          let memberInfo = membersMap[memberId];
-          
-          // 회원 정보가 없으면 직접 Firestore에서 조회 시도
-          if (!memberInfo) {
-            try {
-              const memberDoc = await getDoc(doc(db, 'members', String(memberId)));
-              if (memberDoc.exists()) {
-                memberInfo = memberDoc.data();
-                membersMap[memberId] = memberInfo; // 캐시에 추가
-              }
-            } catch (memberError) {
-              console.error(`회원 정보 조회 오류 (ID: ${memberId}):`, memberError);
-            }
-          }
-          
-          const memberName = memberInfo?.name || "미정";
-          const generation = memberInfo?.generation || "";
-          
-          // 카테고리별로 처리 - 정확한 카테고리 매핑
-          switch (award.category) {
-            case 'simperio':
-              defaultAwards.new_peoria = {
-                title: "심페리오 우승",
-                iconPath: "/images/svg/NewPeoria.svg",
-                memberName: memberName,
-                generation: generation,
-                score: award.score || "NET"
-              };
-              break;
-              
-            case 'medalist_male':  // 수정된 카테고리명
-              defaultAwards.medallist_male = {
-                title: "메달리스트 (남성)",
-                iconPath: "/images/svg/medallist1.svg",
-                memberName: memberName,
-                generation: generation,
-                score: award.score || null
-              };
-              break;
-              
-            case 'medalist_female':  // 수정된 카테고리명
-              defaultAwards.medallist_female = {
-                title: "메달리스트 (여성)",
-                iconPath: "/images/svg/medallist2.svg",
-                memberName: memberName,
-                generation: generation,
-                score: award.score || null
-              };
-              break;
-              
-            case 'longest_male':
-              defaultAwards.longest_male = {
-                title: "롱기스트 (남성)",
-                iconPath: "/images/svg/longest1.svg",
-                memberName: memberName,
-                generation: generation,
-                score: award.score
-              };
-              break;
-              
-            case 'longest_female':
-              defaultAwards.longest_female = {
-                title: "롱기스트 (여성)",
-                iconPath: "/images/svg/longest2.svg",
-                memberName: memberName,
-                generation: generation,
-                score: award.score
-              };
-              break;
-              
-            case 'nearest_male':
-              defaultAwards.nearest_male = {
-                title: "니어리스트 (남성)",
-                iconPath: "/images/svg/nearest1.svg",
-                memberName: memberName,
-                generation: generation,
-                score: award.score
-              };
-              break;
-              
-            case 'nearest_female':
-              defaultAwards.nearest_female = {
-                title: "니어리스트 (여성)",
-                iconPath: "/images/svg/nearest2.svg",
-                memberName: memberName,
-                generation: generation,
-                score: award.score
-              };
-              break;
-              
-            default:
-              console.log(`알 수 없는 특별상 카테고리: ${award.category}`);
-          }
-        } catch (awardError) {
-          console.error(`특별상 처리 중 오류:`, awardError);
-        }
-      }
-    } catch (error) {
-      console.error(`특별상 로드 중 오류 (모임: ${meeting.name}, event_no: ${meetingEventNo}):`, error);
-    }
-    
-    // 모임 데이터 저장
-    monthlyMeetings[month] = {
-      meeting: {
-        ...meeting,
-        image: image
-      },
-      awards: defaultAwards,
-      isProcessing: false
+    meeting.awards[category] = {
+      title: CATEGORY_MAP[category],
+      iconPath: `/images/svg/${category}.svg`,
+      memberName: member?.name || '현재 집계중입니다.',
+      generation: member?.generation || '',
+      score: award?.score || null
     };
   }
-} catch (error) {
-  console.error("데이터 로딩 중 오류 발생:", error);
-  console.log("쿼리 실패: Firebase에서 데이터를 가져오지 못했습니다");
-  console.log("오류:", error.message);
-}
-
-// 표시할 월에 데이터가 없는 경우 연도별로 다른 더미 데이터 추가
-for (const row of displayStructure) {
-  for (const month of row.months) {
-    if (!monthlyMeetings[month]) {
-      const monthDate = new Date(selectedYear, month - 1, 15);
-      
-      // 2025년이고 실제 수상내역이 없으면 "집계중" 상태로 표시
-      if (selectedYear === 2025) {
-        const image = monthImages[month] || `/images/meetings/${month % 5 + 1}.jpg`;
-        monthlyMeetings[month] = {
-          meeting: {
-            id: `dummy-${selectedYear}-${month}`,
-            date: monthDate.toISOString(),
-            name: `${month}월 정기 모임`,
-            location: "장소 미정",
-            status: "집계중",
-            image: image
-          },
-          awards: null,
-          isProcessing: true
-        };
-      } 
-      // 2024년 이전이면 연도별로 다른 테스트 데이터로 채움
-      else if (selectedYear <= 2024) {
-        const image = monthImages[month] || `/images/meetings/${month % 5 + 1}.jpg`;
-        
-        // 연도별로 다른 이름과 스코어 생성
-        const yearOffset = selectedYear - 2022; // 2022년 기준으로 오프셋 계산
-        const scoreBase = 70 + yearOffset * 2; // 연도별로 다른 기본 스코어
-        
-        // 각 연도별 다른 장소 설정
-        const locations = {
-          2022: "용인 CC",
-          2023: "레이크사이드 CC",
-          2024: "가평 베네스트 CC"
-        };
-        
-        const courses = {
-          2022: "서코스",
-          2023: "동코스",
-          2024: "밸리코스"
-        };
-        
-        // 테스트 데이터 생성
-        monthlyMeetings[month] = {
-          meeting: {
-            id: `test-${selectedYear}-${month}`,
-            date: monthDate.toISOString(),
-            name: `${selectedYear}년 ${month}월 정기 모임`,
-            location: locations[selectedYear] || "용인 CC",
-            course: courses[selectedYear] || "서코스",
-            status: "완료",
-            image: image
-          },
-          awards: {
-            medallist_male: {
-              title: "메달리스트 (남성)",
-              iconPath: "/images/svg/medallist1.svg",
-              memberName: `${selectedYear}년 ${month}월 우승자`,
-              generation: String(30 - yearOffset),
-              score: `${scoreBase + (month % 3)}타`
-            },
-            medallist_female: {
-              title: "메달리스트 (여성)",
-              iconPath: "/images/svg/medallist2.svg",
-              memberName: `${selectedYear}년 ${month}월 준우승자`,
-              generation: String(32 - yearOffset),
-              score: `${scoreBase + 2 + (month % 3)}타`
-            },
-            new_peoria: {
-              title: "심페리오 우승",
-              iconPath: "/images/svg/NewPeoria.svg",
-              memberName: `${selectedYear}년 ${month}월 심페리오`,
-              generation: String(33 - yearOffset),
-              score: `NET ${65 + yearOffset + (month % 5)}`
-            },
-            longest_male: {
-              title: "롱기스트 (남성)",
-              iconPath: "/images/svg/longest1.svg",
-              memberName: `${selectedYear}년 ${month}월 롱기스트M`,
-              generation: String(31 - yearOffset),
-              score: `${250 + (yearOffset * 5) + (month * 2)}m`
-            },
-            longest_female: {
-              title: "롱기스트 (여성)",
-              iconPath: "/images/svg/longest2.svg",
-              memberName: `${selectedYear}년 ${month}월 롱기스트F`,
-              generation: String(35 - yearOffset),
-              score: `${215 + (yearOffset * 3) + (month * 1)}m`
-            },
-            nearest_male: {
-              title: "니어리스트 (남성)",
-              iconPath: "/images/svg/nearest1.svg",
-              memberName: `${selectedYear}년 ${month}월 니어리스트M`,
-              generation: String(38 - yearOffset),
-              score: `${1 + (month % 3) + (yearOffset * 0.5)}.${month}m`
-            },
-            nearest_female: {
-              title: "니어리스트 (여성)",
-              iconPath: "/images/svg/nearest2.svg",
-              memberName: `${selectedYear}년 ${month}월 니어리스트F`,
-              generation: String(39 - yearOffset),
-              score: `${2 + (month % 2) + (yearOffset * 0.5)}.${month}m`
-            }
-          },
-          isProcessing: false
-        };
-      }
-    }
-  }
-}
-
-// 날짜 포맷팅 함수
-function formatDate(dateString) {
-  return new Date(dateString).toLocaleDateString('ko-KR', { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric'
-  });
 }
 ---
 
-<MainLayout title="수상 내역 - 청구회" description="청구회 골프 모임 수상 내역 페이지입니다." currentPage="awards">
-  <Banner 
-    title="수상 내역" 
-    subtitle="청구회 골프 모임의 수상자들을 소개합니다" 
-    bgImage="/images/schedule-banner.jpg"
-    btnText=""
-    btnUrl=""
+<Layout>
+  <Banner
+    title="수상 내역"
+    subtitle="각 연도별 정기 모임에서의 특별상 및 메달리스트를 확인하세요."
+    backgroundImage="/images/about-banner.png"
   />
-  
-  <section class="py-12">
+
+  <section class="py-12 bg-gray-50">
     <div class="container mx-auto px-4">
-      <div class="mb-10">
-        <h2 class="text-3xl font-bold mb-2 text-center bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">연도별 수상내역</h2>
-        <div class="title-underline"></div>
-        
-        <!-- 연도 선택 탭 - data-astro-reload 속성 추가 -->
-        <div class="flex justify-center space-x-2 md:space-x-4 mt-20 mb-24">
-          {availableYears.map(year => (
-            <a 
-              href={`/awards?year=${year}`} 
-              data-astro-reload
-              class={`px-8 py-3 rounded-full text-sm md:text-base font-medium transition-colors ${
-                year === selectedYear 
-                  ? 'bg-primary text-white' 
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              {year}년
-            </a>
-          ))}
-        </div>
-        
-        <!-- 설명 문구 -->
-        {selectedYear === 2025 && (
-          <div class="text-center mb-24 text-gray-600">
-            <p>2025년 수상내역은 모임 완료 후 순차적으로 업데이트됩니다.</p>
-          </div>
-        )}
-        
-        <!-- 월별 수상내역 그리드 -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mt-8">
-          {displayStructure.map(row => (
-            <div class="flex flex-col space-y-16">
-              {row.months.map(month => (
-                <div>
-                  <!-- 모임 정보 헤더 -->
-                  <div class="relative rounded-lg shadow-md overflow-hidden">
-                    <div class="h-36 relative">
-                      <img 
-                        src={monthlyMeetings[month]?.meeting?.image || `/images/meetings/${month % 5 + 1}.jpg`}
-                        alt={`${month}월 정기 모임`}
-                        class="w-full h-full object-cover"
-                      />
-                      <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
-                      <div class="absolute bottom-0 left-0 w-full p-4 text-white">
-                        <h3 class="text-xl font-bold mb-1">
-                          {monthlyMeetings[month]?.meeting?.name || `${month}월 정기 모임`}
-                        </h3>
-                        <p class="text-sm opacity-90">
-                          {monthlyMeetings[month]?.meeting?.date ? 
-                            new Date(monthlyMeetings[month].meeting.date).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' }) : 
-                            new Date(selectedYear, month-1, 15).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long' })
-                          }
-                        </p>
-                        <p class="text-xs opacity-80">
-                          <i class="fas fa-map-marker-alt mr-1"></i> 
-                          {monthlyMeetings[month]?.meeting?.location || "장소 미정"} 
-                          {monthlyMeetings[month]?.meeting?.course ? ` ${monthlyMeetings[month].meeting.course}` : ""}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <!-- 수상 카드 그리드 -->
-                  {monthlyMeetings[month]?.isProcessing ? (
-                    <div class="mt-4 p-6 bg-white rounded-lg shadow-md text-center">
-                      <div class="inline-block p-3 rounded-full bg-gray-100 mb-4">
-                        <i class="fas fa-chart-bar text-primary text-2xl"></i>
-                      </div>
-                      <h4 class="text-lg font-semibold text-gray-600">집계중</h4>
-                      <p class="text-sm text-gray-500 mt-2">수상 내역이 집계되고 있습니다.</p>
-                    </div>
-                  ) : (
-                    <div class="space-y-2 mt-4">
-                      {monthlyMeetings[month]?.awards && Object.values(monthlyMeetings[month].awards).map((award, awardIndex) => (
-                        <AwardCard
-                          title={award.title}
-                          iconPath={award.iconPath}
-                          memberName={award.memberName || "미정"}
-                          generation={award.generation}
-                          score={award.score}
-                          className={`${awardIndex % 2 === 0 ? "bg-white" : "bg-gray-50 hover:bg-white"} ${award.memberName === "미정" ? "opacity-75" : ""}`}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
+      <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+        <h2 class="text-3xl font-bold mb-4 md:mb-0">{selectedYear} 수상 내역</h2>
+        <div class="flex gap-2">
+          {[2022, 2023, 2024, 2025].map(y => (
+            <a href={`/awards/${y}`} class={`px-4 py-1 rounded-md text-sm font-medium transition ${y == selectedYear ? 'bg-primary text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'}`}>{y}</a>
           ))}
         </div>
       </div>
+
+      {meetings.length === 0 ? (
+        <p class="text-center text-gray-500">수상 내역이 없습니다.</p>
+      ) : (
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+          {meetings.map(meeting => (
+            <div class="flex flex-col space-y-4">
+              <div class="relative rounded-lg shadow-md overflow-hidden">
+                <div class="h-36 relative">
+                  <img src={meeting.image} alt={meeting.name} class="w-full h-full object-cover" />
+                  <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                  <div class="absolute bottom-0 left-0 w-full p-4 text-white">
+                    <h3 class="text-xl font-bold mb-1">{meeting.name}</h3>
+                    <p class="text-sm opacity-90">{new Date(meeting.date).toLocaleDateString('ko-KR')}</p>
+                    <p class="text-xs opacity-80">{meeting.location} {meeting.course || ''}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                {Object.values(meeting.awards).map(award => (
+                  <AwardCard
+                    title={award.title}
+                    iconPath={award.iconPath}
+                    memberName={award.memberName}
+                    generation={award.generation}
+                    score={award.score}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   </section>
-</MainLayout>
-
-<style>
-  .title-underline {
-    width: 80px;
-    height: 4px;
-    margin: 0 auto;
-    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-    border-radius: 2px;
-  }
-  
-  h3 {
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-  }
-</style>
+</Layout>

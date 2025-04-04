@@ -129,7 +129,7 @@ export async function getRecentCompletedMeetings(count = 3) {
           event_no: null,
           type: "no-data",
           status: "완료",
-          location: "정보 없음",
+          location: "데이터 집계중입니다.",
           course: ""
         }
       ];
@@ -341,7 +341,7 @@ export async function getTopScoresByMeeting(meetingId, count = 3) {
     return topScores.map((score, index) => ({
       ...score,
       rank: index + 1,
-      member_name: members[score.member_id]?.name || '정보 없음'
+      member_name: members[score.member_id]?.name || '데이터 집계중입니다.'
     }));
   } catch (error) {
     console.error(`Error getting top scores for meeting ${meetingId}:`, error);
@@ -372,7 +372,7 @@ export async function getRecentScoresWithMembers(count = 5) {
       return [
         {
           member_id: 'no-data',
-          member_name: "정보 없음",
+          member_name: "데이터 집계중입니다.",
           gross_score: null,
           rank: null,
           meeting_id: 'no-data',
@@ -423,7 +423,7 @@ export async function getRecentScoresWithMembers(count = 5) {
         return [
           {
             member_id: 'no-data',
-            member_name: "정보 없음",
+            member_name: "데이터 집계중입니다.",
             gross_score: null,
             rank: null,
             meeting_id: latestMeeting.id,
@@ -455,7 +455,7 @@ export async function getRecentScoresWithMembers(count = 5) {
       return scores.map((score, index) => ({
         ...score,
         rank: index + 1,
-        member_name: members[score.member_id]?.name || '정보 없음',
+        member_name: members[score.member_id]?.name || '데이터 집계중입니다.',
         meeting_name: latestMeeting.name,
         meeting_date: latestMeeting.date
       }));
@@ -481,7 +481,7 @@ export async function getRecentScoresWithMembers(count = 5) {
     return scores.map((score, index) => ({
       ...score,
       rank: index + 1,
-      member_name: members[score.member_id]?.name || '정보 없음',
+      member_name: members[score.member_id]?.name || '데이터 집계중입니다.',
       meeting_name: latestMeeting.name,
       meeting_date: latestMeeting.date
     }));
@@ -494,7 +494,7 @@ export async function getRecentScoresWithMembers(count = 5) {
     return [
       {
         member_id: 'error',
-        member_name: "정보 없음",
+        member_name: "데이터 집계중입니다.",
         gross_score: null,
         rank: null,
         meeting_id: 'error',
@@ -526,7 +526,7 @@ export async function getRecentThreeMonthsAwards() {
         awards: [
           {
             award_type: recentMeetings[0]?.type === 'error' ? 'error' : 'no-data',
-            member_name: "정보 없음",
+            member_name: "데이터 집계중입니다.",
             meeting_name: recentMeetings[0]?.name || "정보를 불러올 수 없습니다",
             meeting_date: new Date().toISOString()
           }
@@ -597,7 +597,7 @@ export async function getRecentThreeMonthsAwards() {
           award_type: 'medal',
           rank: score.rank,
           member_id: score.member_id,
-          member_name: score.member_name || members[score.member_id]?.name || '정보 없음',
+          member_name: score.member_name || members[score.member_id]?.name || '데이터 집계중입니다.',
           gross_score: score.gross_score,
           meeting_id: meeting.id,
           meeting_name: meeting.name,
@@ -655,7 +655,7 @@ export async function getRecentThreeMonthsAwards() {
             id: award.id,
             award_type: 'special',
             ...award,
-            member_name: award.member_name || memberInfo?.name || '정보 없음',
+            member_name: award.member_name || memberInfo?.name || '데이터 집계중입니다.',
             meeting_name: meeting.name,
             meeting_date: meeting.date
           };
@@ -684,7 +684,7 @@ export async function getRecentThreeMonthsAwards() {
           {
             award_type: 'no-data',
             member_id: 'none',
-            member_name: "정보 없음",
+            member_name: "데이터 집계중입니다.",
             meeting_id: 'none',
             meeting_name: "수상 내역이 없습니다",
             meeting_date: new Date().toISOString()
@@ -710,7 +710,7 @@ export async function getRecentThreeMonthsAwards() {
           award_type: 'error',
           rank: null,
           member_id: 'error',
-          member_name: "정보 없음",
+          member_name: "데이터 집계중입니다.",
           gross_score: null,
           meeting_id: 'error',
           meeting_name: "정보를 불러올 수 없습니다",
@@ -803,7 +803,7 @@ export async function getAwardsByYear(year = null) {
               id: doc.id,
               award_type: 'special',
               ...data,
-              member_name: data.member_name || members[data.member_id]?.name || '정보 없음'
+              member_name: data.member_name || members[data.member_id]?.name || '데이터 집계중입니다.'
             };
           });
         }
@@ -824,7 +824,7 @@ export async function getAwardsByYear(year = null) {
               id: doc.id,
               award_type: 'special',
               ...data,
-              member_name: data.member_name || members[data.member_id]?.name || '정보 없음'
+              member_name: data.member_name || members[data.member_id]?.name || '데이터 집계중입니다.'
             };
           });
         }
