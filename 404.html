@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>페이지를 찾을 수 없습니다</title>
+  <script>
+    // 현재 URL에서 경로 가져오기
+    var pathSegmentsToKeep = 1; // /astro-firebase-homepage/
+    var l = window.location;
+    var path = l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/';
+    var redirectTo = l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') + path + '?p=' + 
+      encodeURIComponent(l.pathname.slice(path.length)) + 
+      (l.search ? '&q=' + encodeURIComponent(l.search.slice(1)) : '') + 
+      (l.hash ? '#' + encodeURIComponent(l.hash.slice(1)) : '');
+    window.location.replace(redirectTo);
+  </script>
+</head>
+<body>
+  <h1>페이지를 찾을 수 없습니다</h1>
+  <p>리다이렉트 중...</p>
+</body>
+</html>
