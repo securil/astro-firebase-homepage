@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <style>
+    .pulse-ring {
+      animation-name: pulsate;
+      animation-duration: 4s;
+      animation-iteration-count: infinite;
+      animation-timing-function: ease-out;
+      fill-opacity: 0;
+      stroke: rgba(255, 78, 80, 0.5);
+      stroke-width: 2;
+    }
+    
+    .pulse-ring-2 {
+      animation-delay: 1.3s;
+    }
+    
+    .pulse-ring-3 {
+      animation-delay: 2.6s;
+    }
+    
+    @keyframes pulsate {
+      0% {
+        transform: scale(0.5);
+        stroke-opacity: 0.8;
+      }
+      70% {
+        transform: scale(1);
+        stroke-opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        stroke-opacity: 0;
+      }
+    }
+  </style>
+  
+  <!-- 펄스 링 -->
+  <circle class="pulse-ring" cx="100" cy="100" r="40" />
+  <circle class="pulse-ring pulse-ring-2" cx="100" cy="100" r="40" />
+  <circle class="pulse-ring pulse-ring-3" cx="100" cy="100" r="40" />
+  
+  <!-- 롱기스트 아이콘 -->
+  <defs>
+    <linearGradient id="longestGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF4E50" />
+      <stop offset="100%" stop-color="#F9D423" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- 골프공 -->
+  <circle cx="80" cy="100" r="8" fill="#FFFFFF" filter="url(#glow)"/>
+  
+  <!-- 비행 궤적 -->
+  <path d="M80,100 Q100,80 120,100" stroke="url(#longestGradient)" stroke-width="3" fill="none" stroke-dasharray="2,2" filter="url(#glow)"/>
+  
+  <!-- 속도/거리 표시 효과 -->
+  <path d="M90,100 L94,96 L94,104 L90,100 Z" fill="url(#longestGradient)"/>
+  <path d="M105,100 L109,96 L109,104 L105,100 Z" fill="url(#longestGradient)"/>
+  <path d="M120,100 L124,96 L124,104 L120,100 Z" fill="url(#longestGradient)"/>
+  
+  <!-- 측정 거리 라인 -->
+  <line x1="80" y1="110" x2="120" y2="110" stroke="url(#longestGradient)" stroke-width="1.5"/>
+  <text x="95" y="115" font-family="Arial" font-size="6" fill="url(#longestGradient)">300y+</text>
+  
+  <!-- 아이콘 이름 -->
+  <text x="100" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#333">롱기스트 드라이브</text>
+</svg>

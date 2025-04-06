@@ -6,4 +6,9 @@ const isDev = process.env.NODE_ENV !== 'production';
 export default defineConfig({
   base: isDev ? '/' : '/astro-firebase-homepage/', // ✅ 이 줄 추가
   integrations: [tailwind()],
+  alias: {
+    '@/lib': './src/lib',
+    '@/components': './src/components',
+    '@/pages': './src/pages'
+  }
 });

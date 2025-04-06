@@ -1,6 +1,6 @@
 ---
 import AwardCard from './ui/AwardCard.astro';
-import { getMembers, getRecentCompletedMeetings, getFilteredAwardsByMeetingId } from '../lib/service/RecentAwards-util.js';
+import { getMembers, getRecentCompletedMeetings, getSpecialAwardsByMeetingId, CATEGORY_MAP } from '../lib/service/awards-util.js';
 
 let recentMeetings = [];
 let membersMap = {};
@@ -14,32 +14,22 @@ try {
 
   recentMeetings = await getRecentCompletedMeetings(3);
 
-  const categoryMap = {
-    simperio: '심페리오 우승',
-    medalist_male: '메달리스트 (남성)',
-    medalist_female: '메달리스트 (여성)',
-    longest_male: '롱기스트 (남성)',
-    longest_female: '롱기스트 (여성)',
-    nearest_male: '니어리스트 (남성)',
-    nearest_female: '니어리스트 (여성)'
-  };
-
-  const awardCategories = Object.keys(categoryMap);
+  const awardCategories = Object.keys(CATEGORY_MAP);
 
   for (let meeting of recentMeetings) {
     const date = new Date(meeting.date);
     const month = date.getMonth() + 1;
 
     meeting.image =
-      month === 9 ? '/images/golf-course-sep.webp'
-      : month === 10 ? '/images/golf-course-oct.webp'
-      : month === 11 ? '/images/golf-course-nov.webp'
-      : '/images/golf-course-default.webp';
+      month === 9 ? `${import.meta.env.BASE_URL}images/golf-course-sep.webp`
+      : month === 10 ? `${import.meta.env.BASE_URL}images/golf-course-oct.webp`
+      : month === 11 ? `${import.meta.env.BASE_URL}images/golf-course-nov.webp`
+      : `${import.meta.env.BASE_URL}images/golf-course-default.webp`;
 
     meeting.location = meeting.location || '장소 미정';
     meeting.awards = {};
 
-    const awardsRaw = await getFilteredAwardsByMeetingId(meeting.id);
+    const awardsRaw = await getSpecialAwardsByMeetingId(meeting.id);
 
     for (const category of awardCategories) {
       const award = awardsRaw.find(a => a.category === category);
@@ -47,8 +37,8 @@ try {
       const member = memberId ? membersMap[memberId] : null;
 
       meeting.awards[category] = {
-        title: categoryMap[category],
-        iconPath: `/images/svg/${category}.svg`,
+        title: CATEGORY_MAP[category],
+        iconPath: `${import.meta.env.BASE_URL}images/svg/${category}.svg`,
         memberName: member?.name || '데이터 집계중입니다.',
         generation: member?.generation || '',
         score: award?.score || null
@@ -65,7 +55,6 @@ try {
     <div class="flex justify-between items-center mb-2">
       <h2 class="text-3xl font-bold text-center mx-auto">최근 수상 내역</h2>
       <a href="/awards" class="absolute right-8 text-sm text-primary hover:text-secondary font-medium flex items-center">
-        <span>자세히 보기</span>
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
         </svg>
@@ -104,7 +93,7 @@ try {
     </div>
 
     <div class="text-center mt-10">
-      <a href="/awards" class="btn-primary">모든 수상 내역 보기</a>
+      <a href={import.meta.env.BASE_URL + "awards"} class="btn-primary">모든 수상 내역 보기</a>
     </div>
   </div>
 </section>

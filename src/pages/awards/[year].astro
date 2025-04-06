@@ -23,10 +23,10 @@ for (let meeting of meetings) {
   const month = date.getMonth() + 1;
 
   meeting.image =
-    month === 9 ? '/images/golf-course-sep.webp'
-    : month === 10 ? '/images/golf-course-oct.webp'
-    : month === 11 ? '/images/golf-course-nov.webp'
-    : '/images/golf-course-default.webp';
+  month === 9 ? `${import.meta.env.BASE_URL}images/golf-course-sep.webp`
+  : month === 10 ? `${import.meta.env.BASE_URL}images/golf-course-oct.webp`
+  : month === 11 ? `${import.meta.env.BASE_URL}images/golf-course-nov.webp`
+  : `${import.meta.env.BASE_URL}images/golf-course-default.webp`;
 
   const awardsRaw = await getSpecialAwardsByMeetingId(meeting.id);
   meeting.awards = {};
@@ -38,7 +38,7 @@ for (let meeting of meetings) {
 
     meeting.awards[category] = {
       title: CATEGORY_MAP[category],
-      iconPath: `/images/svg/${category}.svg`,
+      iconPath: `${import.meta.env.BASE_URL}images/svg/${category}.svg`,
       memberName: member?.name || '현재 집계중입니다.',
       generation: member?.generation || '',
       score: award?.score || null
@@ -51,7 +51,7 @@ for (let meeting of meetings) {
   <Banner
     title="수상 내역"
     subtitle="각 연도별 정기 모임에서의 특별상 및 메달리스트를 확인하세요."
-    backgroundImage="/images/about-banner.png"
+    backgroundImage={`${import.meta.env.BASE_URL}images/about-banner.png`}
   />
 
   <section class="py-12 bg-gray-50">
@@ -60,7 +60,12 @@ for (let meeting of meetings) {
         <h2 class="text-3xl font-bold mb-4 md:mb-0">{selectedYear} 수상 내역</h2>
         <div class="flex gap-2">
           {[2022, 2023, 2024, 2025].map(y => (
-            <a href={`/awards/${y}`} class={`px-4 py-1 rounded-md text-sm font-medium transition ${y == selectedYear ? 'bg-primary text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'}`}>{y}</a>
+            <a 
+              href={`${import.meta.env.BASE_URL}awards/${y}/index.html`} 
+              class={`px-4 py-1 rounded-md text-sm font-medium transition ${y == selectedYear ? 'bg-primary text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'}`}
+            >
+              {y}
+            </a>
           ))}
         </div>
       </div>

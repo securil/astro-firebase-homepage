@@ -22,19 +22,60 @@ function formatDate(dateString: string) {
   const date = new Date(dateString);
   const month = date.toLocaleString('en-US', { month: 'short' }).toUpperCase();
   const day = date.getDate();
-  return { month, day };
+  const year = date.getFullYear();
+  
+  // 요일 가져오기
+  const weekday = date.toLocaleString('ko-KR', { weekday: 'short' }); // '월', '화' 등
+  
+  return { month, day, year, weekday, dateObj: date };
 }
 
-const { month, day } = formatDate(meeting.date);
+// D-Day 계산 함수
+function calculateDday(meetingDate: Date) {
+  const today = new Date();
+  
+  // 시간 부분 제거하여 날짜만 비교
+  today.setHours(0, 0, 0, 0);
+  const targetDate = new Date(meetingDate);
+  targetDate.setHours(0, 0, 0, 0);
+  
+  // 날짜 차이 계산 (밀리초)
+  const diffTime = targetDate.getTime() - today.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  if (diffDays === 0) {
+    return "D-Day";
+  } else if (diffDays > 0) {
+    return `D-${diffDays}`;
+  } else {
+    return `D+${Math.abs(diffDays)}`;
+  }
+}
+
+const { month, day, year, weekday, dateObj } = formatDate(meeting.date);
+const dday = calculateDday(dateObj);
 
 // 이미지 파일 경로 생성
 const imageNumber = typeof meeting.id === 'number' ? meeting.id % 5 + 1 : 1;
-const imagePath = `/images/meetings/${imageNumber}.jpg`;
+const imagePath = `${import.meta.env.BASE_URL}images/meetings/${imageNumber}.jpg`;
+
+// D-day 색상 설정
+let ddayColor = "bg-blue-100 text-blue-800";
+if (dday === "D-Day") {
+  ddayColor = "bg-red-500 text-white";
+} else if (dday.startsWith("D-") && parseInt(dday.substring(2)) <= 7) {
+  // 7일 이내
+  ddayColor = "bg-orange-500 text-white";
+} else if (dday.startsWith("D+")) {
+  // 지난 날짜
+  ddayColor = "bg-gray-500 text-white";
+}
 
 // 콘솔에 디버그 정보 출력
 console.log("MeetingCard 렌더링:", {
   meeting_id: meeting.id,
   meeting_date: meeting.date,
+  dday: dday,
   image_path: imagePath
 });
 ---
@@ -45,14 +86,26 @@ console.log("MeetingCard 렌더링:", {
       src={imagePath} 
       alt={meeting.name} 
       class="w-full h-48 object-cover"
-      onerror="this.src='/images/banner-bg.jpg'; this.onerror=null;"
+      onerror={`this.src='${import.meta.env.BASE_URL}images/banner-bg.jpg'; this.onerror=null;`}
     />
-    <div class="absolute top-4 left-4 bg-white rounded-lg overflow-hidden shadow-md text-center p-2 w-16">
-      <div class="text-xs font-semibold text-primary">{month}</div>
+    
+    <!-- 달력 스타일의 날짜 표시 -->
+    <div class="absolute top-4 left-4 bg-white rounded-lg overflow-hidden shadow-lg text-center w-20">
+      <div class="bg-primary text-white text-xs font-bold py-1">{year}년</div>
+      <div class="text-xs font-semibold text-primary pt-1">{month}</div>
       <div class="text-2xl font-bold">{day}</div>
+      <div class="text-xs text-gray-600 pb-1">{weekday}요일</div>
     </div>
+    
+    <!-- D-day 표시 -->
+    <div class="absolute top-4 right-4">
+      <div class={`${ddayColor} text-xs font-bold px-3 py-1 rounded-full shadow-md`}>
+        {dday}
+      </div>
+    </div>
+    
     {meeting.is_special_tournament && (
-      <div class="absolute top-4 right-4 bg-accent text-primary text-xs font-bold px-2 py-1 rounded">
+      <div class="absolute bottom-4 right-4 bg-accent text-primary text-xs font-bold px-2 py-1 rounded">
         특별대회
       </div>
     )}
@@ -80,8 +133,6 @@ console.log("MeetingCard 렌더링:", {
       }`}>
         {meeting.status || '예정'}
       </span>
-      
-      {/* 상세 보기 링크 제거됨 */}
     </div>
   </div>
 </div>

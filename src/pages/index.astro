@@ -14,7 +14,7 @@ import RecentAwards from '../components/RecentAwards.astro';
     title="청구회에 오신 것을 환영합니다" 
     subtitle="함께하는 골프, 함께하는 열정" 
     btnText="더 알아보기" 
-    btnUrl="/about"
+    btnUrl={`${import.meta.env.BASE_URL}about`}
   />
   
   <IntroSection />
