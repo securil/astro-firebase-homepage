@@ -1,0 +1,260 @@
+---
+// components/ui/ProgressBar.astro
+export interface Props {
+  value: number;
+  max?: number;
+  color?: 'blue' | 'green' | 'red' | 'yellow' | 'indigo' | 'purple' | 'teal' | 'gray';
+  size?: 'xs' | 'sm' | 'md' | 'lg';
+  showValue?: boolean;
+  valuePosition?: 'inside' | 'right' | 'top' | 'bottom';
+  valueFormat?: 'percentage' | 'fraction' | 'custom';
+  customValueFormat?: string;
+  label?: string;
+  labelPosition?: 'top' | 'left';
+  animated?: boolean;
+  striped?: boolean;
+  rounded?: boolean;
+  className?: string;
+  barClassName?: string;
+  id?: string;
+  description?: string;
+  showMinMax?: boolean;
+  minLabel?: string;
+  maxLabel?: string;
+  minValue?: number;
+  gradient?: boolean;
+  gradientFrom?: string;
+  gradientTo?: string;
+}
+
+const { 
+  value, 
+  max = 100, 
+  color = 'blue',
+  size = 'md',
+  showValue = true,
+  valuePosition = 'right',
+  valueFormat = 'percentage',
+  customValueFormat,
+  label,
+  labelPosition = 'top',
+  animated = true,
+  striped = false,
+  rounded = true,
+  className = '',
+  barClassName = '',
+  id,
+  description,
+  showMinMax = false,
+  minLabel = '',
+  maxLabel = '',
+  minValue = 0,
+  gradient = false,
+  gradientFrom = '',
+  gradientTo = ''
+} = Astro.props;
+
+// Calculate the percentage
+const percentage = Math.min(Math.max(0, (value / max) * 100), 100);
+
+// Size classes
+const sizeClasses = {
+  xs: 'h-1',
+  sm: 'h-2',
+  md: 'h-4',
+  lg: 'h-6'
+};
+
+// Color classes
+const colorClasses = {
+  blue: 'bg-blue-500',
+  green: 'bg-green-500',
+  red: 'bg-red-500',
+  yellow: 'bg-yellow-500',
+  indigo: 'bg-indigo-500',
+  purple: 'bg-purple-500',
+  teal: 'bg-teal-500',
+  gray: 'bg-gray-500'
+};
+
+// Text color classes
+const textColorClasses = {
+  blue: 'text-blue-700',
+  green: 'text-green-700',
+  red: 'text-red-700',
+  yellow: 'text-yellow-700',
+  indigo: 'text-indigo-700',
+  purple: 'text-purple-700',
+  teal: 'text-teal-700',
+  gray: 'text-gray-700'
+};
+
+// Gradient classes
+let gradientClass = '';
+if (gradient) {
+  const fromColor = gradientFrom || `${color}-400`;
+  const toColor = gradientTo || `${color}-600`;
+  gradientClass = `bg-gradient-to-r from-${fromColor} to-${toColor}`;
+}
+
+// Format the value based on specified format
+let formattedValue;
+switch (valueFormat) {
+  case 'percentage':
+    formattedValue = `${Math.round(percentage)}%`;
+    break;
+  case 'fraction':
+    formattedValue = `${value}/${max}`;
+    break;
+  case 'custom':
+    formattedValue = customValueFormat ? customValueFormat.replace('{value}', value.toString()).replace('{max}', max.toString()).replace('{percent}', Math.round(percentage).toString()) : value;
+    break;
+  default:
+    formattedValue = `${value}`;
+}
+
+// Determine size-based text classes
+const textSizeClass = size === 'xs' || size === 'sm' ? 'text-xs' : size === 'md' ? 'text-sm' : 'text-base';
+
+// Value position classes
+const valueClasses = {
+  inside: 'absolute inset-0 flex items-center justify-center text-white font-medium',
+  right: 'ml-2 font-medium',
+  top: 'mb-1 font-medium',
+  bottom: 'mt-1 font-medium'
+};
+
+// For inside positioning, only show if the bar is wide enough
+const showInsideValue = valuePosition === 'inside' && percentage > 25;
+
+// Container classes based on layout
+const containerClasses = [
+  'progress-container',
+  className
+
+// Progress background and bar classes
+const bgClasses = [
+  'bg-gray-200',
+  rounded ? 'rounded-full' : '',
+  sizeClasses[size]
+].join(' ');
+
+const barClasses = [
+  colorClasses[color],
+  gradientClass,
+  rounded ? 'rounded-full' : '',
+  striped ? 'progress-striped' : '',
+  animated ? 'progress-animated' : '',
+  barClassName
+].join(' ');
+---
+
+<div id={id} class={containerClasses}>
+  <!-- Label at the top or left -->
+  {(label && labelPosition === 'top') && (
+    <div class="flex items-center justify-between mb-1">
+      <div class={`${textColorClasses[color]} ${textSizeClass} font-medium`}>{label}</div>
+      {showValue && valuePosition === 'top' && (
+        <div class={`${textSizeClass} text-gray-600`}>{formattedValue}</div>
+      )}
+    </div>
+  )}
+  
+  {(label && labelPosition === 'left') && (
+    <div class="flex items-center mb-1">
+      <div class={`${textColorClasses[color]} ${textSizeClass} font-medium mr-2`}>{label}</div>
+    </div>
+  )}
+  
+  <!-- Description if provided -->
+  {description && (
+    <p class="text-sm text-gray-500 mb-1">{description}</p>
+  )}
+  
+  <div class="flex items-center">
+    {(label && labelPosition === 'left') && (
+      <div class={`${textColorClasses[color]} ${textSizeClass} font-medium mr-2`}>{label}</div>
+    )}
+    
+    <div class={`relative flex-grow ${bgClasses}`}>
+      <div 
+        class={barClasses} 
+        style={`width: ${percentage}%`} 
+        role="progressbar" 
+        aria-valuenow={value} 
+        aria-valuemin={minValue} 
+        aria-valuemax={max}
+      >
+        {showValue && showInsideValue && (
+          <div class={valueClasses.inside}>{formattedValue}</div>
+        )}
+      </div>
+    </div>
+    
+    {showValue && valuePosition === 'right' && (
+      <div class={`${valueClasses.right} ${textSizeClass}`}>{formattedValue}</div>
+    )}
+  </div>
+  
+  {showValue && valuePosition === 'bottom' && (
+    <div class={`${valueClasses.bottom} ${textSizeClass} text-right`}>{formattedValue}</div>
+  )}
+  
+  <!-- Min-Max labels if enabled -->
+  {showMinMax && (
+    <div class="flex justify-between mt-1 text-xs text-gray-500">
+      <div>{minLabel || minValue}</div>
+      <div>{maxLabel || max}</div>
+    </div>
+  )}
+</div>
+
+<style>
+  .progress-striped {
+    background-image: linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.15) 25%,
+      transparent 25%,
+      transparent 50%,
+      rgba(255, 255, 255, 0.15) 50%,
+      rgba(255, 255, 255, 0.15) 75%,
+      transparent 75%,
+      transparent
+    );
+    background-size: 1rem 1rem;
+  }
+  
+  .progress-animated {
+    transition: width 0.6s ease;
+  }
+  
+  .progress-animated.progress-striped {
+    animation: progress-bar-stripes 1s linear infinite;
+  }
+  
+  @keyframes progress-bar-stripes {
+    0% {
+      background-position: 1rem 0;
+    }
+    100% {
+      background-position: 0 0;
+    }
+  }
+</style>
+
+
+// Progress background and bar classes
+const bgClasses = [
+  'bg-gray-200',
+  rounded ? 'rounded-full' : '',
+  sizeClasses[size]
+].join(' ');
+
+const barClasses = [
+  colorClasses[color],
+  gradientClass,
+  rounded ? 'rounded-full' : '',
+  striped ? 'progress-striped' : '',
+  animated ? 'progress-animated' : '',
+  barClassName
+].join(' ');

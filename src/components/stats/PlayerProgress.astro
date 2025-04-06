@@ -1,0 +1,340 @@
+---
+// components/stats/PlayerProgress.astro
+import ChartContainer from '../ui/ChartContainer.astro';
+import DataTable from '../ui/DataTable.astro';
+import { getMemberScoreData, getImprovedScoreData } from '../../lib/service/stats-util';
+
+export interface Props {
+  data: {
+    members: Array<any>;
+    scores: Array<any>;
+    meetings: Array<any>;
+    filters?: any;
+  };
+  className?: string;
+  showTable?: boolean;
+  showImprovement?: boolean;
+  maxPlayersShown?: number;
+  chartHeight?: string;
+}
+
+const { 
+  data, 
+  className = '', 
+  showTable = true,
+  showImprovement = true,
+  maxPlayersShown = 6,
+  chartHeight = '500px'
+} = Astro.props;
+
+// 회원별 스코어 데이터 준비
+const scoreData = getMemberScoreData(data);
+
+// 향상도 데이터 계산
+const improvementData = showImprovement ? getImprovedScoreData(data) : [];
+
+// 차트에 표시할 상위 회원 선택
+const topMembers = [...new Set(scoreData.map(item => item.member_id))]
+  .slice(0, maxPlayersShown);
+
+// 테이블 헤더
+const tableHeaders = [
+  { key: 'date', label: '날짜', align: 'left' },
+  { key: 'member_name', label: '회원명', align: 'left' },
+  { key: 'gross_score', label: '스코어', align: 'center' },
+  { key: 'course_name', label: '골프장', align: 'left' },
+  { key: 'details', label: '상세', align: 'center' }
+];
+
+// 차트 콜백 함수를 위한 문자열화
+const topMembersJson = JSON.stringify(topMembers);
+const scoreDateJson = JSON.stringify(scoreData.map(s => ({ 
+  id: s.id,
+  member_id: s.member_id, 
+  member_name: s.member_name,
+  gross_score: s.gross_score,
+  date: s.date 
+})));
+---
+
+<div class={`player-progress ${className}`}>
+  <ChartContainer 
+    title="회원별 스코어 추이" 
+    description="기간별 회원 스코어 변화 추이를 보여줍니다. 그래프의 선을 클릭하면 해당 회원만 표시됩니다." 
+    fullWidth={true}
+    showLegend={true}
+    titleIcon="chart-line"
+    hasToolbar={true}
+    chartHeight={chartHeight}
+  >
+    <canvas id="player-score-chart"></canvas>
+    
+    <div slot="legend" class="flex flex-wrap gap-4 justify-center">
+      <button id="show-all-players" class="text-xs px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full">
+        모든 회원 보기
+      </button>
+    </div>
+  </ChartContainer>
+  
+  {showImprovement && improvementData.length > 0 && (
+    <div class="mt-8">
+      <ChartContainer 
+        title="회원별 성적 향상도" 
+        description="첫 3회와 최근 3회 라운드의 평균 스코어 비교입니다. 음수일수록 향상도가 좋은 것입니다." 
+        fullWidth={true}
+        titleIcon="arrow-trending-down"
+      >
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead>
+              <tr>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">회원명</th>
+                <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">기수</th>
+                <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">첫 평균</th>
+                <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">최근 평균</th>
+                <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">향상도</th>
+                <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">참가 수</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              {improvementData.map((item, index) => (
+                <tr class={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                  <td class="px-4 py-3 text-sm font-medium text-gray-900">{item.name}</td>
+                  <td class="px-4 py-3 text-sm text-gray-500 text-center">{item.generation}기</td>
+                  <td class="px-4 py-3 text-sm text-gray-500 text-center">{item.firstAverage}타</td>
+                  <td class="px-4 py-3 text-sm text-gray-500 text-center">{item.lastAverage}타</td>
+                  <td class="px-4 py-3 text-sm font-medium text-center">
+                    <span 
+                      class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                        item.improvement < 0 
+                          ? 'bg-green-100 text-green-800' 
+                          : item.improvement > 0 
+                            ? 'bg-red-100 text-red-800' 
+                            : 'bg-gray-100 text-gray-800'}`}
+                    >
+                      {item.improvement < 0 ? '↓' : item.improvement > 0 ? '↑' : '→'} 
+                      {Math.abs(item.improvement)}타
+                    </span>
+                  </td>
+                  <td class="px-4 py-3 text-sm text-gray-500 text-center">{item.gamesPlayed}회</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </ChartContainer>
+    </div>
+  )}
+  
+  {showTable && scoreData.length > 0 && (
+    <div class="mt-8">
+      <DataTable
+        headers={tableHeaders}
+        emptyMessage="표시할 스코어 데이터가 없습니다."
+        hoverable={true}
+        striped={true}
+        showSearch={true}
+        bordered={true}
+      >
+        {scoreData.slice(0, 20).map((score, index) => (
+          <tr>
+            <td class="border px-4 py-2">
+              {new Date(score.date).toLocaleDateString('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+              })}
+            </td>
+            <td class="border px-4 py-2">{score.member_name}</td>
+            <td class="border px-4 py-2 text-center font-medium">{score.gross_score}타</td>
+            <td class="border px-4 py-2">{score.course_name || '-'}</td>
+            <td class="border px-4 py-2 text-center">
+              <button class="text-indigo-600 hover:text-indigo-900 font-medium text-sm">
+                보기
+              </button>
+            </td>
+          </tr>
+        ))}
+      </DataTable>
+    </div>
+  )}
+</div>
+
+<script define:vars={{ topMembersJson, scoreDateJson, chartHeight }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const topMembers = JSON.parse(topMembersJson);
+    const scoreData = JSON.parse(scoreDateJson);
+    
+    // 회원별 색상 할당
+    const memberColors = {};
+    const generateColor = (index) => {
+      // 무작위 색상을 생성하지 않고 미리 정의된 색상 사용
+      const colors = [
+        { r: 66, g: 133, b: 244 },  // 파랑
+        { r: 219, g: 68, b: 55 },   // 빨강
+        { r: 15, g: 157, b: 88 },   // 초록
+        { r: 244, g: 160, b: 0 },   // 노랑
+        { r: 171, g: 71, b: 188 },  // 보라
+        { r: 0, g: 172, b: 193 },   // 청록
+        { r: 255, g: 112, b: 67 },  // 주황
+        { r: 158, g: 157, b: 36 },  // 올리브
+        { r: 116, g: 77, b: 169 },  // 자주
+        { r: 82, g: 92, b: 235 }    // 파랑-보라
+      ];
+      const color = colors[index % colors.length];
+      return { 
+        borderColor: `rgb(${color.r}, ${color.g}, ${color.b})`,
+        backgroundColor: `rgba(${color.r}, ${color.g}, ${color.b}, 0.1)`
+      };
+    };
+    
+    // 상위 회원에게 색상 할당
+    topMembers.forEach((memberId, index) => {
+      memberColors[memberId] = generateColor(index);
+    });
+    
+    // 차트 데이터 준비
+    const memberData = {};
+    
+    // 회원별 데이터 그룹화
+    scoreData.forEach(score => {
+      if (!memberData[score.member_id]) {
+        memberData[score.member_id] = {
+          label: score.member_name,
+          data: []
+        };
+      }
+      
+      memberData[score.member_id].data.push({
+        x: new Date(score.date),
+        y: score.gross_score
+      });
+    });
+    
+    // 데이터 시간순 정렬
+    Object.values(memberData).forEach(member => {
+      member.data.sort((a, b) => a.x - b.x);
+    });
+    
+    // 데이터셋 생성
+    const datasets = topMembers.map(memberId => {
+      const member = memberData[memberId];
+      if (!member) return null;
+      
+      const color = memberColors[memberId];
+      
+      return {
+        label: member.label,
+        data: member.data,
+        borderColor: color.borderColor,
+        backgroundColor: color.backgroundColor,
+        tension: 0.2,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        borderWidth: 2,
+        fill: false,
+        spanGaps: true
+      };
+    }).filter(Boolean);
+    
+    // 차트 생성
+    const ctx = document.getElementById('player-score-chart').getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        datasets
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            type: 'time',
+            time: {
+              unit: 'month',
+              displayFormats: {
+                month: 'yy/MM'
+              }
+            },
+            title: {
+              display: true,
+              text: '날짜'
+            }
+          },
+          y: {
+            min: 60,
+            suggestedMax: 120,
+            title: {
+              display: true,
+              text: '스코어 (타)'
+            },
+            ticks: {
+              stepSize: 5
+            }
+          }
+        },
+        plugins: {
+          tooltip: {
+            mode: 'index',
+            intersect: false,
+            callbacks: {
+              title: function(tooltipItems) {
+                const date = new Date(tooltipItems[0].parsed.x);
+                return date.toLocaleDateString('ko-KR', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit'
+                });
+              },
+              label: function(context) {
+                return `${context.dataset.label}: ${context.parsed.y}타`;
+              }
+            }
+          },
+          legend: {
+            display: true,
+            position: 'bottom',
+            labels: {
+              boxWidth: 12,
+              usePointStyle: true,
+              pointStyle: 'circle'
+            },
+            onClick: function(e, legendItem, legend) {
+              const index = legendItem.datasetIndex;
+              const isVisible = legend.chart.isDatasetVisible(index);
+              
+              // 특정 회원만 보기
+              legend.chart.data.datasets.forEach((dataset, i) => {
+                if (i === index) {
+                  legend.chart.setDatasetVisibility(i, !isVisible);
+                } else {
+                  legend.chart.setDatasetVisibility(i, isVisible ? false : legend.chart.isDatasetVisible(i));
+                }
+              });
+              
+              legend.chart.update();
+            }
+          }
+        },
+        interaction: {
+          mode: 'nearest',
+          axis: 'x',
+          intersect: false
+        },
+        elements: {
+          line: {
+            tension: 0.4
+          }
+        }
+      }
+    });
+    
+    // 모든 회원 보기 버튼
+    document.getElementById('show-all-players').addEventListener('click', function() {
+      chart.data.datasets.forEach((dataset, i) => {
+        chart.setDatasetVisibility(i, true);
+      });
+      chart.update();
+    });
+  });
+</script>

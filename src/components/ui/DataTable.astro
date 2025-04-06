@@ -1,0 +1,234 @@
+---
+// components/ui/DataTable.astro
+export interface Props {
+  headers: Array<{
+    key: string;
+    label: string;
+    align?: 'left' | 'center' | 'right';
+    width?: string;
+    sortable?: boolean;
+  }>;
+  emptyMessage?: string;
+  className?: string;
+  striped?: boolean;
+  hoverable?: boolean;
+  compact?: boolean;
+  bordered?: boolean;
+  rounded?: boolean;
+  showSearch?: boolean;
+  showPagination?: boolean;
+  fixedHeader?: boolean;
+  highlightOnHover?: boolean;
+  responsiveMode?: 'scroll' | 'stack' | 'collapse';
+}
+
+const { 
+  headers, 
+  emptyMessage = "데이터가 없습니다", 
+  className = "", 
+  striped = true,
+  hoverable = true,
+  compact = false,
+  bordered = true,
+  rounded = true,
+  showSearch = false,
+  showPagination = false,
+  fixedHeader = false,
+  highlightOnHover = true,
+  responsiveMode = 'scroll'
+} = Astro.props;
+
+const tableClasses = [
+  'min-w-full',
+  bordered ? 'border-collapse' : '',
+  striped ? 'table-striped' : '',
+  hoverable ? 'table-hover' : '',
+  compact ? 'table-compact' : '',
+  className
+].join(' ');
+
+const wrapperClasses = [
+  'data-table-wrapper',
+  'bg-white',
+  bordered ? 'border border-gray-200' : '',
+  rounded ? 'rounded-lg overflow-hidden' : '',
+  fixedHeader ? 'has-fixed-header' : '',
+  responsiveMode === 'scroll' ? 'overflow-x-auto' : 'responsive-table',
+  responsiveMode === 'collapse' ? 'collapse-mode' : ''
+].join(' ');
+
+const getAlignClass = (align?: 'left' | 'center' | 'right') => {
+  switch(align) {
+    case 'center': return 'text-center';
+    case 'right': return 'text-right';
+    default: return 'text-left';
+  }
+};
+---
+
+<div class={wrapperClasses}>
+  {showSearch && (
+    <div class="p-4 border-b border-gray-200 bg-gray-50">
+      <div class="flex">
+        <div class="relative flex-grow">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+            </svg>
+          </div>
+          <input type="text" id="table-search" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="테이블 검색">
+        </div>
+      </div>
+    </div>
+  )}
+
+  <table class={tableClasses}>
+    <thead class={fixedHeader ? 'fixed-header' : ''}>
+      <tr class="bg-gray-100 text-gray-700">
+        {headers.map(header => (
+          <th class={`${bordered ? 'border border-gray-200' : ''} ${compact ? 'px-3 py-2' : 'px-4 py-3'} ${getAlignClass(header.align)} font-semibold`} style={header.width ? `width: ${header.width}` : ''}>
+            <div class="flex items-center justify-between">
+              <span class={header.sortable ? 'cursor-pointer hover:text-gray-900' : ''}>{header.label}</span>
+              {header.sortable && (
+                <svg class="ml-1 w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 12a1 1 0 102 0V6.414l1.293 1.293a1 1 0 001.414-1.414l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L5 6.414V12zM15 8a1 1 0 10-2 0v5.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 13.586V8z"></path>
+                </svg>
+              )}
+            </div>
+          </th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      <slot>
+        <!-- 데이터가 없는 경우 표시할 메시지 -->
+        <tr>
+          <td colspan={headers.length} class={`${bordered ? 'border border-gray-200' : ''} ${compact ? 'px-3 py-4' : 'px-4 py-6'} text-center text-gray-500`}>
+            <div class="flex flex-col items-center justify-center py-6">
+              <svg class="mx-auto h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              <span class="mt-2 text-sm font-medium">{emptyMessage}</span>
+            </div>
+          </td>
+        </tr>
+      </slot>
+    </tbody>
+  </table>
+
+  {showPagination && (
+    <div class="px-4 py-3 flex items-center justify-between border-t border-gray-200 bg-gray-50 sm:px-6">
+      <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+        <div>
+          <p class="text-sm text-gray-700">
+            <span class="font-medium">1-10</span> / <span class="font-medium">97</span> 개 항목
+          </p>
+        </div>
+        <div>
+          <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+            <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+              <span class="sr-only">Previous</span>
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+            </a>
+            <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"> 1 </a>
+            <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-indigo-50 text-sm font-medium text-indigo-600 hover:bg-indigo-100"> 2 </a>
+            <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"> 3 </a>
+            <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700"> ... </span>
+            <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"> 10 </a>
+            <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+              <span class="sr-only">Next</span>
+              <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+              </svg>
+            </a>
+          </nav>
+        </div>
+      </div>
+    </div>
+  )}
+</div>
+
+<style>
+  .table-striped tbody tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.02);
+  }
+  
+  .table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+  
+  .table-compact th,
+  .table-compact td {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .has-fixed-header {
+    max-height: 500px;
+    overflow-y: auto;
+  }
+  
+  .has-fixed-header thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 640px) {
+    .responsive-table.stack-mode table,
+    .responsive-table.stack-mode thead,
+    .responsive-table.stack-mode tbody,
+    .responsive-table.stack-mode th,
+    .responsive-table.stack-mode td,
+    .responsive-table.stack-mode tr {
+      display: block;
+    }
+    
+    .responsive-table.stack-mode thead tr {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+    
+    .responsive-table.stack-mode tr {
+      border: 1px solid #ccc;
+      margin-bottom: 0.5em;
+    }
+    
+    .responsive-table.stack-mode td {
+      border: none;
+      border-bottom: 1px solid #eee;
+      position: relative;
+      padding-left: 50%;
+    }
+    
+    .responsive-table.stack-mode td:before {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      width: 45%;
+      padding-right: 10px;
+      white-space: nowrap;
+      content: attr(data-label);
+      font-weight: bold;
+    }
+  }
+</style>
+
+<script>
+  // Client-side search functionality
+  const searchInput = document.getElementById('table-search');
+  if (searchInput) {
+    searchInput.addEventListener('input', function(e) {
+      const term = e.target.value.toLowerCase();
+      const rows = document.querySelectorAll('tbody tr');
+      
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(term) ? '' : 'none';
+      });
+    });
+  }
+</script>

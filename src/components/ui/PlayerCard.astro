@@ -1,0 +1,182 @@
+---
+// components/ui/PlayerCard.astro
+export interface Props {
+  name: string;
+  generation: number | string;
+  avatarUrl?: string;
+  gender?: '남성' | '여성';
+  bestScore?: number;
+  averageScore?: number;
+  participationRate?: number;
+  bestRank?: number;
+  specialAwards?: Array<{title: string, date: string}>;
+  lastActive?: string;
+  className?: string;
+  showStats?: boolean;
+  variant?: 'default' | 'compact' | 'detailed';
+  clickable?: boolean;
+  backgroundEffect?: 'none' | 'waves' | 'gradient';
+}
+
+const { 
+  name, 
+  generation, 
+  avatarUrl, 
+  gender = '남성',
+  bestScore,
+  averageScore,
+  participationRate,
+  bestRank,
+  specialAwards = [],
+  lastActive,
+  className = "",
+  showStats = true,
+  variant = 'default',
+  clickable = true,
+  backgroundEffect = 'none'
+} = Astro.props;
+
+// Background classes based on effect
+const bgEffectClasses = {
+  none: '',
+  waves: 'bg-waves',
+  gradient: gender === '남성' 
+    ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500' 
+    : 'bg-gradient-to-r from-pink-50 to-rose-50 border-l-4 border-pink-500'
+};
+
+// Default avatar if none provided
+const defaultAvatar = gender === '남성' 
+  ? '/images/avatars/male-default.png' 
+  : '/images/avatars/female-default.png';
+
+// Card class variants
+const cardClasses = {
+  default: 'p-5',
+  compact: 'p-3',
+  detailed: 'p-6'
+};
+
+// Base classes for the card
+const baseClasses = [
+  'player-card',
+  'bg-white rounded-lg shadow-sm border border-gray-100',
+  cardClasses[variant],
+  clickable ? 'cursor-pointer hover:shadow-md transition-shadow duration-300' : '',
+  bgEffectClasses[backgroundEffect],
+  className
+].join(' ');
+---
+
+<div class={baseClasses}>
+  <div class="flex items-center">
+    <div class="relative">
+      <img 
+        src={avatarUrl || defaultAvatar} 
+        alt={`${name} 프로필`} 
+        class={`${variant === 'compact' ? 'w-10 h-10' : 'w-16 h-16'} rounded-full object-cover border-2 border-white shadow-sm`}
+      />
+      {gender && (
+        <div class={`absolute bottom-0 right-0 rounded-full w-4 h-4 ${gender === '남성' ? 'bg-blue-500' : 'bg-pink-500'} border-2 border-white`}></div>
+      )}
+    </div>
+    
+    <div class="ml-4 flex-1 min-w-0">
+      <div class="flex items-center justify-between">
+        <h3 class={`font-bold text-gray-900 truncate ${variant === 'compact' ? 'text-base' : 'text-lg'}`}>{name}</h3>
+        <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">{generation}기</span>
+      </div>
+      
+      {variant !== 'compact' && bestScore && (
+        <p class="mt-1 text-sm text-gray-600">
+          베스트 스코어: <span class="font-semibold text-green-600">{bestScore}타</span>
+        </p>
+      )}
+      
+      {variant === 'compact' && bestScore && (
+        <p class="mt-1 text-xs text-gray-500">
+          <span class="inline-block mr-2">최고 {bestScore}타</span>
+          {averageScore && <span class="inline-block">평균 {averageScore}타</span>}
+        </p>
+      )}
+    </div>
+  </div>
+  
+  {showStats && variant !== 'compact' && (
+    <div class="mt-4 grid grid-cols-2 gap-2 text-sm">
+      {averageScore && (
+        <div class="bg-gray-50 rounded p-2">
+          <div class="text-xs text-gray-500">평균 스코어</div>
+          <div class="font-semibold">{averageScore}타</div>
+        </div>
+      )}
+      
+      {participationRate && (
+        <div class="bg-gray-50 rounded p-2">
+          <div class="text-xs text-gray-500">참여율</div>
+          <div class="font-semibold">{participationRate}%</div>
+        </div>
+      )}
+      
+      {bestRank && (
+        <div class="bg-gray-50 rounded p-2">
+          <div class="text-xs text-gray-500">최고 순위</div>
+          <div class="font-semibold">{bestRank}위</div>
+        </div>
+      )}
+      
+      {lastActive && (
+        <div class="bg-gray-50 rounded p-2">
+          <div class="text-xs text-gray-500">최근 활동</div>
+          <div class="font-semibold">{lastActive}</div>
+        </div>
+      )}
+    </div>
+  )}
+  
+  {variant === 'detailed' && specialAwards && specialAwards.length > 0 && (
+    <div class="mt-4">
+      <h4 class="text-sm font-medium text-gray-700 mb-2">특별상</h4>
+      <div class="space-y-2">
+        {specialAwards.map(award => (
+          <div class="flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-yellow-500 mr-1" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clip-rule="evenodd" />
+            </svg>
+            <span class="text-xs">{award.title}</span>
+            <span class="text-xs text-gray-500 ml-auto">{award.date}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+  
+  {clickable && (
+    <div class="mt-4 text-right">
+      <a href="#" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">상세 보기 →</a>
+    </div>
+  )}
+</div>
+
+<style>
+  .player-card {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .bg-waves::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle at top right, rgba(0,0,0,0.03) 0%, transparent 60%);
+    z-index: 0;
+  }
+  
+  .player-card > * {
+    position: relative;
+    z-index: 1;
+  }
+</style>

@@ -1,0 +1,228 @@
+---
+// components/ui/ScoreBox.astro
+export interface Props {
+  score: number;
+  par?: number;
+  holeNumber?: number;
+  playerName?: string;
+  courseName?: string;
+  date?: string;
+  size?: 'xs' | 'sm' | 'md' | 'lg';
+  variant?: 'minimal' | 'standard' | 'detailed';
+  showRelativeToPar?: boolean;
+  showBoxShadow?: boolean;
+  className?: string;
+  showAnimation?: boolean;
+  special?: 'eagle' | 'birdie' | 'par' | 'bogey' | 'double-bogey' | 'other';
+  handicap?: number;
+  netScore?: number;
+  ballPosition?: 'green' | 'fairway' | 'rough' | 'bunker' | 'water';
+  putts?: number;
+  showPutts?: boolean;
+}
+
+const { 
+  score, 
+  par = null, 
+  holeNumber,
+  playerName,
+  courseName,
+  date,
+  size = 'md',
+  variant = 'standard',
+  showRelativeToPar = true,
+  showBoxShadow = true,
+  className = '',
+  showAnimation = true,
+  special,
+  handicap,
+  netScore,
+  ballPosition,
+  putts,
+  showPutts = false
+} = Astro.props;
+
+// Calculate the relative score to par
+const relativeScore = par !== null ? score - par : null;
+
+// Determine the score label and color based on the relative score or special value
+let relativeScoreLabel: string;
+let scoreColor: string;
+
+// Auto-detect special if not provided but par is available
+const autoSpecial = special || (par !== null ? 
+  relativeScore <= -2 ? 'eagle' :
+  relativeScore === -1 ? 'birdie' :
+  relativeScore === 0 ? 'par' :
+  relativeScore === 1 ? 'bogey' :
+  relativeScore >= 2 ? 'double-bogey' : null : null);
+
+// Color based on score relative to par or special value
+switch (autoSpecial) {
+  case 'eagle':
+    scoreColor = 'bg-indigo-100 text-indigo-800 border-indigo-200';
+    relativeScoreLabel = relativeScore <= -3 ? `${Math.abs(relativeScore)}언더` : '이글';
+    break;
+  case 'birdie':
+    scoreColor = 'bg-blue-100 text-blue-800 border-blue-200';
+    relativeScoreLabel = '버디';
+    break;
+  case 'par':
+    scoreColor = 'bg-gray-100 text-gray-800 border-gray-200';
+    relativeScoreLabel = '파';
+    break;
+  case 'bogey':
+    scoreColor = 'bg-yellow-100 text-yellow-800 border-yellow-200';
+    relativeScoreLabel = '보기';
+    break;
+  case 'double-bogey':
+    scoreColor = 'bg-red-100 text-red-800 border-red-200';
+    relativeScoreLabel = relativeScore === 2 ? '더블보기' : `+${relativeScore}`;
+    break;
+  default:
+    // Default gradient for general scores
+    scoreColor = 'bg-white text-gray-800 border-gray-200';
+    relativeScoreLabel = relativeScore !== null ? (relativeScore > 0 ? `+${relativeScore}` : relativeScore < 0 ? `${relativeScore}` : '이븐') : '';
+}
+
+// Get size classes for the container and score
+const sizeClasses = {
+  container: {
+    xs: 'w-8 h-8',
+    sm: 'w-12 h-12',
+    md: 'w-16 h-16',
+    lg: 'w-20 h-20'
+  },
+  score: {
+    xs: 'text-sm',
+    sm: 'text-base',
+    md: 'text-xl',
+    lg: 'text-2xl'
+  },
+  label: {
+    xs: 'text-xs',
+    sm: 'text-xs',
+    md: 'text-sm',
+    lg: 'text-base'
+  }
+};
+
+// Ball position icons
+const ballPositionIcons = {
+  green: '🟢',
+  fairway: '🟩',
+  rough: '🟫',
+  bunker: '🟨',
+  water: '🔵'
+};
+
+// Animation class
+const animationClass = showAnimation ? 'transform transition-all duration-300 hover:scale-105' : '';
+
+// Shadow class
+const shadowClass = showBoxShadow ? 'shadow-sm' : '';
+
+// Base component classes
+const baseClasses = [
+  'score-box',
+  'rounded-lg border',
+  scoreColor,
+  shadowClass,
+  animationClass,
+  className
+].join(' ');
+
+// Additional classes based on variant
+const variantClasses = {
+  minimal: '',
+  standard: '',
+  detailed: 'p-4 flex flex-col'
+};
+
+// Layout class for minimal and standard variants
+const layoutClass = variant === 'minimal' || variant === 'standard' 
+  ? `flex flex-col items-center justify-center ${sizeClasses.container[size]}`
+  : '';
+---
+
+{variant === 'minimal' ? (
+  <div class={`${baseClasses} ${layoutClass}`}>
+    <span class={`font-bold ${sizeClasses.score[size]}`}>{score}</span>
+  </div>
+) : variant === 'standard' ? (
+  <div class={`${baseClasses} ${layoutClass}`}>
+    <span class={`font-bold ${sizeClasses.score[size]}`}>{score}</span>
+    {showRelativeToPar && relativeScoreLabel && (
+      <span class={`${sizeClasses.label[size]} mt-1`}>{relativeScoreLabel}</span>
+    )}
+  </div>
+) : (
+  <div class={`${baseClasses} ${variantClasses.detailed}`}>
+    {holeNumber && (
+      <div class="flex justify-between items-center mb-2">
+        <span class="text-sm font-medium">{holeNumber}번 홀</span>
+        {par && <span class="text-xs bg-gray-100 px-2 py-0.5 rounded">파 {par}</span>}
+      </div>
+    )}
+    
+    <div class="flex items-center justify-between">
+      <div>
+        <div class="flex items-baseline">
+          <span class={`font-bold ${sizeClasses.score.lg}`}>{score}</span>
+          {showRelativeToPar && relativeScoreLabel && (
+            <span class={`${sizeClasses.label.md} ml-2 ${autoSpecial !== 'par' ? 'font-medium' : ''}`}>{relativeScoreLabel}</span>
+          )}
+        </div>
+        
+        {netScore && handicap && (
+          <div class="text-sm text-gray-600 mt-1">
+            네트: {netScore} (핸디 {handicap})
+          </div>
+        )}
+      </div>
+      
+      {ballPosition && (
+        <div class="text-lg" title={`볼 위치: ${ballPosition}`}>
+          {ballPositionIcons[ballPosition]}
+        </div>
+      )}
+    </div>
+    
+    {showPutts && putts !== undefined && (
+      <div class="mt-2 text-sm">
+        <span class="text-gray-600">퍼팅:</span> <span class="font-medium">{putts}번</span>
+      </div>
+    )}
+    
+    {(playerName || courseName || date) && (
+      <div class="mt-3 pt-2 border-t border-gray-100 text-xs text-gray-500">
+        {playerName && <div>{playerName}</div>}
+        {courseName && date && (
+          <div class="flex justify-between mt-1">
+            <span>{courseName}</span>
+            <span>{date}</span>
+          </div>
+        )}
+        {courseName && !date && <div>{courseName}</div>}
+        {!courseName && date && <div>{date}</div>}
+      </div>
+    )}
+  </div>
+)}
+
+<style>
+  .score-box {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .score-box::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent);
+  }
+</style>

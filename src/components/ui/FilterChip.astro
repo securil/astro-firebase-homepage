@@ -1,0 +1,244 @@
+---
+// components/ui/FilterChip.astro
+export interface Props {
+  label: string;
+  value: string;
+  name: string;
+  selected?: boolean;
+  count?: number;
+  icon?: string;
+  color?: 'default' | 'blue' | 'green' | 'red' | 'yellow' | 'purple' | 'teal';
+  size?: 'sm' | 'md' | 'lg';
+  className?: string;
+  closable?: boolean;
+  disabled?: boolean;
+  type?: 'checkbox' | 'radio' | 'toggle';
+  onClick?: 'submit' | 'javascript';
+  tooltip?: string;
+}
+
+const { 
+  label, 
+  value,
+  name,
+  selected = false,
+  count,
+  icon,
+  color = 'default',
+  size = 'md',
+  className = '',
+  closable = false,
+  disabled = false,
+  type = 'checkbox',
+  onClick = 'javascript',
+  tooltip
+} = Astro.props;
+
+// Size classes
+const sizeClasses = {
+  sm: 'py-1 px-2 text-xs',
+  md: 'py-1.5 px-3 text-sm',
+  lg: 'py-2 px-4 text-base'
+};
+
+// Color classes when not selected
+const defaultColors = {
+  default: 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50',
+  blue: 'bg-white text-blue-700 border-blue-300 hover:bg-blue-50',
+  green: 'bg-white text-green-700 border-green-300 hover:bg-green-50',
+  red: 'bg-white text-red-700 border-red-300 hover:bg-red-50',
+  yellow: 'bg-white text-yellow-700 border-yellow-300 hover:bg-yellow-50',
+  purple: 'bg-white text-purple-700 border-purple-300 hover:bg-purple-50',
+  teal: 'bg-white text-teal-700 border-teal-300 hover:bg-teal-50'
+};
+
+// Color classes when selected
+const selectedColors = {
+  default: 'bg-gray-100 text-gray-800 border-gray-400',
+  blue: 'bg-blue-100 text-blue-800 border-blue-400',
+  green: 'bg-green-100 text-green-800 border-green-400',
+  red: 'bg-red-100 text-red-800 border-red-400',
+  yellow: 'bg-yellow-100 text-yellow-800 border-yellow-400',
+  purple: 'bg-purple-100 text-purple-800 border-purple-400',
+  teal: 'bg-teal-100 text-teal-800 border-teal-400'
+};
+
+const colorClass = selected ? selectedColors[color] : defaultColors[color];
+const chipId = `filter-chip-${name}-${value}`;
+
+// Calculate appropriate aria attributes
+const ariaAttributes = type === 'checkbox' 
+  ? { 'aria-checked': selected ? 'true' : 'false', role: 'checkbox' }
+  : type === 'radio'
+  ? { 'aria-checked': selected ? 'true' : 'false', role: 'radio' }
+  : { 'aria-pressed': selected ? 'true' : 'false', role: 'button' };
+
+// Icon path if provided
+const iconPath = icon ? `/images/icons/${icon}.svg` : null;
+---
+
+<div 
+  id={chipId}
+  class={`filter-chip inline-flex items-center ${sizeClasses[size]} rounded-full border ${colorClass} ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} transition-colors duration-200 ${className}`}
+  data-name={name}
+  data-value={value}
+  data-selected={selected}
+  data-type={type}
+  {...ariaAttributes}
+  title={tooltip}
+>
+  <input 
+    type={type === 'radio' ? 'radio' : 'checkbox'} 
+    name={name} 
+    value={value} 
+    checked={selected}
+    class="sr-only filter-chip-input" 
+    id={`${chipId}-input`}
+    disabled={disabled}
+  />
+
+  {icon && (
+    <img 
+      src={iconPath} 
+      alt="" 
+      class={`mr-1.5 ${size === 'sm' ? 'w-3 h-3' : size === 'md' ? 'w-4 h-4' : 'w-5 h-5'}`} 
+    />
+  )}
+  
+  <span class="filter-chip-label">{label}</span>
+  
+  {count !== undefined && (
+    <span class={`ml-1.5 ${selected ? 'bg-white' : `bg-${color}-50`} text-${color}-700 text-xs px-1.5 py-0.5 rounded-full`}>
+      {count}
+    </span>
+  )}
+  
+  {closable && (
+    <button 
+      type="button"
+      class={`ml-1.5 ${size === 'sm' ? 'w-3 h-3' : size === 'md' ? 'w-4 h-4' : 'w-5 h-5'} rounded-full flex items-center justify-center hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-${color}-500`}
+      aria-label={`Remove ${label} filter`}
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-full h-full">
+        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+      </svg>
+    </button>
+  )}
+</div>
+
+<script define:vars={{ onClick }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+      const input = document.getElementById(`${chip.id}-input`);
+      const type = chip.dataset.type;
+      const isDisabled = input.disabled;
+      
+      if (!isDisabled) {
+        chip.addEventListener('click', (e) => {
+          // Don't trigger if the close button was clicked
+          if (e.target.closest('button') && e.target.closest('button').getAttribute('aria-label')?.includes('Remove')) {
+            return;
+          }
+          
+          const isRadio = type === 'radio';
+          
+          // Toggle checkbox state
+          if (!isRadio) {
+            input.checked = !input.checked;
+            chip.dataset.selected = input.checked;
+            chip.setAttribute('aria-checked', input.checked);
+            
+            // Update visual appearance
+            updateChipAppearance(chip, input.checked);
+          } else {
+            // For radio buttons, always set to checked
+            input.checked = true;
+            
+            // Update all radio chips in the same group
+            document.querySelectorAll(`.filter-chip[data-name="${chip.dataset.name}"]`).forEach(radioChip => {
+              const radioInput = document.getElementById(`${radioChip.id}-input`);
+              const isSelected = radioChip === chip;
+              radioChip.dataset.selected = isSelected;
+              radioChip.setAttribute('aria-checked', isSelected);
+              updateChipAppearance(radioChip, isSelected);
+            });
+          }
+          
+          // Dispatch change event
+          input.dispatchEvent(new Event('change', { bubbles: true }));
+          
+          // Submit the form if configured to do so
+          if (onClick === 'submit' && input.form) {
+            input.form.submit();
+          }
+        });
+      }
+      
+      // Initial appearance update
+      updateChipAppearance(chip, input.checked);
+    });
+    
+    // Close button functionality
+    document.querySelectorAll('.filter-chip button[aria-label*="Remove"]').forEach(closeButton => {
+      closeButton.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent triggering the chip click
+        
+        const chip = closeButton.closest('.filter-chip');
+        const input = document.getElementById(`${chip.id}-input`);
+        
+        // Uncheck the input
+        input.checked = false;
+        chip.dataset.selected = false;
+        chip.setAttribute(chip.getAttribute('role') === 'button' ? 'aria-pressed' : 'aria-checked', 'false');
+        
+        // Update appearance
+        updateChipAppearance(chip, false);
+        
+        // Dispatch change event
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+        
+        // Submit the form if configured to do so
+        if (onClick === 'submit' && input.form) {
+          input.form.submit();
+        }
+      });
+    });
+  });
+  
+  function updateChipAppearance(chip, isSelected) {
+    const color = getChipColor(chip);
+    
+    // Remove all color classes
+    chip.classList.remove(
+      'bg-white', 'bg-gray-100', 'bg-blue-100', 'bg-green-100', 'bg-red-100', 'bg-yellow-100', 'bg-purple-100', 'bg-teal-100',
+      'text-gray-700', 'text-gray-800', 'text-blue-700', 'text-blue-800', 'text-green-700', 'text-green-800', 
+      'text-red-700', 'text-red-800', 'text-yellow-700', 'text-yellow-800', 'text-purple-700', 'text-purple-800',
+      'text-teal-700', 'text-teal-800',
+      'border-gray-300', 'border-gray-400', 'border-blue-300', 'border-blue-400', 'border-green-300', 'border-green-400',
+      'border-red-300', 'border-red-400', 'border-yellow-300', 'border-yellow-400', 'border-purple-300', 'border-purple-400',
+      'border-teal-300', 'border-teal-400'
+    );
+    
+    // Add appropriate color classes
+    if (isSelected) {
+      if (color === 'default') {
+        chip.classList.add('bg-gray-100', 'text-gray-800', 'border-gray-400');
+      } else {
+        chip.classList.add(`bg-${color}-100`, `text-${color}-800`, `border-${color}-400`);
+      }
+    } else {
+      chip.classList.add('bg-white', `text-${color === 'default' ? 'gray' : color}-700`, `border-${color === 'default' ? 'gray' : color}-300`, `hover:bg-${color === 'default' ? 'gray' : color}-50`);
+    }
+  }
+  
+  function getChipColor(chip) {
+    // Extract color from class names
+    const colorClasses = ['blue', 'green', 'red', 'yellow', 'purple', 'teal'];
+    for (const color of colorClasses) {
+      if (chip.classList.contains(`text-${color}-700`) || chip.classList.contains(`text-${color}-800`)) {
+        return color;
+      }
+    }
+    return 'default'; // Default to gray if no color is found
+  }
+</script>

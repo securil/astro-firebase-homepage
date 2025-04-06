@@ -1,0 +1,182 @@
+---
+// components/stats/RankingSection.astro
+import ChartContainer from '../ui/ChartContainer.astro';
+import PlayerCard from '../ui/PlayerCard.astro';
+import { getRankingData } from '../../lib/service/stats-util';
+
+export interface Props {
+  data: {
+    members: Array<any>;
+    scores: Array<any>;
+    meetings: Array<any>;
+  };
+  className?: string;
+  limit?: number;
+  showCards?: boolean;
+  chartHeight?: string;
+}
+
+const { 
+  data, 
+  className = '',
+  limit = 10,
+  showCards = true,
+  chartHeight = '450px'
+} = Astro.props;
+
+// 랭킹 데이터 준비
+const rankings = getRankingData(data, limit);
+
+// 차트 데이터 준비
+const labels = rankings.map(item => item.name);
+const scores = rankings.map(item => item.averageScore);
+const backgroundColors = rankings.map((_, i) => {
+  // 그라데이션 색상 효과를 위한 색상값 계산
+  const hue = 220 - (i * 120 / limit); // 파란색에서 보라색 계열로 변화
+  return `hsl(${hue}, 70%, 65%)`;
+});
+
+// 차트 데이터 JSON 문자열화
+const chartData = {
+  labels,
+  scores,
+  backgroundColors,
+  bestScores: rankings.map(item => item.bestScore)
+};
+---
+
+<div class={`ranking-section ${className}`}>
+  <ChartContainer 
+    title="회원 랭킹 (평균 스코어)" 
+    description="최소 3라운드 이상 참여한 회원의 평균 스코어 랭킹입니다." 
+    fullWidth={true}
+    titleIcon="trophy"
+    chartHeight={chartHeight}
+  >
+    <canvas id="ranking-chart"></canvas>
+  </ChartContainer>
+  
+  {showCards && rankings.length > 0 && (
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {rankings.slice(0, 3).map((player, index) => (
+        <PlayerCard
+          name={player.name}
+          generation={player.generation}
+          gender={player.gender}
+          bestScore={player.bestScore}
+          averageScore={player.averageScore}
+          bestRank={index + 1}
+          variant="detailed"
+          backgroundEffect={index === 0 ? "gradient" : "none"}
+          className={index === 0 ? "border-2 border-yellow-400" : ""}
+        />
+      ))}
+    </div>
+  )}
+</div>
+
+<script define:vars={{ chartData }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const ctx = document.getElementById('ranking-chart').getContext('2d');
+    
+    // 차트 생성
+    const rankingChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: chartData.labels,
+        datasets: [{
+          label: '평균 스코어',
+          data: chartData.scores,
+          backgroundColor: chartData.backgroundColors,
+          borderColor: 'rgba(0, 0, 0, 0.1)',
+          borderWidth: 1,
+          borderRadius: 4,
+          barThickness: 20,
+          maxBarThickness: 35
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                const index = context.dataIndex;
+                return [
+                  `평균 스코어: ${chartData.scores[index]}타`,
+                  `베스트 스코어: ${chartData.bestScores[index]}타`
+                ];
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            min: 60,
+            max: Math.max(110, ...chartData.scores) + 5,
+            grid: {
+              display: true,
+              color: 'rgba(0, 0, 0, 0.05)'
+            },
+            title: {
+              display: true,
+              text: '스코어 (타)'
+            }
+          },
+          y: {
+            grid: {
+              display: false
+            }
+          }
+        }
+      }
+    });
+    
+    // 차트 애니메이션 (옵션)
+    const animateChart = () => {
+      // 초기 상태 설정
+      rankingChart.data.datasets[0].data = Array(chartData.scores.length).fill(70);
+      rankingChart.update();
+      
+      // 애니메이션
+      setTimeout(() => {
+        rankingChart.data.datasets[0].data = chartData.scores;
+        rankingChart.update();
+      }, 500);
+    };
+    
+    // 차트가 화면에 보이는지 확인하는 함수
+    const isChartVisible = () => {
+      const rect = ctx.canvas.getBoundingClientRect();
+      return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+      );
+    };
+    
+    // 스크롤 이벤트 리스너 등록
+    let animated = false;
+    const handleScroll = () => {
+      if (!animated && isChartVisible()) {
+        animateChart();
+        animated = true;
+        window.removeEventListener('scroll', handleScroll);
+      }
+    };
+    
+    // 이미 화면에 보이면 애니메이션 실행, 아니면 스크롤 이벤트 등록
+    if (isChartVisible()) {
+      animateChart();
+      animated = true;
+    } else {
+      window.addEventListener('scroll', handleScroll);
+    }
+  });
+</script>

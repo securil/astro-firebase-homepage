@@ -1,0 +1,42 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import StatsTabs from '../components/stats/StatsTabs.jsx';
+import StatsSummary from '../components/stats/StatsSummary.jsx';
+import "../styles/stats.css";
+
+import {
+  getMembers,
+  getMeetings,
+  getScores,
+  getSpecialAwards,
+  calculateSummaryStats,
+  calculateSummaryStatsByYear
+} from '../lib/service/stats-util.js';
+
+const members = await getMembers();
+const meetings = await getMeetings();
+const scores = await getScores();
+const specialAwards = await getSpecialAwards();
+
+const rawData = { members, meetings, scores, specialAwards };
+const summaryStatsByYear = calculateSummaryStatsByYear(rawData);
+const totalStats = calculateSummaryStats(rawData);
+
+const pageTitle = '청구회 골프 스코어 분석 (2020-2024)';
+---
+
+<MainLayout title={pageTitle} currentPage="stats">
+  <!-- Hero Section -->
+  <section class="stats-hero">
+    <h1>청구회 골프 스코어 분석</h1>
+    <p>회원들의 스코어 데이터를 바탕으로 통계와 인사이트를 제공합니다.</p>
+  </section>
+
+
+  <!-- 연도별 탭 통계 -->
+  <section class="stats-container my-12">
+    <StatsTabs client:load statsByYear={summaryStatsByYear} />
+  </section>
+
+  <!-- 🔜 이후 추가 섹션: SpecialAwards, RankingSection, PlayerProgress 등 -->
+</MainLayout>

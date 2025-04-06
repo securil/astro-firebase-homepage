@@ -1,0 +1,334 @@
+---
+// components/ui/TabPanel.astro
+export interface TabItem {
+  id: string;
+  label: string;
+  icon?: string;
+  badge?: number | string;
+  disabled?: boolean;
+}
+
+export interface Props {
+  tabs: TabItem[];
+  activeTab?: string;
+  variant?: 'underline' | 'pills' | 'buttons' | 'cards';
+  size?: 'sm' | 'md' | 'lg';
+  centered?: boolean;
+  fullWidth?: boolean;
+  withIcons?: boolean;
+  className?: string;
+  contentClass?: string;
+  onChange?: "submit" | "javascript";
+  name?: string;
+  vertical?: boolean;
+  animated?: boolean;
+  tabsContainerClass?: string;
+}
+
+const { 
+  tabs, 
+  activeTab = tabs.length > 0 ? tabs[0].id : '',
+  variant = 'underline', 
+  size = 'md',
+  centered = false,
+  fullWidth = false,
+  withIcons = true,
+  className = '',
+  contentClass = '',
+  onChange = 'javascript',
+  name = 'tab-group',
+  vertical = false,
+  animated = true,
+  tabsContainerClass = ''
+} = Astro.props;
+
+// Size classes for tabs
+const sizeClasses = {
+  sm: 'text-sm py-1 px-2',
+  md: 'text-base py-2 px-3',
+  lg: 'text-lg py-2.5 px-4'
+};
+
+// Variant classes
+const variantClasses = {
+  underline: {
+    container: 'border-b border-gray-200',
+    tab: 'inline-block border-b-2 border-transparent',
+    active: 'border-b-2 border-indigo-600 text-indigo-600 font-medium',
+    inactive: 'text-gray-500 hover:text-gray-700 hover:border-gray-300'
+  },
+  pills: {
+    container: '',
+    tab: 'rounded-full',
+    active: 'bg-indigo-100 text-indigo-700 font-medium',
+    inactive: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+  },
+  buttons: {
+    container: 'bg-gray-100 p-1 rounded-lg',
+    tab: 'rounded-md',
+    active: 'bg-white shadow text-gray-900 font-medium',
+    inactive: 'text-gray-600 hover:text-gray-900'
+  },
+  cards: {
+    container: '',
+    tab: 'rounded-t-lg border-t border-l border-r border-transparent',
+    active: 'bg-white border-t border-l border-r border-gray-200 text-gray-900 font-medium -mb-px',
+    inactive: 'bg-gray-50 text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+  }
+};
+
+// Layout classes
+const layoutClasses = {
+  container: [
+    variant === 'underline' ? variantClasses.underline.container : '',
+    variant === 'buttons' ? variantClasses.buttons.container : '',
+    centered ? 'flex justify-center' : '',
+    fullWidth ? 'flex w-full' : 'inline-flex',
+    vertical ? 'flex-col' : '',
+    'tab-container',
+    tabsContainerClass
+  ].filter(Boolean).join(' '),
+  
+  tab: [
+    sizeClasses[size],
+    variant === 'underline' ? variantClasses.underline.tab : '',
+    variant === 'pills' ? variantClasses.pills.tab : '',
+    variant === 'buttons' ? variantClasses.buttons.tab : '',
+    variant === 'cards' ? variantClasses.cards.tab : '',
+    'focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2',
+    fullWidth && !vertical ? 'flex-1 text-center' : '',
+    'transition-all duration-200'
+  ].filter(Boolean).join(' '),
+  
+  activeTab: [
+    variant === 'underline' ? variantClasses.underline.active : '',
+    variant === 'pills' ? variantClasses.pills.active : '',
+    variant === 'buttons' ? variantClasses.buttons.active : '',
+    variant === 'cards' ? variantClasses.cards.active : ''
+  ].filter(Boolean).join(' '),
+  
+  inactiveTab: [
+    variant === 'underline' ? variantClasses.underline.inactive : '',
+    variant === 'pills' ? variantClasses.pills.inactive : '',
+    variant === 'buttons' ? variantClasses.buttons.inactive : '',
+    variant === 'cards' ? variantClasses.cards.inactive : ''
+  ].filter(Boolean).join(' ')
+};
+
+// Content panel classes
+const contentClasses = [
+  'tab-content', 
+  animated ? 'tab-content-animated' : '',
+  variant === 'cards' ? 'border border-gray-200 rounded-b-lg p-4 bg-white' : 'pt-4',
+  contentClass
+].filter(Boolean).join(' ');
+---
+
+<div class={`tab-panel ${vertical ? 'flex flex-row' : 'flex flex-col'} ${className}`}>
+  <div class={layoutClasses.container}>
+    {tabs.map((tab, index) => (
+      <button
+        class={`${layoutClasses.tab} ${tab.id === activeTab ? layoutClasses.activeTab : layoutClasses.inactiveTab} ${tab.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+        id={`tab-${tab.id}`}
+        data-tab={tab.id}
+        role="tab"
+        aria-selected={tab.id === activeTab ? 'true' : 'false'}
+        aria-controls={`panel-${tab.id}`}
+        disabled={tab.disabled}
+        data-index={index}
+      >
+        <div class="flex items-center justify-center">
+          {withIcons && tab.icon && (
+            <img 
+              src={`/images/icons/${tab.icon}.svg`} 
+              alt="" 
+              class={`${size === 'sm' ? 'w-4 h-4' : size === 'md' ? 'w-5 h-5' : 'w-6 h-6'} ${tab.label ? 'mr-2' : ''}`} 
+            />
+          )}
+          <span>{tab.label}</span>
+          {tab.badge && (
+            <span class={`ml-2 ${size === 'sm' ? 'text-xs' : 'text-sm'} bg-indigo-100 text-indigo-800 rounded-full px-2 py-0.5`}>
+              {tab.badge}
+            </span>
+          )}
+        </div>
+      </button>
+    ))}
+  </div>
+  
+  <div class={contentClasses}>
+    {/* 정적 슬롯 하나만 사용하고, 클라이언트 측 JavaScript로 내용 처리 */}
+    <slot />
+    
+    {tabs.map(tab => (
+      <div 
+        id={`panel-${tab.id}`}
+        class={`tab-pane ${tab.id === activeTab ? 'active' : 'hidden'}`}
+        role="tabpanel"
+        aria-labelledby={`tab-${tab.id}`}
+        data-tab-id={tab.id}
+      >
+        {/* 탭 패널 내용은 클라이언트 측 JavaScript로 처리됨 */}
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .tab-content-animated .tab-pane.active {
+    animation: fadeIn 0.3s ease-in;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<script define:vars={{ tabs, activeTab, onChange, name }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tabPanel = document.querySelector('.tab-panel');
+    const tabButtons = tabPanel.querySelectorAll('[role="tab"]');
+    const tabPanels = tabPanel.querySelectorAll('[role="tabpanel"]');
+    
+    // 슬롯 콘텐츠 처리 함수
+    function processSlotContent() {
+      // slot 속성을 가진 모든 직접 자식 요소를 찾음
+      const slotElements = Array.from(tabPanel.querySelectorAll(':scope > slot, :scope > div[slot]'));
+      
+      // 각 슬롯 요소에 대해 처리
+      slotElements.forEach(element => {
+        let slotName;
+        if (element.tagName.toLowerCase() === 'slot') {
+          slotName = element.getAttribute('name');
+        } else {
+          slotName = element.getAttribute('slot');
+        }
+        
+        // 슬롯 이름이 있는 경우만 처리
+        if (slotName) {
+          // 해당하는 탭 패널 찾기
+          const targetPanel = document.getElementById(`panel-${slotName}`);
+          if (targetPanel) {
+            // 패널에 콘텐츠 이동
+            targetPanel.appendChild(element);
+          }
+        }
+      });
+    }
+    
+    // 초기 슬롯 콘텐츠 처리
+    processSlotContent();
+    
+    // Initialize active tab from URL if present
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlTab = urlParams.get(name);
+    
+    if (urlTab) {
+      const matchingTab = Array.from(tabButtons).find(tab => tab.dataset.tab === urlTab);
+      if (matchingTab) {
+        setActiveTab(matchingTab.dataset.tab);
+      }
+    }
+    
+    // Set up click handlers
+    tabButtons.forEach(tab => {
+      if (!tab.disabled) {
+        tab.addEventListener('click', () => {
+          const tabId = tab.dataset.tab;
+          setActiveTab(tabId);
+          
+          // Handle URL parameter updates if using submit mode
+          if (onChange === 'submit') {
+            // Update URL without reload
+            const url = new URL(window.location);
+            url.searchParams.set(name, tabId);
+            window.history.pushState({}, '', url);
+            
+            // Trigger a custom event that forms can listen to
+            const event = new CustomEvent('tabChange', {
+              bubbles: true,
+              detail: { tabId, name }
+            });
+            tabPanel.dispatchEvent(event);
+          }
+        });
+      }
+    });
+    
+    // Function to set the active tab
+    function setActiveTab(tabId) {
+      // Update tab buttons
+      tabButtons.forEach(btn => {
+        const isActive = btn.dataset.tab === tabId;
+        btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        btn.classList.toggle('active', isActive);
+        
+        // Update active/inactive classes
+        const activeClass = btn.className.includes('underline') ? 'border-indigo-600 text-indigo-600 font-medium' :
+                           btn.className.includes('pill') ? 'bg-indigo-100 text-indigo-700 font-medium' :
+                           btn.className.includes('buttons') ? 'bg-white shadow text-gray-900 font-medium' :
+                           'bg-white border-t border-l border-r border-gray-200 text-gray-900 font-medium -mb-px';
+        
+        const inactiveClass = btn.className.includes('underline') ? 'text-gray-500 hover:text-gray-700 hover:border-gray-300' :
+                             btn.className.includes('pill') ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' :
+                             btn.className.includes('buttons') ? 'text-gray-600 hover:text-gray-900' :
+                             'bg-gray-50 text-gray-600 hover:text-gray-900 hover:bg-gray-100';
+        
+        // Remove both classes and add the appropriate one
+        btn.classList.remove(activeClass, inactiveClass);
+        btn.classList.add(isActive ? activeClass : inactiveClass);
+      });
+      
+      // Update tab panels
+      tabPanels.forEach(panel => {
+        const isPanelActive = panel.id === `panel-${tabId}`;
+        panel.classList.toggle('active', isPanelActive);
+        panel.classList.toggle('hidden', !isPanelActive);
+      });
+    }
+    
+    // Handle keyboard navigation
+    tabPanel.addEventListener('keydown', (e) => {
+      if (e.target.getAttribute('role') === 'tab') {
+        const tabs = Array.from(tabButtons);
+        const currentIndex = parseInt(e.target.dataset.index);
+        let nextIndex;
+        
+        switch (e.key) {
+          case 'ArrowRight':
+          case 'ArrowDown':
+            nextIndex = (currentIndex + 1) % tabs.length;
+            break;
+          case 'ArrowLeft':
+          case 'ArrowUp':
+            nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+            break;
+          case 'Home':
+            nextIndex = 0;
+            break;
+          case 'End':
+            nextIndex = tabs.length - 1;
+            break;
+          default:
+            return;
+        }
+        
+        // Skip disabled tabs
+        while (tabs[nextIndex].disabled) {
+          nextIndex = (nextIndex + 1) % tabs.length;
+        }
+        
+        tabs[nextIndex].focus();
+        tabs[nextIndex].click();
+        e.preventDefault();
+      }
+    });
+  });
+</script>

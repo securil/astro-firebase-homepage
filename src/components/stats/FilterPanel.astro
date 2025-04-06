@@ -1,0 +1,384 @@
+---
+// components/stats/FilterPanel.astro
+import FilterChip from '../ui/FilterChip.astro';
+
+export interface Props {
+  members: Array<any>;
+  currentFilters: {
+    name?: string;
+    generation?: string | number;
+    gender?: string;
+    year?: string | number;
+    course?: string;
+    dateRange?: string;
+  };
+  className?: string;
+  showDateFilter?: boolean;
+  showCourseFilter?: boolean;
+  showYearFilter?: boolean;
+  compact?: boolean;
+}
+
+const { 
+  members, 
+  currentFilters = {},
+  className = '',
+  showDateFilter = true,
+  showCourseFilter = true,
+  showYearFilter = true,
+  compact = false
+} = Astro.props;
+
+// 기수 목록 추출 및 정렬
+const generations = [...new Set(members.map(member => member.generation))]
+  .sort((a, b) => a - b);
+
+// 성별 옵션
+const genderOptions = [
+  { value: '', label: '전체' },
+  { value: '남성', label: '남성' },
+  { value: '여성', label: '여성' }
+];
+
+// 연도 옵션 (2020-2024)
+const yearOptions = [
+  { value: '', label: '전체 연도' },
+  { value: '2024', label: '2024년' },
+  { value: '2023', label: '2023년' },
+  { value: '2022', label: '2022년' },
+  { value: '2021', label: '2021년' },
+  { value: '2020', label: '2020년' }
+];
+
+// 주요 골프장 옵션 (예시)
+const courseOptions = [
+  { value: '', label: '전체 골프장' },
+  { value: '레이크사이드', label: '레이크사이드 CC' },
+  { value: '남서울', label: '남서울 CC' },
+  { value: '서원힐스', label: '서원힐스 CC' },
+  { value: '아트밸리', label: '아트밸리 CC' },
+  { value: '기타', label: '기타 골프장' }
+];
+
+// 레이아웃 클래스
+const layoutClass = compact ? 'space-y-4' : 'p-6 space-y-6';
+
+// 패널 배경 클래스
+const panelClass = compact 
+  ? 'bg-white border border-gray-100 rounded-lg shadow-sm'
+  : 'bg-white border border-gray-100 rounded-lg shadow-md';
+
+// 이전 필터 기록하기 위한 URL 생성
+const createFilterUrl = (filters) => {
+  const url = new URL(window.location.href);
+  Object.entries(filters).forEach(([key, value]) => {
+    if (value) {
+      url.searchParams.set(key, value);
+    } else {
+      url.searchParams.delete(key);
+    }
+  });
+  return url.toString();
+};
+---
+
+<div class={`filter-panel ${panelClass} ${className}`}>
+  <!-- 패널 헤더 -->
+  <div class="p-4 border-b border-gray-100 flex justify-between items-center">
+    <h2 class="text-lg font-semibold text-gray-800 flex items-center">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
+      </svg>
+      필터
+    </h2>
+    <button 
+      type="button" 
+      id="toggle-filter-panel"
+      class="text-gray-400 hover:text-gray-600 focus:outline-none" 
+      aria-label="필터 패널 토글"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+  </div>
+  
+  <!-- 필터 폼 -->
+  <div id="filter-content" class={layoutClass}>
+    <form id="filter-form" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <!-- 성함 검색 -->
+      <div class="form-group">
+        <label for="name-filter" class="block text-sm font-medium text-gray-700 mb-1">성함</label>
+        <div class="relative">
+          <input 
+            type="text" 
+            id="name-filter"
+            name="name"
+            value={currentFilters.name || ''} 
+            placeholder="이름으로 검색" 
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+          />
+          <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+            </svg>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 기수 선택 -->
+      <div class="form-group">
+        <label for="generation-filter" class="block text-sm font-medium text-gray-700 mb-1">기수</label>
+        <div class="relative">
+          <select 
+            id="generation-filter"
+            name="generation" 
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 appearance-none"
+          >
+            <option value="">전체 기수</option>
+            {generations.map(gen => (
+              <option 
+                value={gen} 
+                selected={currentFilters.generation == gen}
+              >
+                {gen}기
+              </option>
+            ))}
+          </select>
+          <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+            <svg class="w-5 h-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 성별 선택 -->
+      <div class="form-group">
+        <label class="block text-sm font-medium text-gray-700 mb-1">성별</label>
+        <div class="flex flex-wrap gap-3">
+          {genderOptions.map(option => (
+            <FilterChip
+              label={option.label}
+              value={option.value}
+              name="gender"
+              selected={currentFilters.gender === option.value}
+              color={option.value === '남성' ? 'blue' : option.value === '여성' ? 'purple' : 'default'}
+              type="radio"
+            />
+          ))}
+        </div>
+      </div>
+      
+      <!-- 연도 필터 -->
+      {showYearFilter && (
+        <div class="form-group md:col-span-2 lg:col-span-1">
+          <label class="block text-sm font-medium text-gray-700 mb-1">연도</label>
+          <div class="flex flex-wrap gap-2">
+            {yearOptions.map(option => (
+              <FilterChip
+                label={option.label}
+                value={option.value}
+                name="year"
+                selected={currentFilters.year === option.value}
+                size="sm"
+                type="radio"
+              />
+            ))}
+          </div>
+        </div>
+      )}
+      
+      <!-- 골프장 필터 -->
+      {showCourseFilter && (
+        <div class="form-group md:col-span-2 lg:col-span-1">
+          <label for="course-filter" class="block text-sm font-medium text-gray-700 mb-1">골프장</label>
+          <div class="relative">
+            <select 
+              id="course-filter"
+              name="course" 
+              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500 appearance-none"
+            >
+              {courseOptions.map(option => (
+                <option 
+                  value={option.value} 
+                  selected={currentFilters.course === option.value}
+                >
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+              <svg class="w-5 h-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      <!-- 날짜 범위 필터 -->
+      {showDateFilter && (
+        <div class="form-group md:col-span-2">
+          <label class="block text-sm font-medium text-gray-700 mb-1">기간</label>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="relative">
+              <input 
+                type="date" 
+                name="start_date" 
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="시작일"
+              />
+            </div>
+            <div class="relative">
+              <input 
+                type="date" 
+                name="end_date" 
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="종료일"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+      
+      <!-- 필터 적용 버튼 -->
+      <div class="col-span-full flex justify-end mt-2 gap-2">
+        <button 
+          type="reset" 
+          class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+          id="reset-filter"
+        >
+          초기화
+        </button>
+        <button 
+          type="submit" 
+          class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        >
+          필터 적용
+        </button>
+      </div>
+    </form>
+    
+    <!-- 현재 적용된 필터 표시 영역 -->
+    <div id="active-filters" class="mt-4 flex flex-wrap gap-2 pt-4 border-t border-gray-100">
+      <span class="text-sm text-gray-500 mr-2">적용된 필터:</span>
+      {Object.entries(currentFilters).filter(([_, value]) => value).length === 0 ? (
+        <span class="text-sm text-gray-400">없음</span>
+      ) : (
+        <>
+          {currentFilters.name && (
+            <div class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm flex items-center">
+              <span>이름: {currentFilters.name}</span>
+              <button class="ml-2 text-gray-500 hover:text-gray-700" data-filter-key="name">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          )}
+          
+          {currentFilters.generation && (
+            <div class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm flex items-center">
+              <span>기수: {currentFilters.generation}기</span>
+              <button class="ml-2 text-gray-500 hover:text-gray-700" data-filter-key="generation">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          )}
+          
+          {currentFilters.gender && (
+            <div class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm flex items-center">
+              <span>성별: {currentFilters.gender}</span>
+              <button class="ml-2 text-gray-500 hover:text-gray-700" data-filter-key="gender">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          )}
+          
+          {currentFilters.year && (
+            <div class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm flex items-center">
+              <span>연도: {currentFilters.year}년</span>
+              <button class="ml-2 text-gray-500 hover:text-gray-700" data-filter-key="year">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          )}
+          
+          {currentFilters.course && (
+            <div class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm flex items-center">
+              <span>골프장: {currentFilters.course}</span>
+              <button class="ml-2 text-gray-500 hover:text-gray-700" data-filter-key="course">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // 필터 패널 토글
+    const toggleFilterBtn = document.getElementById('toggle-filter-panel');
+    const filterContent = document.getElementById('filter-content');
+    
+    if (toggleFilterBtn && filterContent) {
+      toggleFilterBtn.addEventListener('click', () => {
+        filterContent.classList.toggle('hidden');
+        
+        // 아이콘 변경
+        const svg = toggleFilterBtn.querySelector('svg');
+        if (filterContent.classList.contains('hidden')) {
+          svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />';
+        } else {
+          svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />';
+        }
+      });
+    }
+    
+    // 필터 초기화 버튼
+    const resetFilterBtn = document.getElementById('reset-filter');
+    if (resetFilterBtn) {
+      resetFilterBtn.addEventListener('click', () => {
+        // URL 파라미터 제거하고 페이지 새로고침
+        window.location.href = window.location.pathname;
+      });
+    }
+    
+    // 개별 필터 제거 버튼
+    const removeFilterBtns = document.querySelectorAll('[data-filter-key]');
+    removeFilterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filterKey = btn.getAttribute('data-filter-key');
+        if (filterKey) {
+          const url = new URL(window.location.href);
+          url.searchParams.delete(filterKey);
+          window.location.href = url.toString();
+        }
+      });
+    });
+    
+    // FilterChip 컴포넌트 연동
+    document.querySelectorAll('.filter-chip-input').forEach(input => {
+      input.addEventListener('change', () => {
+        if (input.type === 'radio' && input.checked) {
+          const filterForm = document.getElementById('filter-form');
+          if (filterForm) {
+            filterForm.submit();
+          }
+        }
+      });
+    });
+  });
+</script>

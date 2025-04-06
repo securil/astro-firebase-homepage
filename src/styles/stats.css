@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .stats-container {
+    @apply max-w-7xl mx-auto px-4 py-8;
+  }
+
+  .stats-hero {
+    @apply text-center py-12 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg shadow-md mb-12 animate-fade-in;
+  }
+
+  .stats-hero h1 {
+    @apply text-4xl font-bold text-gray-800 mb-2;
+  }
+
+  .stats-hero p {
+    @apply text-gray-600 text-lg;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+}

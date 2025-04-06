@@ -1,0 +1,232 @@
+---
+// components/stats/GenerationComparison.astro
+import ChartContainer from '../ui/ChartContainer.astro';
+import ProgressBar from '../ui/ProgressBar.astro';
+import { getGenerationScoreData, getGenerationParticipationData } from '../../lib/service/stats-util';
+
+export interface Props {
+  data: {
+    members: Array<any>;
+    scores: Array<any>;
+    meetings: Array<any>;
+  };
+  className?: string;
+  showParticipation?: boolean;
+  chartHeight?: string;
+}
+
+const { 
+  data, 
+  className = '',
+  showParticipation = true,
+  chartHeight = '350px'
+} = Astro.props;
+
+// 기수별 평균 스코어 데이터 준비
+const genScoreData = getGenerationScoreData(data);
+
+// 기수별 참여 데이터 준비
+const participationData = showParticipation ? getGenerationParticipationData(data) : [];
+
+// 차트 데이터 준비
+const chartData = {
+  labels: genScoreData.map(item => `${item.generation}기`),
+  avgScores: genScoreData.map(item => item.averageScore),
+  memberCounts: genScoreData.map(item => item.memberCount),
+  participationRates: participationData.map(item => item.participationRate)
+};
+---
+
+<div class={`generation-comparison ${className}`}>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <ChartContainer 
+      title="기수별 평균 스코어" 
+      description="각 기수별 회원들의 평균 스코어 비교입니다." 
+      titleIcon="users"
+      chartHeight={chartHeight}
+    >
+      <canvas id="generation-score-chart"></canvas>
+    </ChartContainer>
+    
+    {showParticipation && (
+      <ChartContainer 
+        title="기수별 참여율" 
+        description="각 기수별 전체 회원 대비 실제 라운드 참여율입니다." 
+        titleIcon="chart-bar"
+        chartHeight={chartHeight}
+      >
+        <div class="p-4 space-y-6">
+          {participationData.map(item => (
+            <div>
+              <div class="flex justify-between mb-1">
+                <span class="text-sm font-medium">{item.generation}기</span>
+                <span class="text-sm text-gray-600">{item.activeMembers}/{item.totalMembers}명 참여</span>
+              </div>
+              <ProgressBar 
+                value={item.participationRate} 
+                max={100}
+                showValue={true}
+                valuePosition="right"
+                color={item.participationRate > 75 ? 'green' : item.participationRate > 50 ? 'blue' : item.participationRate > 25 ? 'yellow' : 'red'}
+                size="md"
+                striped={true}
+              />
+            </div>
+          ))}
+        </div>
+      </ChartContainer>
+    )}
+  </div>
+  
+  <div class="mt-8">
+    <ChartContainer 
+      title="기수별 회원 구성" 
+      description="각 기수별 회원 수와 참여 횟수를 보여줍니다." 
+      fullWidth={true}
+      titleIcon="chart-pie"
+    >
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+        {genScoreData.map(gen => (
+          <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+            <h3 class="text-lg font-bold text-center mb-2">{gen.generation}기</h3>
+            <div class="grid grid-cols-2 gap-2 text-center">
+              <div class="bg-white p-3 rounded-lg">
+                <p class="text-sm text-gray-500">회원 수</p>
+                <p class="text-xl font-bold">{gen.memberCount}명</p>
+              </div>
+              <div class="bg-white p-3 rounded-lg">
+                <p class="text-sm text-gray-500">평균 스코어</p>
+                <p class="text-xl font-bold">{gen.averageScore}타</p>
+              </div>
+              <div class="bg-white p-3 rounded-lg col-span-2">
+                <p class="text-sm text-gray-500">총 라운드 수</p>
+                <p class="text-xl font-bold">{gen.scoreCount}회</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </ChartContainer>
+  </div>
+</div>
+
+<script define:vars={{ chartData }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    // 기수별 평균 스코어 차트
+    const scoreCtx = document.getElementById('generation-score-chart').getContext('2d');
+    
+    const scoreChart = new Chart(scoreCtx, {
+      type: 'bar',
+      data: {
+        labels: chartData.labels,
+        datasets: [{
+          label: '평균 스코어',
+          data: chartData.avgScores,
+          backgroundColor: 'rgba(54, 162, 235, 0.7)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1,
+          borderRadius: 4,
+          order: 1
+        }, {
+          label: '회원 수',
+          data: chartData.memberCounts,
+          type: 'line',
+          fill: false,
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderDash: [5, 5],
+          pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+          pointRadius: 4,
+          order: 0,
+          yAxisID: 'y1'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          tooltip: {
+            mode: 'index',
+            intersect: false
+          },
+          legend: {
+            position: 'bottom'
+          }
+        },
+        scales: {
+          y: {
+            min: 60,
+            max: Math.max(120, ...chartData.avgScores) + 5,
+            title: {
+              display: true,
+              text: '평균 스코어 (타)'
+            },
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)'
+            }
+          },
+          y1: {
+            position: 'right',
+            min: 0,
+            max: Math.max(20, ...chartData.memberCounts) + 5,
+            title: {
+              display: true,
+              text: '회원 수 (명)'
+            },
+            grid: {
+              display: false
+            }
+          }
+        }
+      }
+    });
+    
+    // 스코어 차트 애니메이션
+    const animateScoreChart = () => {
+      // 초기 상태 설정
+      scoreChart.data.datasets[0].data = Array(chartData.avgScores.length).fill(70);
+      scoreChart.data.datasets[1].data = Array(chartData.memberCounts.length).fill(0);
+      scoreChart.update();
+      
+      // 점진적으로 실제 값으로 변경
+      setTimeout(() => {
+        scoreChart.data.datasets[0].data = chartData.avgScores;
+        scoreChart.data.datasets[1].data = chartData.memberCounts;
+        scoreChart.update();
+      }, 500);
+    };
+    
+    // 차트가 화면에 보이는지 확인
+    const isChartVisible = (canvas) => {
+      const rect = canvas.getBoundingClientRect();
+      return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+      );
+    };
+    
+    // 스크롤 이벤트 처리
+    let scoreAnimated = false;
+    
+    const handleScroll = () => {
+      if (!scoreAnimated && isChartVisible(scoreCtx.canvas)) {
+        animateScoreChart();
+        scoreAnimated = true;
+      }
+      
+      // 모든 차트가 애니메이션되면 스크롤 이벤트 제거
+      if (scoreAnimated) {
+        window.removeEventListener('scroll', handleScroll);
+      }
+    };
+    
+    // 초기 화면에 보이는지 체크
+    if (isChartVisible(scoreCtx.canvas)) {
+      animateScoreChart();
+      scoreAnimated = true;
+    } else {
+      window.addEventListener('scroll', handleScroll);
+    }
+  });
+</script>

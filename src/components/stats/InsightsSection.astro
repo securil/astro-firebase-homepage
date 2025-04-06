@@ -1,0 +1,237 @@
+---
+// components/stats/InsightsSection.astro
+import ChartContainer from '../ui/ChartContainer.astro';
+import { getSpecialAwardStats, getImprovedScoreData, getParticipationRate } from '../../lib/service/stats-util';
+
+export interface Props {
+  data: {
+    members: Array<any>;
+    scores: Array<any>;
+    meetings: Array<any>;
+    specialAwards?: Array<any>;
+  };
+  className?: string;
+  limit?: number;
+}
+
+const { 
+  data, 
+  className = '',
+  limit = 5
+} = Astro.props;
+
+// 특별상 통계 데이터
+const awardsStats = data.specialAwards ? getSpecialAwardStats(data) : { memberAwards: [], categories: [] };
+
+// 향상도 데이터 (가장 향상된 회원)
+const improvementData = getImprovedScoreData(data);
+const mostImproved = improvementData.filter(item => item.improvement < 0).slice(0, limit);
+
+// 참여율 데이터 (가장 활동적인 회원)
+const participationData = getParticipationRate(data);
+const mostActive = [...participationData].sort((a, b) => b.participatedCount - a.participatedCount).slice(0, limit);
+
+// 통계 인사이트 생성
+const insights = [];
+
+// 1. 가장 많이 참가한 회원
+if (mostActive.length > 0) {
+  const topMember = mostActive[0];
+  insights.push({
+    title: '최다 참여 회원',
+    content: `${topMember.name}님은 총 ${topMember.participatedCount}회 라운드에 참여하셨습니다. 전체 모임의 ${topMember.participationRate}%에 해당합니다.`,
+    icon: 'star'
+  });
+}
+
+// 2. 가장 향상된 회원
+if (mostImproved.length > 0) {
+  const topImproved = mostImproved[0];
+  const improvement = Math.abs(topImproved.improvement);
+  insights.push({
+    title: '최고 향상 회원',
+    content: `${topImproved.name}님은 초기 평균 ${topImproved.firstAverage}타에서 최근 ${topImproved.lastAverage}타로 ${improvement.toFixed(1)}타 향상되었습니다.`,
+    icon: 'trending-up'
+  });
+}
+
+// 3. 특별상 최다 수상자
+if (awardsStats.memberAwards.length > 0) {
+  const topAwards = awardsStats.memberAwards[0];
+  insights.push({
+    title: '특별상 최다 수상자',
+    content: `${topAwards.name}님은 총 ${topAwards.totalAwards}회의 특별상을 수상하셨습니다.`,
+    icon: 'award'
+  });
+}
+
+// 4. 스코어 분석 (평균, 표준편차 등)
+const scores = data.scores.map(s => s.gross_score);
+if (scores.length > 0) {
+  const avg = scores.reduce((sum, score) => sum + score, 0) / scores.length;
+  const min = Math.min(...scores);
+  const max = Math.max(...scores);
+  
+  insights.push({
+    title: '스코어 분포',
+    content: `전체 라운드의 평균 스코어는 ${avg.toFixed(1)}타이며, 최저 ${min}타에서 최고 ${max}타까지 기록되었습니다.`,
+    icon: 'chart-bar'
+  });
+}
+
+// 5. 모임 참가자 분석
+const meetingCounts = data.meetings.length;
+const avgParticipants = data.scores.length / (meetingCounts || 1);
+insights.push({
+  title: '모임 참가율',
+  content: `모임당 평균 ${avgParticipants.toFixed(1)}명이 참가하고 있으며, 전체 회원 ${data.members.length}명 중 ${((mostActive.length / data.members.length) * 100).toFixed(1)}%가 최소 1회 이상 참여했습니다.`,
+  icon: 'users'
+});
+
+// 랜덤 골프 팁 목록
+const golfTips = [
+  "일관된 스탠스와 그립은 스윙의 기본입니다. 항상 같은 방식으로 공을 세팅하세요.",
+  "과도한 힘을 주기보다 리듬감 있는 스윙을 유지하는 것이 더 좋은 스코어로 연결됩니다.",
+  "몸의 회전을 통해 파워를 생성하세요. 팔의 힘만으로 스윙하면 일관성이 떨어집니다.",
+  "숏게임과 퍼팅에 더 많은 연습 시간을 투자하세요. 대부분의 스코어 차이는 그린 근처에서 결정됩니다.",
+  "멘탈 게임도 중요합니다. 한 샷에 집중하고 이전 실수를 빨리 잊으세요.",
+  "코스 공략 계획을 세우는 것이 중요합니다. 항상 거리에 맞는 클럽을 선택하세요.",
+  "어려운 상황에선 안전한 선택을 하세요. 한 홀에서 큰 실수는 전체 스코어에 영향을 미칩니다.",
+  "바람의 방향과 세기를 항상 고려하세요. 특히 어프로치 샷에서 중요합니다.",
+  "자신의 한계를 알고 무리한 도전보다 안정적인 플레이를 선택하는 것이 좋습니다.",
+  "비거리보다 정확도에 집중하세요. 페어웨이에서 두 번째 샷을 치는 것이 더 유리합니다."
+];
+
+// 랜덤 팁 선택
+const randomTip = golfTips[Math.floor(Math.random() * golfTips.length)];
+---
+
+<div class={`insights-section ${className}`}>
+  <ChartContainer 
+    title="골프 스코어 인사이트" 
+    description="청구회 골프 데이터 분석을 통한 주요 인사이트입니다." 
+    fullWidth={true}
+    titleIcon="lightbulb"
+  >
+    <div class="p-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        {insights.map(insight => (
+          <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-5 hover:shadow-md transition-shadow">
+            <div class="flex items-start">
+              <div class="flex-shrink-0 bg-indigo-100 rounded-full p-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <div class="ml-4">
+                <h3 class="text-lg font-semibold text-gray-800">{insight.title}</h3>
+                <p class="mt-1 text-gray-600">{insight.content}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- 최고 향상 회원 -->
+        <div class="bg-gradient-to-br from-green-50 to-emerald-100 rounded-lg shadow-sm p-5">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">가장 향상된 회원</h3>
+          <div class="space-y-3">
+            {mostImproved.map((member, index) => (
+              <div class="flex items-center justify-between bg-white p-3 rounded-lg shadow-sm">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 bg-green-100 text-green-800 rounded-full w-8 h-8 flex items-center justify-center font-bold">
+                    {index + 1}
+                  </div>
+                  <div class="ml-3">
+                    <p class="font-medium">{member.name}</p>
+                    <p class="text-xs text-gray-500">{member.generation}기</p>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="flex items-center text-green-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="font-semibold">{Math.abs(member.improvement).toFixed(1)}타</span>
+                  </div>
+                  <p class="text-xs text-gray-500">{member.firstAverage}타 → {member.lastAverage}타</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        <!-- 최다 참여 회원 -->
+        <div class="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg shadow-sm p-5">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">가장 활동적인 회원</h3>
+          <div class="space-y-3">
+            {mostActive.map((member, index) => (
+              <div class="flex items-center justify-between bg-white p-3 rounded-lg shadow-sm">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 bg-blue-100 text-blue-800 rounded-full w-8 h-8 flex items-center justify-center font-bold">
+                    {index + 1}
+                  </div>
+                  <div class="ml-3">
+                    <p class="font-medium">{member.name}</p>
+                    <p class="text-xs text-gray-500">{member.generation}기</p>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <p class="font-semibold text-blue-700">{member.participatedCount}회</p>
+                  <p class="text-xs text-gray-500">{member.participationRate}% 참여율</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        <!-- 골프 팁 -->
+        <div class="bg-gradient-to-br from-amber-50 to-yellow-100 rounded-lg shadow-sm p-5">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">오늘의 골프 팁</h3>
+          <div class="bg-white p-5 rounded-lg shadow-sm">
+            <div class="flex mb-4">
+              <div class="bg-amber-100 rounded-full p-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+              </div>
+            </div>
+            <blockquote class="text-gray-600 italic">"{randomTip}"</blockquote>
+            <p class="mt-4 text-right text-sm text-gray-500">청구회 골프 가이드</p>
+          </div>
+          
+          <div class="mt-4 bg-white p-5 rounded-lg shadow-sm">
+            <h4 class="font-medium text-gray-800 mb-2">스코어 향상을 위한 체크리스트</h4>
+            <ul class="text-gray-600 space-y-2">
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                <span>일관된 프리샷 루틴 만들기</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                <span>퍼팅 연습 시간 늘리기</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                <span>코스 공략 전략 수립하기</span>
+              </li>
+              <li class="flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                <span>스코어 기록 및 분석하기</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ChartContainer>
+</div>
