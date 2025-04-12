@@ -142,41 +142,6 @@ const ScoreStats = ({ scoresData, membersData, meetingStatsData }) => {
     return <div className="text-center py-8">월별 성적 정보를 불러오는 중입니다...</div>;
   }
 
-  const getMonthlyChartData = () => {
-    const now = new Date();
-    const currentYear = now.getFullYear();
-    const currentMonth = now.getMonth() + 1;
-
-    const validData = scoresData.monthlyAverages
-      .filter(item => {
-        const [year, month] = item.month.split('-').map(Number);
-        if (year > currentYear || (year === currentYear && month > currentMonth)) return false;
-        return item.count > 0 && item.average !== undefined;
-      })
-      .sort((a, b) => a.month.localeCompare(b.month));
-
-    const recent = validData.slice(-13);
-    const labels = recent.map(item => {
-      const [year, month] = item.month.split('-');
-      return `${year.slice(2)}.${month}`;
-    });
-    const averages = recent.map(item => item.average);
-
-    return {
-      labels,
-      datasets: [{
-        label: '평균 타수',
-        data: averages,
-        borderColor: colors.primary.replace('0.7', '1'),
-        backgroundColor: colors.primary,
-        tension: 0.3,
-        fill: true,
-        pointBackgroundColor: colors.primary.replace('0.7', '1'),
-        pointRadius: 4,
-        pointHoverRadius: 6,
-      }]
-    };
-  };
 
   // 최근 6개 모임 데이터를 가져오는 공통 함수
   const getRecentMeetings = () => {
@@ -298,13 +263,6 @@ const ScoreStats = ({ scoresData, membersData, meetingStatsData }) => {
 
   return (
     <div className="score-stats space-y-8">
-      <div className="bg-white rounded-lg shadow p-6">
-        <h3 className="text-xl font-semibold mb-4">월별 평균 타수 추이</h3>
-        <div className="h-80">
-          <Line data={getMonthlyChartData()} options={{ responsive: true, plugins: { legend: { position: 'top' } } }} />
-        </div>
-      </div>
-
       {/* 최근 모임 차트 - 두 차트를 같은 행에 배치 */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white rounded-lg shadow p-6">
