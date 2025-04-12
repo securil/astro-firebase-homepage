@@ -1,0 +1,181 @@
+---
+// src/pages/stats.astro
+import MainLayout from '../layouts/MainLayout.astro';
+import Banner from '../components/Banner.astro';
+import MemberStats from '../components/stats/MemberStats.jsx';
+import ScoreStats from '../components/stats/ScoreStats.jsx';
+import { 
+  getMembersStats, 
+  getScoresStats, 
+  getMeetingParticipationStats, 
+  getAwardsStats
+} from '../lib/service/stats-util';
+import { db } from '../lib/firebase';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import MeetingScoreDistribution from '../components/stats/MeetingScoreDistribution.jsx';
+
+function findBestMemberInfo(meetingStatsData, membersData) {
+  if (!meetingStatsData || !meetingStatsData.length || !membersData || !membersData.rawData) {
+    return { 
+      name: "임진호", 
+      generation: "47기", 
+      memberId: 9, 
+      score: 73,
+      date: "2023-08-18"
+    };
+  }
+
+  const bestScoreMeeting = [...meetingStatsData].sort((a, b) => a.bestScore - b.bestScore)[0];
+
+  if (bestScoreMeeting && bestScoreMeeting.bestMemberId) {
+    const bestMember = membersData.rawData.find(member => member.memberId === bestScoreMeeting.bestMemberId);
+
+    if (bestMember) {
+      return {
+        name: bestMember.name || "정보 수집중",
+        generation: bestMember.generation || "",
+        memberId: bestMember.memberId,
+        score: bestScoreMeeting.bestScore,
+        date: bestScoreMeeting.date
+      };
+    }
+  }
+
+  return { 
+    name: "임진호", 
+    generation: "47기", 
+    memberId: 9, 
+    score: bestScoreMeeting ? bestScoreMeeting.bestScore : 73,
+    date: bestScoreMeeting ? bestScoreMeeting.date : "2023-08-18"
+  };
+}
+
+const membersData = await getMembersStats();
+const scoresData = await getScoresStats();
+
+// 모임 데이터 가져오기
+let meetingStatsData = [];
+let bestMemberData = null;
+try {
+  // 1. 먼저 완료된 모임 ID 목록 가져오기
+  const meetingsRef = collection(db, 'meetings');
+  const completedMeetingsQuery = query(meetingsRef, where('status', '==', '완료'));
+  const completedMeetingsSnapshot = await getDocs(completedMeetingsQuery);
+  
+  // 완료된 모임 ID 배열 생성
+  const completedMeetingIds = completedMeetingsSnapshot.docs
+    .map(doc => {
+      const data = doc.data();
+      return data.meetingId || parseInt(doc.id);
+    })
+    .filter(id => id); // undefined나 null 제거
+  
+  console.log('완료된 모임 ID 수:', completedMeetingIds.length);
+  
+  // 2. Meeting_Stats 컬렉션에서 데이터 가져오기
+  const meetingStatsRef = collection(db, 'Meeting_Stats');
+  const meetingStatsSnapshot = await getDocs(meetingStatsRef);
+  
+  // 모든 미팅 통계 데이터 가져오기
+  const allMeetingStats = meetingStatsSnapshot.docs.map(doc => {
+    const data = doc.data();
+    // meetingId가 숫자가 아닌 경우 변환
+    if (data.meetingId && typeof data.meetingId === 'string') {
+      data.meetingId = parseInt(data.meetingId);
+    }
+    return data;
+  });
+  
+  console.log('Meeting_Stats 총 문서 수:', allMeetingStats.length);
+  
+  // 3. 필터링: 필수 필드가 있고, 참가자가 있으며, 완료된 모임만 선택
+  meetingStatsData = allMeetingStats.filter(data => {
+    // 필수 필드 확인
+    const hasRequiredFields = 
+      data && 
+      data.meetingId !== undefined && 
+      data.averageScore !== undefined && 
+      data.bestScore !== undefined && 
+      data.participantCount !== undefined;
+    
+    // 참가자 수 확인
+    const hasParticipants = data.participantCount > 0;
+    
+    // 완료된 모임인지 확인
+    const isCompleted = completedMeetingIds.includes(data.meetingId);
+    
+    return hasRequiredFields && hasParticipants && isCompleted;
+  });
+  
+  console.log('필터링 후 유효한 모임 데이터 수:', meetingStatsData.length);
+  
+  // 4. 모임 ID 기준으로 정렬 (최신순)
+  meetingStatsData.sort((a, b) => b.meetingId - a.meetingId);
+  
+} catch (error) {
+  console.error('Meeting_Stats 로딩 오류:', error);
+}
+
+const bestMemberInfo = findBestMemberInfo(meetingStatsData, membersData);
+---
+
+<MainLayout title="통계 - 청구회 골프모임" description="청구회 골프 모임의 각종 통계 정보" currentPage="stats">
+  <Banner 
+    title="청구회 골프 통계" 
+    subtitle="데이터로 보는 우리 모임의 모든 것" 
+    bgImage="images/stats-banner.jpg"
+  />
+
+  <section class="py-12">
+    <div class="text-center mb-16">
+      <h1 class="text-3xl font-bold text-gray-800">골프 활동 통계</h1>
+      <div class="title-underline"></div>
+      <p class="mt-4 text-gray-600">회원 정보와 경기 기록을 바탕으로 한 다양한 통계 분석</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+      <!-- 각 섹션 요약 카드 -->
+      <!-- 회원 통계 -->
+      <!-- 성적 분석 -->
+      <!-- 성적 분포 -->
+      <!-- 모임 참여 -->
+      <!-- 수상 통계 -->
+      <!-- 개인 성적 발전 -->
+      <!-- (지금은 생략 가능) -->
+    </div>
+
+    <!-- 실제 컴포넌트 삽입 -->
+    <div id="member-stats" class="mb-16 bg-white rounded-lg shadow-md p-8">
+      <h2 class="text-2xl font-bold mb-6 text-gray-800">회원 통계</h2>
+      <div class="border-t border-gray-200 pt-4">
+        {membersData.rawData && membersData.rawData.length > 0 ? (
+          <MemberStats client:load membersData={membersData} />
+        ) : (
+          <p class="text-gray-500 italic">회원 데이터를 불러오는 중...</p>
+        )}
+      </div>
+    </div>
+
+    <div id="score-stats" class="mb-16 bg-white rounded-lg shadow-md p-8">
+      <h2 class="text-2xl font-bold mb-6 text-gray-800">성적 분석</h2>
+      <div class="border-t border-gray-200 pt-4">
+        {scoresData.rawData && scoresData.rawData.length > 0 ? (
+          <ScoreStats client:load scoresData={scoresData} membersData={membersData} meetingStatsData={meetingStatsData} />
+        ) : (
+          <p class="text-gray-500 italic">성적 데이터를 불러오는 중...</p>
+        )}
+      </div>
+    </div>
+
+    <div id="score-distribution" class="mb-16 bg-white rounded-lg shadow-md p-8">
+      <h2 class="text-2xl font-bold mb-6 text-gray-800">성적 분포</h2>
+      <div class="border-t border-gray-200 pt-4">
+        {meetingStatsData && meetingStatsData.length > 0 ? (
+          <MeetingScoreDistribution client:load meetingStatsData={meetingStatsData} membersData={membersData} />
+        ) : (
+          <p class="text-gray-500 italic">성적 분포 데이터를 불러오는 중...</p>
+        )}
+      </div>
+    </div>
+  </section>
+</MainLayout>

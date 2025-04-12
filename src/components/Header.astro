@@ -1,0 +1,81 @@
+---
+const { currentPage = 'home' } = Astro.props;
+const base = import.meta.env.BASE_URL;
+
+const menuItems = [
+  { name: '홈', url: '', id: 'home' },
+  { name: '소개', url: 'about', id: 'about' },
+  { name: '모임 일정', url: 'schedule', id: 'schedule' },
+  { name: '수상내역', url: 'awards', id: 'awards' },
+  { name: '통계', url: 'stats', id: 'stats' },
+  { name: '회원검색', url: 'stats2', id: 'stats2' },
+  { name: '통계-테스트', url: 'stats-test', id: 'stats-test' },
+];
+---
+
+<header class="sticky top-0 z-50 bg-white shadow-md">
+  <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+    <div class="logo">
+      <h1 class="text-2xl font-bold text-primary">
+        <a href={base} class="hover:opacity-80 transition-opacity">청구회</a>
+      </h1>
+    </div>
+    
+    <nav class="hidden md:block">
+      <ul class="flex gap-6">
+        {menuItems.map(item => (
+          <li>
+            <a 
+              href={`${base}${item.url}`} 
+              class={`relative py-2 hover:text-primary transition-colors ${currentPage === item.id ? 'text-primary font-medium after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary' : 'text-gray-700'}`}
+            >
+              {item.name}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    
+    <div class="hidden md:block">
+      <a href={`${base}login`} class="text-gray-700 hover:text-primary transition-colors">로그인</a>
+    </div>
+    
+    <button class="md:hidden hamburger-menu">
+      <span class="block w-6 h-0.5 bg-gray-700 mb-1.5"></span>
+      <span class="block w-6 h-0.5 bg-gray-700 mb-1.5"></span>
+      <span class="block w-6 h-0.5 bg-gray-700"></span>
+    </button>
+  </div>
+
+  <!-- 모바일 메뉴 -->
+  <div class="mobile-menu hidden md:hidden">
+    <div class="max-w-screen-xl mx-auto">
+      <ul class="py-4 px-4 bg-white border-t">
+        {menuItems.map(item => (
+          <li class="mb-2">
+            <a 
+              href={`${base}${item.url}`} 
+              class={`block py-2 px-4 ${currentPage === item.id ? 'text-primary font-medium bg-gray-50' : 'text-gray-700'}`}
+            >
+              {item.name}
+            </a>
+          </li>
+        ))}
+        <li>
+          <a href={`${base}login`} class="block py-2 px-4 text-gray-700">로그인</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<script>
+  const hamburger = document.querySelector('.hamburger-menu');
+  const mobileMenu = document.querySelector('.mobile-menu');
+  
+  if (hamburger && mobileMenu) {
+    hamburger.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+  }
+</script>

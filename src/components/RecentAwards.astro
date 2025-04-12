@@ -1,0 +1,109 @@
+---
+import AwardCard from './ui/AwardCard.astro';
+import { getMembers, getRecentCompletedMeetings, getSpecialAwardsByMeetingId, CATEGORY_MAP } from '../lib/service/awards-util.js';
+
+let recentMeetings = [];
+let membersMap = {};
+
+try {
+  const members = await getMembers();
+  membersMap = members.reduce((acc, m) => {
+    acc[m.id] = m;
+    return acc;
+  }, {});
+
+  recentMeetings = await getRecentCompletedMeetings(3);
+
+  const awardCategories = Object.keys(CATEGORY_MAP);
+
+  for (let meeting of recentMeetings) {
+    const date = new Date(meeting.date);
+    const month = date.getMonth() + 1;
+
+    meeting.image =
+      month === 9 ? `${import.meta.env.BASE_URL}images/golf-course-sep.webp`
+      : month === 10 ? `${import.meta.env.BASE_URL}images/golf-course-oct.webp`
+      : month === 11 ? `${import.meta.env.BASE_URL}images/golf-course-nov.webp`
+      : `${import.meta.env.BASE_URL}images/golf-course-default.webp`;
+
+    meeting.location = meeting.location || '장소 미정';
+    meeting.awards = {};
+
+    const awardsRaw = await getSpecialAwardsByMeetingId(meeting.id);
+
+    for (const category of awardCategories) {
+      const award = awardsRaw.find(a => a.category === category);
+      const memberId = award?.member_id;
+      const member = memberId ? membersMap[memberId] : null;
+
+      meeting.awards[category] = {
+        title: CATEGORY_MAP[category],
+        iconPath: `${import.meta.env.BASE_URL}images/svg/${category}.svg`,
+        memberName: member?.name || '데이터 집계중입니다.',
+        generation: member?.generation || '',
+        score: award?.score || null
+      };
+    }
+  }
+} catch (error) {
+  console.error('🔥 수상 데이터 로드 실패:', error);
+}
+---
+
+<section class="py-12 bg-gray-50 mb-8">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-center mb-2">
+      <h2 class="text-3xl font-bold text-center mx-auto">최근 수상 내역</h2>
+      <a href="/awards" class="absolute right-8 text-sm text-primary hover:text-secondary font-medium flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+    <div class="title-underline mb-10"></div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+      {recentMeetings.map(meeting => (
+        <div class="flex flex-col space-y-4">
+          <div class="relative rounded-lg shadow-md overflow-hidden">
+            <div class="h-36 relative">
+              <img src={meeting.image} alt={meeting.name} class="w-full h-full object-cover" />
+              <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+              <div class="absolute bottom-0 left-0 w-full p-4 text-white">
+                <h3 class="text-xl font-bold mb-1">{meeting.name}</h3>
+                <p class="text-sm opacity-90">{new Date(meeting.date).toLocaleDateString('ko-KR')}</p>
+                <p class="text-xs opacity-80">{meeting.location} {meeting.course || ''}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            {Object.entries(meeting.awards).map(([key, award]) => (
+              <AwardCard
+                title={award.title}
+                iconPath={award.iconPath}
+                memberName={award.memberName}
+                generation={award.generation}
+                score={award.score}
+              />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="text-center mt-10">
+      <a href={import.meta.env.BASE_URL + "awards"} class="btn-primary">모든 수상 내역 보기</a>
+    </div>
+  </div>
+</section>
+
+<style>
+.title-underline {
+  width: 80px;
+  height: 4px;
+  margin: 0 auto;
+  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  border-radius: 2px;
+}
+</style>

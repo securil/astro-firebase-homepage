@@ -1,0 +1,19 @@
+---
+// bgImage가 이미 전체 URL을 가지고 있는지 확인
+const { title, subtitle, bgImage = 'images/banner-bg.jpg', btnText, btnUrl } = Astro.props;
+const imagePath = bgImage.startsWith('http') || bgImage.startsWith('/') 
+  ? bgImage 
+  : `${import.meta.env.BASE_URL}${bgImage}`;
+---
+
+<section class="relative bg-cover bg-center py-20 md:py-32" style={`background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${imagePath})`}>
+  <div class="container mx-auto px-4 text-center text-white">
+    <h2 class="text-3xl md:text-5xl font-bold mb-4">{title}</h2>
+    {subtitle && <p class="text-xl md:text-2xl mb-6 max-w-xl mx-auto">{subtitle}</p>}
+    {btnText && btnUrl && (
+      <a href={btnUrl} class="inline-block bg-gradient-to-r from-primary to-secondary text-white py-3 px-8 rounded-md font-medium hover:-translate-y-1 transition-transform">
+        {btnText}
+      </a>
+    )}
+  </div>
+</section>

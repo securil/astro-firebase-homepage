@@ -1,0 +1,77 @@
+---
+// src/components/UpcomingMeetings.astro
+import { getUpcomingMeetings } from '../lib/service/schedule-util.js';
+import MeetingCard from './ui/MeetingCard.astro';
+
+// 로딩 상태 관리
+let isLoading = true;
+let errorOccurred = false;
+let upcomingMeetings = [];
+
+try {
+  // 파이어베이스에서 '예정' 상태인 다가오는 모임 3개 가져오기
+  console.log("Fetching upcoming meetings from Firebase...");
+  
+  // getUpcomingMeetings 함수는 이미 날짜순 정렬되고 limit 적용됨
+  // (useTestData 플래그 제거하여 실제 데이터 가져오기 시도)
+  upcomingMeetings = await getUpcomingMeetings(3);
+  
+  // 결과 확인 및 디버깅 로그
+  console.log(`Found ${upcomingMeetings.length} upcoming meetings`);
+  
+  if (upcomingMeetings.length > 0) {
+    if (upcomingMeetings[0].id === 'error') {
+      // 오류 문서가 반환됨
+      console.error("Error response received from getUpcomingMeetings");
+      errorOccurred = true;
+    } else {
+      // 성공적으로 데이터 수신
+      console.log("Successfully loaded upcoming meetings");
+    }
+  } else {
+    console.warn("No upcoming meetings found in database");
+  }
+  
+  isLoading = false;
+} catch (error) {
+  console.error("Exception while fetching upcoming meetings:", error);
+  errorOccurred = true;
+  isLoading = false;
+}
+---
+
+<section class="py-16 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center mb-2">다가오는 모임</h2>
+    <div class="w-24 h-1 bg-primary mx-auto mb-10"></div>
+    
+    {isLoading ? (
+      <div class="text-center py-8">
+        <p class="text-xl text-gray-500">확인중...</p>
+        <p class="mt-2 text-gray-400">다가오는 모임 정보를 불러오고 있습니다</p>
+      </div>
+    ) : errorOccurred ? (
+      <div class="text-center py-8">
+        <p class="text-xl text-red-500">데이터 로딩 오류</p>
+        <p class="mt-2 text-gray-500">모임 정보를 불러오는 중 문제가 발생했습니다</p>
+      </div>
+    ) : upcomingMeetings.length > 0 ? (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {upcomingMeetings.map(meeting => (
+          <MeetingCard meeting={meeting} showDetailLink={true} />
+        ))}
+      </div>
+    ) : (
+      <div class="text-center py-8">
+        <p class="text-xl text-gray-500">예정된 모임이 없습니다</p>
+        <p class="mt-2 text-gray-400">새로운 모임이 등록되면 이곳에 표시됩니다</p>
+      </div>
+    )}
+    
+    <div class="text-center mt-10">
+      <a href={import.meta.env.BASE_URL + "schedule"} class="inline-block bg-primary hover:bg-primary-dark text-white font-bold py-3 px-6 rounded-lg transition duration-300">
+        모든 일정 보기
+      </a>
+    </div>
+  </div>
+</section>

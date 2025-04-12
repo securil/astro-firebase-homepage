@@ -1,0 +1,79 @@
+---
+// src/components/GallerySection.astro
+
+// 갤러리 이미지 데이터
+const galleryItems = [
+  {
+    id: 1,
+    image: `${import.meta.env.BASE_URL}images/gallery/gallery-1.jpg`,
+    title: "2025년 봄 정기 모임",
+    description: "성남 남서울CC에서의 즐거운 라운딩"
+  },
+  {
+    id: 2,
+    image: `${import.meta.env.BASE_URL}images/gallery/gallery-2.jpg`,
+    title: "2024년 가을 대회",
+    description: "우승팀의 기념 촬영"
+  },
+  {
+    id: 3,
+    image: `${import.meta.env.BASE_URL}images/gallery/gallery-3.jpg`,
+    title: "친목 만찬",
+    description: "경기 후 회원들과의 즐거운 시간"
+  }
+];
+---
+
+<section class="py-16 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-10">
+      <h2 class="text-3xl font-bold mb-2 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">갤러리 하이라이트</h2>
+      <div class="title-underline"></div>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+      {galleryItems.map(item => (
+        <div class="gallery-item group relative overflow-hidden rounded-lg shadow-md transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+          <img 
+            src={item.image} 
+            alt={item.title} 
+            class="w-full h-64 object-cover"
+          />
+          <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <h3 class="text-lg font-semibold">{item.title}</h3>
+            <p class="text-sm text-gray-200">{item.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+    
+    <div class="text-center mt-10">
+      <a 
+        href="/gallery" 
+        class="inline-block bg-gradient-to-r from-primary to-secondary text-white py-3 px-8 rounded-md font-medium hover:-translate-y-1 transition-transform shadow-md"
+      >
+        갤러리 더보기
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* 갤러리 아이템 호버 효과를 위한 추가 스타일 */
+  .gallery-item::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.4), transparent 50%);
+    opacity: 0.2;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  
+  .gallery-item:hover::after {
+    opacity: 1;
+  }
+</style>

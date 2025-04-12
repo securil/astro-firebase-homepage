@@ -1,0 +1,42 @@
+{
+  "name": "chunggu-golf",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "deploy": "astro build && echo > dist/.nojekyll && gh-pages -d dist"
+  },
+  "dependencies": {
+    "@astrojs/react": "^4.2.3",
+    "@astrojs/tailwind": "^6.0.2",
+    "@tailwindcss/typography": "^0.5.16",
+    "astro": "^5.5.6",
+    "chart.js": "^4.4.8",
+    "d3": "^7.9.0",
+    "firebase": "^11.6.0",
+    "firebase-admin": "^13.2.0",
+    "react": "^19.1.0",
+    "react-chartjs-2": "^5.3.0",
+    "react-dom": "^19.1.0",
+    "recharts": "^2.15.2",
+    "tailwindcss": "^3.4.17"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.0.0"
+  },
+  "description": "```sh npm create astro@latest -- --template basics ```",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/securil/astro-firebase-homepage.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/securil/astro-firebase-homepage/issues"
+  },
+  "homepage": "https://github.com/securil/astro-firebase-homepage#readme"
+}

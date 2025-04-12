@@ -1,0 +1,138 @@
+---
+// src/components/ui/MeetingCard.astro
+// 모임 카드 컴포넌트 - 다가오는 모임과 모임 일정 페이지에서 공통으로 사용
+
+export interface Props {
+  meeting: {
+    id: number | string;
+    date: string;
+    name: string;
+    location: string;
+    course: string;
+    description?: string;
+    status?: string;
+    is_special_tournament?: boolean;
+  };
+}
+
+const { meeting } = Astro.props;
+
+// 날짜 포맷팅 함수
+function formatDate(dateString: string) {
+  const date = new Date(dateString);
+  const month = date.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+  const day = date.getDate();
+  const year = date.getFullYear();
+  
+  // 요일 가져오기
+  const weekday = date.toLocaleString('ko-KR', { weekday: 'short' }); // '월', '화' 등
+  
+  return { month, day, year, weekday, dateObj: date };
+}
+
+// D-Day 계산 함수
+function calculateDday(meetingDate: Date) {
+  const today = new Date();
+  
+  // 시간 부분 제거하여 날짜만 비교
+  today.setHours(0, 0, 0, 0);
+  const targetDate = new Date(meetingDate);
+  targetDate.setHours(0, 0, 0, 0);
+  
+  // 날짜 차이 계산 (밀리초)
+  const diffTime = targetDate.getTime() - today.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  if (diffDays === 0) {
+    return "D-Day";
+  } else if (diffDays > 0) {
+    return `D-${diffDays}`;
+  } else {
+    return `D+${Math.abs(diffDays)}`;
+  }
+}
+
+const { month, day, year, weekday, dateObj } = formatDate(meeting.date);
+const dday = calculateDday(dateObj);
+
+// 이미지 파일 경로 생성
+const imageNumber = typeof meeting.id === 'number' ? meeting.id % 5 + 1 : 1;
+const imagePath = `${import.meta.env.BASE_URL}images/meetings/${imageNumber}.jpg`;
+
+// D-day 색상 설정
+let ddayColor = "bg-blue-100 text-blue-800";
+if (dday === "D-Day") {
+  ddayColor = "bg-red-500 text-white";
+} else if (dday.startsWith("D-") && parseInt(dday.substring(2)) <= 7) {
+  // 7일 이내
+  ddayColor = "bg-orange-500 text-white";
+} else if (dday.startsWith("D+")) {
+  // 지난 날짜
+  ddayColor = "bg-gray-500 text-white";
+}
+
+// 콘솔에 디버그 정보 출력
+console.log("MeetingCard 렌더링:", {
+  meeting_id: meeting.id,
+  meeting_date: meeting.date,
+  dday: dday,
+  image_path: imagePath
+});
+---
+
+<div class="bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:-translate-y-2">
+  <div class="relative">
+    <img 
+      src={imagePath} 
+      alt={meeting.name} 
+      class="w-full h-48 object-cover"
+      onerror={`this.src='${import.meta.env.BASE_URL}images/banner-bg.jpg'; this.onerror=null;`}
+    />
+    
+    <!-- 달력 스타일의 날짜 표시 -->
+    <div class="absolute top-4 left-4 bg-white rounded-lg overflow-hidden shadow-lg text-center w-20">
+      <div class="bg-primary text-white text-xs font-bold py-1">{year}년</div>
+      <div class="text-xs font-semibold text-primary pt-1">{month}</div>
+      <div class="text-2xl font-bold">{day}</div>
+      <div class="text-xs text-gray-600 pb-1">{weekday}요일</div>
+    </div>
+    
+    <!-- D-day 표시 -->
+    <div class="absolute top-4 right-4">
+      <div class={`${ddayColor} text-xs font-bold px-3 py-1 rounded-full shadow-md`}>
+        {dday}
+      </div>
+    </div>
+    
+    {meeting.is_special_tournament && (
+      <div class="absolute bottom-4 right-4 bg-accent text-primary text-xs font-bold px-2 py-1 rounded">
+        특별대회
+      </div>
+    )}
+  </div>
+  <div class="p-6">
+    <h3 class="text-xl font-bold mb-2">{meeting.name}</h3>
+    <div class="flex items-center text-gray-600 text-sm mb-2">
+      <i class="fas fa-map-marker-alt mr-2 text-primary"></i>
+      <span>{meeting.location}</span>
+    </div>
+    <div class="flex items-center text-gray-600 text-sm mb-4">
+      <i class="fas fa-golf-ball mr-2 text-primary"></i>
+      <span>{meeting.course}</span>
+    </div>
+    {meeting.description && (
+      <p class="text-gray-600 mb-4 line-clamp-2">{meeting.description}</p>
+    )}
+    <div class="flex justify-between items-center">
+      <span class={`text-xs font-semibold px-2 py-1 rounded ${
+        meeting.status === '예정' 
+          ? 'bg-blue-100 text-blue-800' 
+          : meeting.status === '완료' 
+            ? 'bg-green-100 text-green-800' 
+            : 'bg-gray-100 text-gray-800'
+      }`}>
+        {meeting.status || '예정'}
+      </span>
+    </div>
+  </div>
+</div>

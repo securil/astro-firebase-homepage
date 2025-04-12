@@ -1,0 +1,47 @@
+---
+// src/components/IntroSection.astro
+// 이미지 경로는 public 폴더 기준입니다
+const imagePath = `${import.meta.env.BASE_URL}images/clubhouse.jpg`;
+---
+
+<section class="py-16 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-10">
+      <h2 class="text-3xl font-bold mb-2 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">청구회 소개</h2>
+      <div class="title-underline"></div>
+    </div>
+    
+    <div class="flex flex-col md:flex-row items-center max-w-5xl mx-auto">
+      <!-- 소개 텍스트 부분 -->
+      <div class="w-full md:w-1/2 mb-8 md:mb-0 md:pr-8">
+        <div class="space-y-4 text-center md:text-left">
+          <p class="text-gray-700 leading-relaxed">
+            청구회는 2010년부터 시작된 골프 동호회로, 매월 정기적인 모임을 통해 회원들의 골프 실력 향상과 친목 도모를 위해 활동하고 있습니다.
+          </p>
+          <p class="text-gray-700 leading-relaxed">
+            다양한 수준의 골퍼들이 함께하며 서로의 경험을 나누고 즐거운 시간을 보내고 있습니다.
+          </p>
+          <div class="mt-6">
+            <a 
+            href={import.meta.env.BASE_URL + "about"}
+              class="inline-block px-6 py-3 border-2 border-primary text-primary font-medium rounded-md hover:bg-primary hover:text-white transition-colors"
+            >
+              자세히 보기
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 이미지 부분 -->
+      <div class="w-full md:w-1/2">
+        <div class="relative overflow-hidden rounded-lg shadow-xl">
+          <img 
+            src={imagePath} 
+            alt="골프 클럽하우스" 
+            class="w-full h-auto transform hover:scale-105 transition-transform duration-500"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

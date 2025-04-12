@@ -1,0 +1,59 @@
+---
+// src/components/Footer.astro
+const currentYear = new Date().getFullYear();
+
+// 푸터 링크 배열
+const footerLinks = [
+  { name: '홈', url: '/' },
+  { name: '소개', url: '/about' },
+  { name: '모임 일정', url: '/schedule' },
+  { name: '수상내역', url: '/awards' }
+];
+---
+
+<footer class="bg-gray-800 text-white pt-12 pb-6 mt-12">
+  <div class="container mx-auto px-4">
+    <div class="flex flex-wrap justify-around max-w-6xl mx-auto">
+      <!-- 로고 및 모토 섹션 -->
+      <div class="w-full md:w-1/3 mb-8 md:mb-0">
+        <h3 class="text-2xl font-bold mb-2">청구회</h3>
+        <p class="text-gray-300 mb-4">함께하는 골프, 함께하는 열정</p>
+      </div>
+      
+      <!-- 링크 섹션 -->
+      <div class="w-full md:w-1/3 mb-8 md:mb-0">
+        <h4 class="text-lg font-semibold mb-4">바로가기</h4>
+        <ul class="space-y-2">
+          {footerLinks.map(link => (
+            <li>
+              <a 
+                href={link.url} 
+                class="text-gray-300 hover:text-white transition-colors"
+              >
+                {link.name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+      
+      <!-- 연락처 섹션 -->
+      <div class="w-full md:w-1/3">
+        <h4 class="text-lg font-semibold mb-4">연락처</h4>
+        <p class="flex items-center text-gray-300 mb-2">
+          <i class="fas fa-envelope mr-2"></i>
+          <span>email@chunggu.com</span>
+        </p>
+        <p class="flex items-center text-gray-300">
+          <i class="fas fa-phone mr-2"></i>
+          <span>010-1234-5678</span>
+        </p>
+      </div>
+    </div>
+    
+    <!-- 카피라이트 섹션 -->
+    <div class="border-t border-gray-700 mt-8 pt-6 text-center">
+      <p class="text-gray-400">&copy; {currentYear} 청구회. All Rights Reserved.</p>
+    </div>
+  </div>
+</footer>

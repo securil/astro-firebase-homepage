@@ -1,0 +1,98 @@
+---
+import Layout from '../layouts/MainLayout.astro';
+import Banner from '../components/Banner.astro';
+import AwardCard from '../components/ui/AwardCard.astro';
+import { getYearlyMeetings, getMembersMap, getSpecialAwardsByMeetingId, CATEGORY_MAP } from '../lib/service/awards-util.js';
+
+const { year } = Astro.params;
+const selectedYear = Number(year) || 2024;
+const meetings = (await getYearlyMeetings(selectedYear)).reverse();
+const membersMap = await getMembersMap();
+
+for (let meeting of meetings) {
+  const date = new Date(meeting.date);
+  const month = date.getMonth() + 1;
+
+  meeting.image =
+  month === 9 ? `${import.meta.env.BASE_URL}images/golf-course-sep.webp`
+  : month === 10 ? `${import.meta.env.BASE_URL}images/golf-course-oct.webp`
+  : month === 11 ? `${import.meta.env.BASE_URL}images/golf-course-nov.webp`
+  : `${import.meta.env.BASE_URL}images/golf-course-default.webp`;
+
+  const awardsRaw = await getSpecialAwardsByMeetingId(meeting.id);
+  meeting.awards = {};
+
+  for (const category of Object.keys(CATEGORY_MAP)) {
+    const award = awardsRaw.find(a => a.category === category);
+    const memberId = award?.member_id;
+    const member = memberId ? membersMap[memberId] : null;
+
+    meeting.awards[category] = {
+      title: CATEGORY_MAP[category],
+      iconPath: `${import.meta.env.BASE_URL}images/svg/${category}.svg`,
+      memberName: member?.name || '현재 집계중입니다.',
+      generation: member?.generation || '',
+      score: award?.score || null
+    };
+  }
+}
+---
+
+<Layout>
+  <Banner
+    title="수상 내역"
+    subtitle="각 연도별 정기 모임에서의 특별상 및 메달리스트를 확인하세요."
+    backgroundImage={`${import.meta.env.BASE_URL}images/about-banner.png`}
+  />
+
+  <section class="py-12 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+        <h2 class="text-3xl font-bold mb-4 md:mb-0">{selectedYear} 수상 내역</h2>
+        <div class="flex gap-2">
+          {[2022, 2023, 2024, 2025].map(y => (
+            <a 
+              href={`${import.meta.env.BASE_URL}awards/${y}/index.html`} 
+              class={`px-4 py-1 rounded-md text-sm font-medium transition ${y == selectedYear ? 'bg-primary text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'}`}
+            >
+              {y}
+            </a>
+          ))}
+        </div>
+      </div>
+      {meetings.length === 0 ? (
+        <p class="text-center text-gray-500">수상 내역이 없습니다.</p>
+      ) : (
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+          {meetings.map(meeting => (
+            <div class="flex flex-col space-y-4">
+              <div class="relative rounded-lg shadow-md overflow-hidden">
+                <div class="h-36 relative">
+                  <img src={meeting.image} alt={meeting.name} class="w-full h-full object-cover" />
+                  <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                  <div class="absolute bottom-0 left-0 w-full p-4 text-white">
+                    <h3 class="text-xl font-bold mb-1">{meeting.name}</h3>
+                    <p class="text-sm opacity-90">{new Date(meeting.date).toLocaleDateString('ko-KR')}</p>
+                    <p class="text-xs opacity-80">{meeting.location} {meeting.course || ''}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                {Object.values(meeting.awards).map(award => (
+                  <AwardCard
+                    title={award.title}
+                    iconPath={award.iconPath}
+                    memberName={award.memberName}
+                    generation={award.generation}
+                    score={award.score}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</Layout>

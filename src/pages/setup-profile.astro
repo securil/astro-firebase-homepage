@@ -1,0 +1,52 @@
+---
+// src/pages/setup-profile.astro
+import MainLayout from '../layouts/MainLayout.astro';
+---
+
+<MainLayout title="회원정보 입력" currentPage="signup">
+  <section class="py-10">
+    <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+      <h2 class="text-xl font-semibold text-center mb-6">회원 정보 입력</h2>
+      <form id="profileForm" class="space-y-4">
+        <input type="text" name="name" placeholder="이름" required class="w-full border px-4 py-2 rounded" />
+        <input type="tel" name="phone" placeholder="전화번호 (예: 01012345678)" required class="w-full border px-4 py-2 rounded" />
+        <input type="password" name="password" placeholder="비밀번호 설정" required class="w-full border px-4 py-2 rounded" />
+        <button type="submit" class="btn-primary w-full">정보 저장</button>
+      </form>
+    </div>
+  </section>
+
+  <script type="module">
+    import { db, auth } from '../../lib/firebase.js';
+    import { doc, setDoc } from 'firebase/firestore';
+
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = e.target.name.value;
+      const phone = e.target.phone.value;
+      const password = e.target.password.value;
+      const uid = auth.currentUser?.uid;
+
+      if (!uid) {
+        alert('로그인이 필요합니다.');
+        location.href = '/login';
+        return;
+      }
+
+      const loginId = name + phone.slice(-4);
+
+      await setDoc(doc(db, "users", uid), {
+        uid,
+        name,
+        phone,
+        loginId,
+        password, // 실서비스에서는 반드시 암호화 필요
+        createdAt: new Date(),
+        role: 'member'
+      });
+
+      alert("정보가 저장되었습니다!");
+      location.href = '/mypage';
+    });
+  </script>
+</MainLayout>

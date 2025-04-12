@@ -1,0 +1,81 @@
+---
+// src/components/ui/AwardCard.astro
+// 청구회 골프모임 개별 수상 카드 컴포넌트
+
+export interface Props {
+  title: string;
+  iconPath: string;
+  memberName: string;
+  generation?: string;
+  score?: string | number;
+  className?: string;
+}
+
+const { title, iconPath, memberName, generation, score, className = "" } = Astro.props;
+---
+
+<div class={`award-card bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden ${className}`}>
+  <div class="flex items-center p-3">
+    <div class="flex-shrink-0 w-12 h-12 mr-3 flex items-center justify-center icon-container">
+      <img src={iconPath} alt={title} class="w-full h-full relative z-10" />
+      <div class="pulse-effect"></div>
+    </div>
+    <div class="flex-grow min-w-0">
+      <h4 class="text-xs font-medium text-gray-500 truncate">{title}</h4>
+      <div class="flex justify-between items-baseline">
+        <p class="text-base font-bold text-gray-800 truncate">
+          {memberName || "미정"}
+          {generation && <span class="text-xs text-gray-500 ml-1">{generation}기</span>}
+        </p>
+        {score && (
+          <span class="text-sm font-medium text-green-600 ml-2 flex-shrink-0">{score}</span>
+        )}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .award-card {
+    transition: all 0.3s ease;
+  }
+  
+  .award-card:hover {
+    transform: translateY(-3px);
+    border-left: 3px solid #0a5f38;
+  }
+  
+  .icon-container {
+    position: relative;
+  }
+  
+  .pulse-effect {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: rgba(10, 95, 56, 0.2);
+    z-index: 1;
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% {
+      transform: scale(0.95);
+      opacity: 0.7;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 0.3;
+    }
+    100% {
+      transform: scale(0.95);
+      opacity: 0.7;
+    }
+  }
+  
+  .award-card:hover .pulse-effect {
+    animation-duration: 1.5s;
+    background-color: rgba(10, 95, 56, 0.3);
+  }
+</style>
