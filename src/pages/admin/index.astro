@@ -1,0 +1,103 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+---
+
+<MainLayout title="관리자 대시보드">
+  <div id="adminContent" class="hidden">
+    <div class="bg-white shadow-md rounded-lg p-6">
+      <h1 class="text-2xl font-bold mb-6">관리자 대시보드</h1>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- 회원 관리 카드 -->
+        <div class="bg-blue-50 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+          <h2 class="text-xl font-semibold mb-3">회원 관리</h2>
+          <p class="text-gray-600 mb-4">회원 정보 조회, 추가, 수정 및 삭제</p>
+          <a 
+            href="/admin/members" 
+            class="inline-block bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+          >
+            관리하기
+          </a>
+        </div>
+        
+        <!-- 모임 관리 카드 -->
+        <div class="bg-green-50 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+          <h2 class="text-xl font-semibold mb-3">모임 관리</h2>
+          <p class="text-gray-600 mb-4">모임 일정 및 결과 관리</p>
+          <a 
+            href="/admin/meetings" 
+            class="inline-block bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
+          >
+            관리하기
+          </a>
+        </div>
+        
+        <!-- 수상 관리 카드 -->
+        <div class="bg-yellow-50 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+          <h2 class="text-xl font-semibold mb-3">수상 내역 관리</h2>
+          <p class="text-gray-600 mb-4">모임별 수상 결과 등록 및 관리</p>
+          <a 
+            href="/admin/awards" 
+            class="inline-block bg-yellow-600 text-white py-2 px-4 rounded hover:bg-yellow-700"
+          >
+            관리하기
+          </a>
+        </div>
+        
+        <!-- 점수 관리 카드 -->
+        <div class="bg-indigo-50 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+          <h2 class="text-xl font-semibold mb-3">점수 관리</h2>
+          <p class="text-gray-600 mb-4">회원별 스코어 기록 및 통계 관리</p>
+          <a 
+            href="/admin/scores" 
+            class="inline-block bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700"
+          >
+            관리하기
+          </a>
+        </div>
+        
+        <!-- 시스템 설정 카드 -->
+        <div class="bg-purple-50 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+          <h2 class="text-xl font-semibold mb-3">시스템 설정</h2>
+          <p class="text-gray-600 mb-4">관리자 계정 및 권한 설정</p>
+          <a 
+            href="/admin/settings" 
+            class="inline-block bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700"
+          >
+            설정하기
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div id="unauthorizedContent" class="bg-white shadow-md rounded-lg p-6 text-center">
+    <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-16 w-16 text-red-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+    </svg>
+    <h1 class="text-2xl font-bold mb-2">접근 권한 없음</h1>
+    <p class="text-gray-600 mb-6">관리자 권한이 필요한 페이지입니다. 로그인 후 이용해주세요.</p>
+    <a href="/login" class="inline-block bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+      로그인 페이지로
+    </a>
+  </div>
+  
+  <script>
+    // 로그인 상태 및 관리자 여부 확인
+    const userJson = sessionStorage.getItem('user');
+    const user = userJson ? JSON.parse(userJson) : null;
+    
+    const adminContent = document.getElementById('adminContent');
+    const unauthorizedContent = document.getElementById('unauthorizedContent');
+    
+    if (user && user.isAdmin) {
+      // 관리자인 경우 관리자 컨텐츠 표시
+      if (adminContent) adminContent.classList.remove('hidden');
+      if (unauthorizedContent) unauthorizedContent.classList.add('hidden');
+    } else {
+      // 관리자가 아닌 경우 접근 권한 없음 메시지 표시
+      if (adminContent) adminContent.classList.add('hidden');
+      if (unauthorizedContent) unauthorizedContent.classList.remove('hidden');
+    }
+  </script>
+</MainLayout>

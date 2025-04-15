@@ -31,11 +31,21 @@ const menuItems = [
             </a>
           </li>
         ))}
+        <li id="adminMenu" class="hidden">
+          <a 
+            href={`${base}admin`} 
+            class="relative py-2 text-yellow-600 hover:text-yellow-700 transition-colors font-medium"
+          >
+            관리자
+          </a>
+        </li>
       </ul>
     </nav>
     
     <div class="hidden md:block">
-      <a href={`${base}login`} class="text-gray-700 hover:text-primary transition-colors">로그인</a>
+      <div id="userSection">
+        <a href={`${base}login`} id="loginBtn" class="text-gray-700 hover:text-primary transition-colors">로그인</a>
+      </div>
     </div>
     
     <button class="md:hidden hamburger-menu">
@@ -59,7 +69,10 @@ const menuItems = [
             </a>
           </li>
         ))}
-        <li>
+        <li id="mobileAdminMenu" class="mb-2 hidden">
+          <a href={`${base}admin`} class="block py-2 px-4 text-yellow-600 font-medium">관리자</a>
+        </li>
+        <li id="mobileLoginSection">
           <a href={`${base}login`} class="block py-2 px-4 text-gray-700">로그인</a>
         </li>
       </ul>
@@ -68,6 +81,7 @@ const menuItems = [
 </header>
 
 <script>
+  // 햄버거 메뉴 토글
   const hamburger = document.querySelector('.hamburger-menu');
   const mobileMenu = document.querySelector('.mobile-menu');
   
@@ -75,5 +89,59 @@ const menuItems = [
     hamburger.addEventListener('click', () => {
       mobileMenu.classList.toggle('hidden');
     });
+  }
+  
+  // 로그인 상태 확인
+  const userJson = sessionStorage.getItem('user');
+  const user = userJson ? JSON.parse(userJson) : null;
+  
+  if (user) {
+    // 데스크톱 메뉴 업데이트
+    const userSection = document.getElementById('userSection');
+    if (userSection) {
+      userSection.innerHTML = `
+        <div class="flex items-center gap-3">
+          <span class="text-gray-700">${user.displayName || user.email}</span>
+          <button id="logoutBtn" class="text-red-600 hover:text-red-700 transition-colors">로그아웃</button>
+        </div>
+      `;
+    }
+    
+    // 모바일 메뉴 업데이트
+    const mobileLoginSection = document.getElementById('mobileLoginSection');
+    if (mobileLoginSection) {
+      mobileLoginSection.innerHTML = `
+        <div class="block py-2 px-4">
+          <span class="text-gray-700 block">${user.displayName || user.email}</span>
+          <button id="mobileLogoutBtn" class="text-red-600 hover:text-red-700 mt-1">로그아웃</button>
+        </div>
+      `;
+    }
+    
+    // 관리자 메뉴 표시
+    if (user.isAdmin) {
+      const adminMenu = document.getElementById('adminMenu');
+      if (adminMenu) adminMenu.classList.remove('hidden');
+      
+      const mobileAdminMenu = document.getElementById('mobileAdminMenu');
+      if (mobileAdminMenu) mobileAdminMenu.classList.remove('hidden');
+    }
+    
+    // 로그아웃 이벤트 리스너
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', () => {
+        sessionStorage.removeItem('user');
+        window.location.reload();
+      });
+    }
+    
+    const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+    if (mobileLogoutBtn) {
+      mobileLogoutBtn.addEventListener('click', () => {
+        sessionStorage.removeItem('user');
+        window.location.reload();
+      });
+    }
   }
 </script>

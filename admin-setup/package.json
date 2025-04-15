@@ -1,0 +1,16 @@
+{
+  "name": "chunggu-admin-setup",
+  "version": "1.0.0",
+  "description": "청구회 관리자 계정 설정 스크립트",
+  "main": "admin-setup.js",
+  "dependencies": {
+    "firebase-admin": "^11.11.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}

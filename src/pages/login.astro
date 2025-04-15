@@ -1,0 +1,115 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+
+// 테스트용 사용자 계정 목록 (실제로는 데이터베이스에서 가져와야 함)
+const userAccounts = [
+  { email: 'admin@example.com', password: 'password', displayName: '관리자', isAdmin: true },
+  { email: 'member1@example.com', password: 'member1', displayName: '김회원', isAdmin: false },
+  { email: 'member2@example.com', password: 'member2', displayName: '이회원', isAdmin: false },
+  { email: 'member3@example.com', password: 'member3', displayName: '박회원', isAdmin: false }
+];
+
+// 폼 제출 처리
+let errorMessage = '';
+if (Astro.request.method === 'POST') {
+  try {
+    // URL 인코딩된 폼 데이터를 직접 파싱
+    const body = await Astro.request.text();
+    const formData = new URLSearchParams(body);
+    const email = formData.get('email') || '';
+    const password = formData.get('password') || '';
+    
+    // 로그인 검증
+    const user = userAccounts.find(account => 
+      account.email === email && account.password === password
+    );
+    
+    if (user) {
+      // 성공 시 리다이렉트 (사용자 정보를 쿼리 파라미터에 포함)
+      return Astro.redirect(`/?login=success&email=${encodeURIComponent(email)}`);
+    } else {
+      errorMessage = '로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.';
+    }
+  } catch (error) {
+    console.error('로그인 폼 처리 오류:', error);
+    errorMessage = '로그인 처리 중 오류가 발생했습니다.';
+  }
+}
+---
+
+<MainLayout title="로그인">
+  <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md">
+    <h1 class="text-2xl font-bold text-center mb-6">로그인</h1>
+    
+    {errorMessage && (
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+        <span class="block sm:inline">{errorMessage}</span>
+      </div>
+    )}
+    
+    <form method="POST" enctype="application/x-www-form-urlencoded" class="space-y-4">
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">이메일</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+      
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">비밀번호</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          required
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+      
+      <button
+        type="submit"
+        class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+      >
+        로그인
+      </button>
+    </form>
+    
+    <!-- 테스트 계정 정보 (개발용, 실제 서비스에서는 제거) -->
+    <div class="mt-8 p-4 bg-gray-50 rounded-lg">
+      <h3 class="text-sm font-medium text-gray-700 mb-2">테스트 계정 정보</h3>
+      <ul class="text-xs text-gray-600 space-y-1">
+        <li><strong>관리자:</strong> admin@example.com / password</li>
+        <li><strong>회원1:</strong> member1@example.com / member1</li>
+        <li><strong>회원2:</strong> member2@example.com / member2</li>
+        <li><strong>회원3:</strong> member3@example.com / member3</li>
+      </ul>
+    </div>
+  </div>
+  
+  <script>
+    // 로그인 성공 시 세션 스토리지에 사용자 정보 저장
+    if (window.location.search.includes('login=success')) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const email = urlParams.get('email');
+      
+      // 이메일에 해당하는 사용자 정보 찾기 (클라이언트에서 다시 체크)
+      const userAccounts = [
+        { email: 'admin@example.com', displayName: '관리자', isAdmin: true },
+        { email: 'member1@example.com', displayName: '김회원', isAdmin: false },
+        { email: 'member2@example.com', displayName: '이회원', isAdmin: false },
+        { email: 'member3@example.com', displayName: '박회원', isAdmin: false }
+      ];
+      
+      const user = userAccounts.find(account => account.email === email);
+      
+      if (user) {
+        sessionStorage.setItem('user', JSON.stringify(user));
+        window.location.href = '/';
+      }
+    }
+  </script>
+</MainLayout>
