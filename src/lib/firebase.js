@@ -4,15 +4,16 @@ import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
 
-// Firebase 구성 정보 (환경 변수 또는 직접 입력)
+// Firebase 구성 정보 - 환경변수 사용
+// GitHub Actions에서 빌드시 환경변수로 주입됨
 const firebaseConfig = {
-  apiKey: "AIzaSyDkcPHQ3a89WwsizzkYC7WF2_B6iAPb9f0",
-  authDomain: "chunggu-golf.firebaseapp.com",
-  projectId: "chunggu-golf",
-  storageBucket: "chunggu-golf.firebasestorage.app",
-  messagingSenderId: "548891376636",
-  appId: "1:548891376636:web:7bc1d1b3034a46baab9079",
-  measurementId: "G-83K93WKFPE"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // 아직 초기화되지 않은 경우에만 초기화

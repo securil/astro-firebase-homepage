@@ -6,7 +6,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "deploy": "astro build && echo > dist/.nojekyll && gh-pages -d dist"
+    "deploy": "echo 'Deploy is now handled by GitHub Actions. Push to main branch to deploy.'"
   },
   "dependencies": {
     "@astrojs/react": "^4.3.0",
