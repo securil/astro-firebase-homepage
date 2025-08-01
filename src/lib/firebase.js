@@ -2,6 +2,7 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+import { getStorage } from 'firebase/storage';
 
 // Firebase 구성 정보 (환경 변수 또는 직접 입력)
 const firebaseConfig = {
@@ -18,17 +19,20 @@ const firebaseConfig = {
 let app;
 let db;
 let auth;
+let storage;
 
 try {
   app = initializeApp(firebaseConfig);
   db = getFirestore(app);
   auth = getAuth(app);
+  storage = getStorage(app);
   console.log("Firebase 초기화 성공!");
 } catch (error) {
   console.error("Firebase 초기화 오류:", error);
   // 더미 객체 생성
   db = {};
+  storage = {};
   auth = {};
 }
 
-export { db, auth };
+export { db, auth, storage };

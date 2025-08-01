@@ -1,0 +1,66 @@
+---
+// 통계 대시보드 섹션 컴포넌트
+interface Props {
+  bestScore: number;
+  avgScore: number;
+  underPar: number;
+  eighties: number;
+}
+
+const { bestScore, avgScore, underPar, eighties } = Astro.props;
+---
+
+<section class="mb-20">
+  <div class="text-center mb-12">
+    <h2 class="text-3xl font-black text-gray-900 sm:text-4xl">
+      📈 <span class="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">통계 대시보드</span>
+    </h2>
+    <p class="mt-4 text-lg text-gray-600">이번 모임의 주요 지표</p>
+  </div>
+  
+  <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+    <div class="bg-gradient-to-br from-red-500 to-pink-600 rounded-2xl p-8 text-white shadow-xl">
+      <div class="flex items-center justify-between mb-4">
+        <div class="text-4xl">🎯</div>
+        <div class="text-right">
+          <div class="text-sm opacity-90">최고 성적</div>
+          <div class="text-3xl font-black">{bestScore}</div>
+          <div class="text-sm opacity-75">타</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl p-8 text-white shadow-xl">
+      <div class="flex items-center justify-between mb-4">
+        <div class="text-4xl">📊</div>
+        <div class="text-right">
+          <div class="text-sm opacity-90">평균 타수</div>
+          <div class="text-3xl font-black">{avgScore}</div>
+          <div class="text-sm opacity-75">타</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-8 text-white shadow-xl">
+      <div class="flex items-center justify-between mb-4">
+        <div class="text-4xl">🦅</div>
+        <div class="text-right">
+          <div class="text-sm opacity-90">언더파</div>
+          <div class="text-3xl font-black">{underPar}</div>
+          <div class="text-sm opacity-75">명</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl p-8 text-white shadow-xl">
+      <div class="flex items-center justify-between mb-4">
+        <div class="text-4xl">⭐</div>
+        <div class="text-right">
+          <div class="text-sm opacity-90">80대</div>
+          <div class="text-3xl font-black">{eighties}</div>
+          <div class="text-sm opacity-75">명</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

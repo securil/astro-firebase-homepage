@@ -13,5 +13,13 @@ export default defineConfig({
     '@/pages': './src/pages',
     '@/styles': './src/styles',
     '@/utils': './src/utils',
+  },
+  vite: {
+    define: {
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+    },
+    optimizeDeps: {
+      include: ['react', 'react-dom', 'chart.js', 'react-chartjs-2'],
+    },
   }
 });

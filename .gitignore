@@ -30,3 +30,14 @@ yarn-error.log*
 # OS 파일
 .DS_Store
 Thumbs.db
+
+# Claude 애플리케이션 파일들
+claude.exe
+*.dll
+*.pak
+*.bin
+icudtl.dat
+squirrel.exe
+Squirrel-UpdateSelf.log
+resources/
+locales/

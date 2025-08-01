@@ -1,0 +1,79 @@
+{
+  "title": "2025년 청구회장배 대회 리포트",
+  "date": "2025-05-27",
+  "location": "이천 뉴스프링빌 CC",
+  "participants": 78,
+  "avgScore": 91,
+  "bestScore": 69,
+  "underPar": 1,
+  "eighties": 15,
+  "weather": "맑음",
+  "temperature": "22°C",
+  "gallery": [
+    "청구회-2025 청구회 시상식-69271527872.jpg",
+    "청구회-2025 청구회 시상식-69271527873.jpg",
+    "청구회-2025 청구회 시상식-69271527874.jpg",
+    "청구회-2025 청구회 시상식-69271527875.jpg",
+    "청구회-2025 청구회 시상식-69271527876.jpg",
+    "청구회-2025 청구회 시상식-69271527877.jpg",
+    "청구회-2025 청구회 시상식-69271527878.jpg",
+    "청구회-2025 청구회 시상식-69271527879.jpg",
+    "청구회-2025 청구회 시상식-69271527880.jpg",
+    "청구회-2025 청구회 시상식-69271527881.jpg"
+  ],
+  "awards": [
+    { "category": "메달리스트", "name": "유대균", "generation": "39기", "score": "69타", "color": "from-emerald-400 to-teal-500" },
+    { "category": "신페리오우승 (남)", "name": "장세걸", "generation": "30기", "score": "83타", "color": "from-yellow-400 to-orange-500" },
+    { "category": "신페리오우승 (여)", "name": "박미신", "generation": "36기", "score": "88타", "color": "from-pink-400 to-rose-500" },
+    { "category": "준우승", "name": "우종만", "generation": "31기", "score": "83타", "color": "from-blue-400 to-cyan-500" },
+    { "category": "준우승", "name": "홍신민", "generation": "44기", "score": "88타", "color": "from-purple-400 to-indigo-500" },
+    { "category": "롱기스트 (남)", "name": "최호석", "generation": "39기", "score": "275Y", "color": "from-green-400 to-emerald-500" },
+    { "category": "롱기스트 (여)", "name": "이수민", "generation": "56기", "score": "220Y", "color": "from-orange-400 to-red-500" },
+    { "category": "니어리스트", "name": "채웅석", "generation": "47기", "score": "1.5m", "color": "from-cyan-400 to-blue-500" },
+    { "category": "다파상", "name": "이영찬", "generation": "46기", "score": "12개", "color": "from-indigo-400 to-purple-500" },
+    { "category": "다보기상", "name": "전성애", "generation": "36기", "score": "14개", "color": "from-pink-400 to-rose-500" },
+    { "category": "양파상", "name": "홍세훈", "generation": "49기", "score": "6개", "color": "from-red-400 to-pink-500" },
+    { "category": "생온상", "name": "김종국", "generation": "39기", "score": "신페리오 54등", "color": "from-yellow-400 to-orange-500" }
+  ],
+  "courseStats": [
+    { 
+      "name": "올림프스", 
+      "players": 40, 
+      "topPlayers": [
+        { "name": "정동균", "score": 40, "generation": "44기" },
+        { "name": "장세걸", "score": 41, "generation": "30기" },
+        { "name": "김종만", "score": 41, "generation": "25기" }
+      ]
+    },
+    { 
+      "name": "록키", 
+      "players": 40, 
+      "topPlayers": [
+        { "name": "안정화", "score": 39, "generation": "44기" },
+        { "name": "박미신", "score": 41, "generation": "36기" },
+        { "name": "홍신민", "score": 41, "generation": "44기" }
+      ]
+    },
+    { 
+      "name": "알프스", 
+      "players": 38, 
+      "topPlayers": [
+        { "name": "유대균", "score": 36, "generation": "39기" },
+        { "name": "류동석", "score": 38, "generation": "42기" },
+        { "name": "최치영", "score": 40, "generation": "36기" }
+      ]
+    },
+    { 
+      "name": "몽블랑", 
+      "players": 38, 
+      "topPlayers": [
+        { "name": "유대균", "score": 33, "generation": "39기" },
+        { "name": "이수완", "score": 36, "generation": "46기" },
+        { "name": "이영찬", "score": 37, "generation": "46기" }
+      ]
+    }
+  ],
+  "scores": [],
+  "femaleScores": [],
+  "teamList": null
+}

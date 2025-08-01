@@ -1,0 +1,269 @@
+{
+  "title": "2025년 6월 정기모임 리포트",
+  "date": "2025-06-24",
+  "location": "이천 뉴스프링빌 CC",
+  "participants": 48,
+  "avgScore": 87.4,
+  "bestScore": 74,
+  "underPar": 0,
+  "eighties": 27,
+  "weather": "맑음",
+  "temperature": "28°C",
+  "gallery": [
+    "청구회-412회 청구회 (25년6월24일)-70015682665.jpg",
+    "청구회-412회 청구회 (25년6월24일)-70015682666.jpg",
+    "청구회-412회 청구회 (25년6월24일)-70015682667.jpg",
+    "청구회-412회 청구회 (25년6월24일)-70015682668.jpg",
+    "청구회-412회 청구회 (25년6월24일)-70015682669.jpg",
+    "청구회-412회 청구회 (25년6월24일)-70015682670.jpg",
+    "청구회-412회 청구회 (25년6월24일)-70015682671.jpg",
+    "청구회-412회 청구회 (25년6월24일)-70015682672.jpg",
+    "청구회-412회 청구회 (25년6월24일)-70015682673.jpg",
+    "청구회-412회 청구회 (25년6월24일)-70015682674.jpg",
+    "청구회-412회 청구회 (25년6월24일)-70015682675.jpg",
+    "청구회-412회 청구회 (25년6월24일)-70015682676.jpg",
+    "청구회-412회 청구회 (25년6월24일)-70015682677.jpg",
+    "청구회-412회 청구회 (25년6월24일)-70015682678.jpg",
+    "청구회-412회 청구회 (25년6월24일)-70015682679.jpg",
+    "청구회-412회 청구회 (25년6월24일)-70015682680.jpg",
+    "청구회-412회 청구회 (25년6월24일)-70015682681.jpg",
+    "청구회-412회 청구회 (25년6월24일)-70015682682.jpg",
+    "청구회-412회 청구회 (25년6월24일)-70015682683.jpg",
+    "청구회-412회 청구회 (25년6월24일)-70015682684.jpg",
+    "청구회-412회 청구회 (25년6월24일)-70015682685.jpg",
+    "청구회-412회 청구회 (25년6월24일)-70015682686.jpg",
+    "청구회-412회 청구회 (25년6월24일)-70015682687.jpg",
+    "청구회-412회 청구회 (25년6월24일)-70015682688.jpg",
+    "청구회-412회 청구회 (25년6월24일)-70015682689.jpg"
+  ],
+  "awards": [
+    {
+      "category": "신페리오우승",
+      "name": "이항복",
+      "generation": "34기",
+      "score": "HD6, 점수 73",
+      "color": "from-emerald-400 to-teal-500"
+    },
+    {
+      "category": "남자 메달리스트",
+      "name": "최치영",
+      "generation": "36기",
+      "score": "74타",
+      "color": "from-yellow-400 to-orange-500"
+    },
+    {
+      "category": "여자 메달리스트",
+      "name": "조민정",
+      "generation": "43기",
+      "score": "85타",
+      "color": "from-pink-400 to-rose-500"
+    },
+    {
+      "category": "남자 롱기스트",
+      "name": "김영호",
+      "generation": "34기",
+      "score": "260Y",
+      "color": "from-purple-400 to-indigo-500"
+    },
+    {
+      "category": "여자 롱기스트",
+      "name": "목삼균",
+      "generation": "42기",
+      "score": "170Y",
+      "color": "from-blue-400 to-cyan-500"
+    },
+    {
+      "category": "니어리스트",
+      "name": "성국현",
+      "generation": "25기",
+      "score": "1미터",
+      "color": "from-green-400 to-emerald-500"
+    }
+  ],
+  "courseStats": [
+    {
+      "name": "올림프스",
+      "players": 24,
+      "topPlayers": [
+        { "name": "박세환", "score": 38, "generation": "30기" },
+        { "name": "최치영", "score": 39, "generation": "36기" },
+        { "name": "최관호", "score": 41, "generation": "27기" }
+      ]
+    },
+    {
+      "name": "록키",
+      "players": 24,
+      "topPlayers": [
+        { "name": "최치영", "score": 35, "generation": "36기" },
+        { "name": "박세환", "score": 37, "generation": "30기" },
+        { "name": "최관호", "score": 39, "generation": "27기" }
+      ]
+    },
+    {
+      "name": "몽블랑",
+      "players": 24,
+      "topPlayers": [
+        { "name": "장진원", "score": 37, "generation": "34기" },
+        { "name": "유대균", "score": 38, "generation": "39기" },
+        { "name": "노형식", "score": 38, "generation": "30기" }
+      ]
+    },
+    {
+      "name": "알프스",
+      "players": 24,
+      "topPlayers": [
+        { "name": "유대균", "score": 38, "generation": "39기" },
+        { "name": "이항복", "score": 40, "generation": "34기" },
+        { "name": "장진원", "score": 41, "generation": "34기" }
+      ]
+    }
+  ],
+  "scores": [
+    { "rank": 1, "name": "최치영", "generation": "36기", "score": 74, "course": "올림프스/록키", "front": 39, "back": 35 },
+    { "rank": 2, "name": "박세환", "generation": "30기", "score": 75, "course": "록키/올림프스", "front": 37, "back": 38 },
+    { "rank": 3, "name": "유대균", "generation": "39기", "score": 76, "course": "알프스/몽블랑", "front": 38, "back": 38 },
+    { "rank": 4, "name": "장진원", "generation": "34기", "score": 78, "course": "알프스/몽블랑", "front": 41, "back": 37 },
+    { "rank": 5, "name": "이항복", "generation": "34기", "score": 79, "course": "알프스/몽블랑", "front": 40, "back": 39 },
+    { "rank": 6, "name": "최관호", "generation": "27기", "score": 80, "course": "록키/올림프스", "front": 39, "back": 41 },
+    { "rank": 7, "name": "노형식", "generation": "30기", "score": 82, "course": "알프스/몽블랑", "front": 44, "back": 38 },
+    { "rank": 7, "name": "김태형", "generation": "34기", "score": 82, "course": "알프스/몽블랑", "front": 42, "back": 40 },
+    { "rank": 7, "name": "이성일", "generation": "25기", "score": 82, "course": "록키/올림프스", "front": 41, "back": 41 },
+    { "rank": 10, "name": "윤상호", "generation": "21기", "score": 83, "course": "록키/올림프스", "front": 40, "back": 43 },
+    { "rank": 10, "name": "성국현", "generation": "25기", "score": 83, "course": "록키/올림프스", "front": 42, "back": 41 },
+    { "rank": 12, "name": "이준희", "generation": "26기", "score": 84, "course": "록키/올림프스", "front": 42, "back": 42 },
+    { "rank": 12, "name": "정인모", "generation": "25기", "score": 84, "course": "록키/올림프스", "front": 41, "back": 43 },
+    { "rank": 12, "name": "안희태", "generation": "25기", "score": 84, "course": "록키/올림프스", "front": 42, "back": 42 },
+    { "rank": 15, "name": "조민정", "generation": "43기", "score": 85, "course": "올림프스/록키", "front": 42, "back": 43 },
+    { "rank": 15, "name": "윤해균", "generation": "31기", "score": 85, "course": "알프스/몽블랑", "front": 45, "back": 40 },
+    { "rank": 15, "name": "이진형", "generation": "26기", "score": 85, "course": "올림프스/록키", "front": 44, "back": 41 },
+    { "rank": 15, "name": "권오광", "generation": "26기", "score": 85, "course": "올림프스/록키", "front": 44, "back": 41 },
+    { "rank": 15, "name": "정윤성", "generation": "39기", "score": 85, "course": "올림프스/록키", "front": 43, "back": 42 },
+    { "rank": 20, "name": "정혜연", "generation": "47기", "score": 87, "course": "올림프스/록키", "front": 43, "back": 44 },
+    { "rank": 20, "name": "장재숙", "generation": "26기", "score": 87, "course": "올림프스/록키", "front": 45, "back": 42 },
+    { "rank": 20, "name": "이동호", "generation": "41기", "score": 87, "course": "몽블랑/알프스", "front": 43, "back": 44 },
+    { "rank": 20, "name": "정동균", "generation": "44기", "score": 87, "course": "올림프스/록키", "front": 45, "back": 42 },
+    { "rank": 20, "name": "류동석", "generation": "42기", "score": 87, "course": "몽블랑/알프스", "front": 41, "back": 46 },
+    { "rank": 25, "name": "김정일", "generation": "30기", "score": 88, "course": "몽블랑/알프스", "front": 41, "back": 47 },
+    { "rank": 25, "name": "이상우", "generation": "30기", "score": 88, "course": "알프스/몽블랑", "front": 45, "back": 43 },
+    { "rank": 25, "name": "박기홍", "generation": "41기", "score": 88, "course": "몽블랑/알프스", "front": 46, "back": 42 },
+    { "rank": 28, "name": "이현자", "generation": "30기", "score": 89, "course": "올림프스/록키", "front": 44, "back": 45 },
+    { "rank": 28, "name": "김진", "generation": "30기", "score": 89, "course": "록키/올림프스", "front": 42, "back": 47 },
+    { "rank": 28, "name": "김형찬", "generation": "42기", "score": 89, "course": "몽블랑/알프스", "front": 44, "back": 45 },
+    { "rank": 28, "name": "박미신", "generation": "36기", "score": 89, "course": "몽블랑/알프스", "front": 45, "back": 44 },
+    { "rank": 28, "name": "목삼균", "generation": "42기", "score": 89, "course": "몽블랑/알프스", "front": 46, "back": 43 },
+    { "rank": 33, "name": "박지혁", "generation": "46기", "score": 90, "course": "올림프스/록키", "front": 47, "back": 43 },
+    { "rank": 34, "name": "우종만", "generation": "31기", "score": 91, "course": "알프스/몽블랑", "front": 48, "back": 43 },
+    { "rank": 34, "name": "김종국", "generation": "39기", "score": 91, "course": "알프스/몽블랑", "front": 46, "back": 45 },
+    { "rank": 34, "name": "노희숙", "generation": "26기", "score": 91, "course": "올림프스/록키", "front": 47, "back": 44 },
+    { "rank": 34, "name": "우승훈", "generation": "40기", "score": 91, "course": "몽블랑/알프스", "front": 45, "back": 46 },
+    { "rank": 34, "name": "김영호", "generation": "34기", "score": 91, "course": "알프스/몽블랑", "front": 48, "back": 43 },
+    { "rank": 39, "name": "장세걸", "generation": "30기", "score": 92, "course": "몽블랑/알프스", "front": 44, "back": 48 },
+    { "rank": 39, "name": "정연수", "generation": "25기", "score": 92, "course": "록키/올림프스", "front": 47, "back": 45 },
+    { "rank": 41, "name": "오호진", "generation": "30기", "score": 93, "course": "알프스/몽블랑", "front": 47, "back": 46 },
+    { "rank": 41, "name": "조영승", "generation": "49기", "score": 93, "course": "몽블랑/알프스", "front": 46, "back": 47 },
+    { "rank": 43, "name": "정혜영", "generation": "47기", "score": 95, "course": "올림프스/록키", "front": 48, "back": 47 },
+    { "rank": 43, "name": "이인영", "generation": "30기", "score": 95, "course": "몽블랑/알프스", "front": 45, "back": 50 },
+    { "rank": 43, "name": "금인호", "generation": "21기", "score": 95, "course": "록키/올림프스", "front": 47, "back": 48 },
+    { "rank": 46, "name": "정연삼", "generation": "30기", "score": 98, "course": "몽블랑/알프스", "front": 48, "back": 50 },
+    { "rank": 47, "name": "임풍화", "generation": "21기", "score": 99, "course": "록키/올림프스", "front": 48, "back": 51 },
+    { "rank": 48, "name": "김재원", "generation": "31기", "score": 103, "course": "알프스/몽블랑", "front": 53, "back": 50 }
+  ],
+  "matchReport": {
+    "headline": "최치영, 록키 코스 1언더파 폭발로 74타 우승!",
+    "subheadline": "박세환 1타 차 아쉬운 준우승... 올림프스 코스에서는 1위 기록",
+    "stories": [
+      {
+        "type": "winner",
+        "icon": "🏆",
+        "title": "우승자 스토리",
+        "content": "최치영(36기)이 74타로 당당히 우승을 차지했다. 전반 올림프스 코스에서 39타로 다소 아쉬운 출발을 했으나, 후반 록키 코스에서 35타 대폭발을 기록하며 극적인 역전승을 거두었다. 특히 록키 코스 35타는 파 36에서 1언더파에 해당하는 놀라운 기록이다.",
+        "highlight": "록키 코스 35타 (1언더파)"
+      },
+      {
+        "type": "runner-up", 
+        "icon": "🥈",
+        "title": "준우승자 분석",
+        "content": "박세환(30기)은 75타로 아쉬운 준우승에 머물렀다. 전반 록키 코스에서 37타로 완벽한 스타트를 끊었고, 후반 올림프스 코스에서도 38타로 안정적인 플레이를 펼쳤다. 흥미롭게도 올림프스 코스에서는 전체 1위 기록을 세웠으나, 최종 합계에서 1타 차이로 우승을 놓쳤다.",
+        "highlight": "올림프스 코스 1위 (38타)"
+      },
+      {
+        "type": "course-masters",
+        "icon": "⛰️", 
+        "title": "코스별 지배자들",
+        "content": "각 코스별로 독특한 강자들이 등장했다. 유대균(39기)은 알프스 코스를 38타로 정복하며 '알프스의 제왕'이라는 별명을 얻었다. 장진원(34기)은 몽블랑 코스에서 37타를 기록하며 최고 기록을 세웠고, 최관호(27기)는 올림프스와 록키 양쪽 코스 모두에서 3위에 오르며 놀라운 일관성을 보여줬다.",
+        "highlight": "4개 코스 모두 다른 강자 등장"
+      },
+      {
+        "type": "course-analysis",
+        "icon": "📊",
+        "title": "코스별 난이도 분석", 
+        "content": "이번 라운드에서 가장 쉬운 코스는 록키(상위 3명 평균 37.0타)였으며, 가장 어려운 코스는 알프스(상위 3명 평균 39.7타)로 나타났다. 록키 코스에서는 최치영이 35타라는 폭발적인 기록을 세웠고, 알프스 코스에서는 유대균의 38타가 최고 기록이었다.",
+        "highlight": "록키 vs 알프스 2.7타 난이도 차이"
+      },
+      {
+        "type": "surprise",
+        "icon": "⚡",
+        "title": "깜짝 포인트",
+        "content": "올림프스 코스 1위 박세환이 전체 2위, 록키 코스 1위 최치영이 전체 1위를 차지하는 등 코스별 강자와 전체 순위가 정확히 일치하는 흥미로운 결과를 보였다. 반면 몽블랑 코스 1위 장진원은 전체 4위, 알프스 코스 1위 유대균은 전체 3위에 그쳤다.",
+        "highlight": "코스 1위 ≠ 전체 1위의 묘미"
+      }
+    ],
+    "stats": [
+      { "label": "가장 쉬운 코스", "value": "록키", "detail": "평균 37.0타" },
+      { "label": "가장 어려운 코스", "value": "알프스", "detail": "평균 39.7타" },
+      { "label": "최고 9홀 기록", "value": "35타", "detail": "최치영 (록키)" },
+      { "label": "코스별 승부", "value": "4강 4색", "detail": "모두 다른 강자" }
+    ]
+  },
+  "femaleScores": [
+    { "rank": 1, "name": "조민정", "generation": "43기", "score": 85, "course": "올림프스/록키", "front": 42, "back": 43 },
+    { "rank": 2, "name": "정혜연", "generation": "47기", "score": 87, "course": "올림프스/록키", "front": 43, "back": 44 },
+    { "rank": 3, "name": "이현자", "generation": "30기", "score": 89, "course": "올림프스/록키", "front": 44, "back": 45 },
+    { "rank": 4, "name": "박미신", "generation": "36기", "score": 89, "course": "몽블랑/알프스", "front": 45, "back": 44 },
+    { "rank": 5, "name": "목삼균", "generation": "42기", "score": 89, "course": "몽블랑/알프스", "front": 46, "back": 43 },
+    { "rank": 6, "name": "노희숙", "generation": "26기", "score": 91, "course": "올림프스/록키", "front": 47, "back": 44 },
+    { "rank": 7, "name": "정혜영", "generation": "47기", "score": 95, "course": "올림프스/록키", "front": 48, "back": 47 },
+    { "rank": 8, "name": "임풍화", "generation": "21기", "score": 99, "course": "록키/올림프스", "front": 48, "back": 51 }
+  ],
+  "teamList": {
+    "title": "청구회 월례회 조편성 청구회(411회) 2025년 6월 24일 화요일",
+    "courses": [
+      {
+        "name": "몽블랑",
+        "startTime": "3팀-12:29 분-12시44분",
+        "teams": [
+          { "number": 1, "time": "12:29", "players": ["정세걸(30)", "정연삼(30)", "김정일(30)", "이인영(30)"] },
+          { "number": 2, "time": "12:37", "players": ["우승훈(40)", "이동호(41)", "박기홍(41)", "조영승(49)"] },
+          { "number": 3, "time": "12:44", "players": ["박미신(36여)", "김형찬(42)", "류동석(42)", "목삼균(42여)"] }
+        ]
+      },
+      {
+        "name": "알프스",
+        "startTime": "3팀-12:29 분-12시44분",
+        "teams": [
+          { "number": 1, "time": "12:29", "players": ["오호진(30)", "김재원(31)", "우종만(31)", "윤해균(31)"] },
+          { "number": 2, "time": "12:37", "players": ["이상우(30)", "노형식(30)", "유대균(39)", "김종국(39)"] },
+          { "number": 3, "time": "12:44", "players": ["장진원(34)", "김태형(34)", "이항복(34)", "김영호(34)"] }
+        ]
+      }
+    ],
+    "rightSide": {
+      "name": "록키",
+      "startTime": "3팀-12:29 분-12시44분",
+      "teams": [
+        { "number": 1, "time": "12:29", "players": ["최관호(27)", "이준희(27)", "김진(30)", "박세환(30)"] },
+        { "number": 2, "time": "12:37", "players": ["임풍화(21여)", "금인호(21)", "윤상호(21)", "정연수(25)"] },
+        { "number": 3, "time": "12:44", "players": ["이성일(25)", "성국현(25)", "정인모(25)", "안희태(25)"] }
+      ]
+    },
+    "rightSideExtended": {
+      "name": "올림프스",
+      "startTime": "12:29 분-12시44분",
+      "teams": [
+        { "number": 1, "time": "12:29", "players": ["이현자(30여)", "조민정(43여)", "정혜연(47여)", "정혜영(47여)"] },
+        { "number": 2, "time": "12:37", "players": ["최치영(36)", "정윤성(39)", "정동균(44)", "박지혁(46)"] },
+        { "number": 3, "time": "12:44", "players": ["이진형(26)", "권오광(26)", "장재숙(26여)", "노희숙(26여)"] }
+      ]
+    }
+  }
+}

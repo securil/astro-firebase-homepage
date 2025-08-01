@@ -1,0 +1,729 @@
+{
+  "meetingInfo": {
+    "date": "2025-06-24",
+    "location": "이천 뉴스프링빌 CC",
+    "totalParticipants": 48
+  },
+  "scores": [
+    {
+      "name": "이현자",
+      "course": "올림프스/록키",
+      "frontNine": {
+        "holes": [0, 1, 1, 1, 1, 1, 1, 2, 0],
+        "score": 44,
+        "courseName": "올림프스"
+      },
+      "backNine": {
+        "holes": [1, 0, 1, 2, 1, 1, 1, 1, 1],
+        "score": 45,
+        "courseName": "록키"
+      },
+      "totalScore": 89
+    },
+    {
+      "name": "조민정",
+      "course": "올림프스/록키",
+      "frontNine": {
+        "holes": [0, 1, 0, 1, 1, 1, 1, 1, 0],
+        "score": 42,
+        "courseName": "올림프스"
+      },
+      "backNine": {
+        "holes": [-1, 1, 0, 1, 1, 1, 1, 2, 1],
+        "score": 43,
+        "courseName": "록키"
+      },
+      "totalScore": 85
+    },
+    {
+      "name": "정혜연",
+      "course": "올림프스/록키",
+      "frontNine": {
+        "holes": [0, 1, 0, 1, 1, 1, 1, 2, 0],
+        "score": 43,
+        "courseName": "올림프스"
+      },
+      "backNine": {
+        "holes": [1, 0, 1, 2, 0, 1, 1, 1, 1],
+        "score": 44,
+        "courseName": "록키"
+      },
+      "totalScore": 87
+    },
+    {
+      "name": "정혜영",
+      "course": "올림프스/록키",
+      "frontNine": {
+        "holes": [0, 1, 2, 1, 2, 1, 4, 1, 0],
+        "score": 48,
+        "courseName": "올림프스"
+      },
+      "backNine": {
+        "holes": [1, 1, 1, 1, 2, 1, 1, 2, 1],
+        "score": 47,
+        "courseName": "록키"
+      },
+      "totalScore": 95
+    },
+    {
+      "name": "최관호",
+      "course": "록키/올림프스",
+      "frontNine": {
+        "holes": [0, 0, 0, 0, 1, 1, 0, 0, 1],
+        "score": 39,
+        "courseName": "록키"
+      },
+      "backNine": {
+        "holes": [1, 1, 0, 1, 1, 0, 1, -1, 1],
+        "score": 41,
+        "courseName": "올림프스"
+      },
+      "totalScore": 80
+    },
+    {
+      "name": "이준희",
+      "course": "록키/올림프스",
+      "frontNine": {
+        "holes": [0, 0, 1, 0, 2, 0, 0, 2, 1],
+        "score": 42,
+        "courseName": "록키"
+      },
+      "backNine": {
+        "holes": [0, 1, 1, 1, 1, 0, 1, 1, 0],
+        "score": 42,
+        "courseName": "올림프스"
+      },
+      "totalScore": 84
+    },
+    {
+      "name": "김진",
+      "course": "록키/올림프스",
+      "frontNine": {
+        "holes": [0, 0, 1, 0, 1, 0, 1, 1, 2],
+        "score": 42,
+        "courseName": "록키"
+      },
+      "backNine": {
+        "holes": [1, 1, 1, 2, 2, 2, 1, 0, 1],
+        "score": 47,
+        "courseName": "올림프스"
+      },
+      "totalScore": 89
+    },
+    {
+      "name": "박세환",
+      "course": "록키/올림프스",
+      "frontNine": {
+        "holes": [-2, 0, 0, 0, 0, 0, 2, 1, 0],
+        "score": 37,
+        "courseName": "록키"
+      },
+      "backNine": {
+        "holes": [0, 0, 0, 1, 0, 1, 1, -1, 0],
+        "score": 38,
+        "courseName": "올림프스"
+      },
+      "totalScore": 75
+    },
+    {
+      "name": "장세걸",
+      "course": "몽블랑/알프스",
+      "frontNine": {
+        "holes": [0, 0, 1, 2, 2, 1, 1, 1, 0],
+        "score": 44,
+        "courseName": "몽블랑"
+      },
+      "backNine": {
+        "holes": [3, 3, 1, 0, 1, 2, 1, 1, 0],
+        "score": 48,
+        "courseName": "알프스"
+      },
+      "totalScore": 92
+    },
+    {
+      "name": "정연삼",
+      "course": "몽블랑/알프스",
+      "frontNine": {
+        "holes": [0, 1, 1, 2, 2, 0, 1, 2, 3],
+        "score": 48,
+        "courseName": "몽블랑"
+      },
+      "backNine": {
+        "holes": [2, 1, 3, 1, 2, 1, 2, 2, 0],
+        "score": 50,
+        "courseName": "알프스"
+      },
+      "totalScore": 98
+    },
+    {
+      "name": "김정일",
+      "course": "몽블랑/알프스",
+      "frontNine": {
+        "holes": [0, 0, 2, 1, 0, 0, 1, 0, 1],
+        "score": 41,
+        "courseName": "몽블랑"
+      },
+      "backNine": {
+        "holes": [2, 2, 0, 1, 1, 3, 1, 1, 0],
+        "score": 47,
+        "courseName": "알프스"
+      },
+      "totalScore": 88
+    },
+    {
+      "name": "이인영",
+      "course": "몽블랑/알프스",
+      "frontNine": {
+        "holes": [0, 0, 2, 1, 1, 1, 1, 2, 1],
+        "score": 45,
+        "courseName": "몽블랑"
+      },
+      "backNine": {
+        "holes": [3, 2, 1, 0, 3, 3, 1, 1, 0],
+        "score": 50,
+        "courseName": "알프스"
+      },
+      "totalScore": 95
+    },
+    {
+      "name": "오호진",
+      "course": "알프스/몽블랑",
+      "frontNine": {
+        "holes": [0, 3, 1, 1, 1, 2, 1, 1, 1],
+        "score": 47,
+        "courseName": "알프스"
+      },
+      "backNine": {
+        "holes": [1, 0, 2, 2, 3, 1, 0, 1, 0],
+        "score": 46,
+        "courseName": "몽블랑"
+      },
+      "totalScore": 93
+    },
+    {
+      "name": "김재원",
+      "course": "알프스/몽블랑",
+      "frontNine": {
+        "holes": [1, 2, 2, 1, 2, 3, 2, 2, 2],
+        "score": 53,
+        "courseName": "알프스"
+      },
+      "backNine": {
+        "holes": [2, 1, 2, 2, 2, 2, 1, 1, 1],
+        "score": 50,
+        "courseName": "몽블랑"
+      },
+      "totalScore": 103
+    },
+    {
+      "name": "우종만",
+      "course": "알프스/몽블랑",
+      "frontNine": {
+        "holes": [2, 0, 1, 0, 2, 3, 0, 1, 3],
+        "score": 48,
+        "courseName": "알프스"
+      },
+      "backNine": {
+        "holes": [0, 2, 0, 0, 1, 3, 0, 0, 1],
+        "score": 43,
+        "courseName": "몽블랑"
+      },
+      "totalScore": 91
+    },
+    {
+      "name": "윤해균",
+      "course": "알프스/몽블랑",
+      "frontNine": {
+        "holes": [0, 2, 1, 0, 1, 1, 2, 1, 1],
+        "score": 45,
+        "courseName": "알프스"
+      },
+      "backNine": {
+        "holes": [1, 1, 1, -1, 1, 1, 0, 0, 0],
+        "score": 40,
+        "courseName": "몽블랑"
+      },
+      "totalScore": 85
+    },
+    {
+      "name": "이상우",
+      "course": "알프스/몽블랑",
+      "frontNine": {
+        "holes": [0, 2, 2, 1, 1, 1, 1, 0, 1],
+        "score": 45,
+        "courseName": "알프스"
+      },
+      "backNine": {
+        "holes": [1, 1, 0, 1, 1, 1, 1, 1, 0],
+        "score": 43,
+        "courseName": "몽블랑"
+      },
+      "totalScore": 88
+    },
+    {
+      "name": "노형식",
+      "course": "알프스/몽블랑",
+      "frontNine": {
+        "holes": [0, 1, 0, 1, 1, 1, 2, 0, 2],
+        "score": 44,
+        "courseName": "알프스"
+      },
+      "backNine": {
+        "holes": [1, 0, 0, 0, 0, -1, 1, 1, 0],
+        "score": 38,
+        "courseName": "몽블랑"
+      },
+      "totalScore": 82
+    },
+    {
+      "name": "유대균",
+      "course": "알프스/몽블랑",
+      "frontNine": {
+        "holes": [0, 2, 0, 0, 0, 1, 0, -1, 0],
+        "score": 38,
+        "courseName": "알프스"
+      },
+      "backNine": {
+        "holes": [0, 1, 0, 0, 1, 0, 0, 0, 0],
+        "score": 38,
+        "courseName": "몽블랑"
+      },
+      "totalScore": 76
+    },
+    {
+      "name": "김종국",
+      "course": "알프스/몽블랑",
+      "frontNine": {
+        "holes": [0, 2, 0, 2, 2, 2, 1, 0, 1],
+        "score": 46,
+        "courseName": "알프스"
+      },
+      "backNine": {
+        "holes": [2, 1, 2, 1, 2, 0, 1, 1, -1],
+        "score": 45,
+        "courseName": "몽블랑"
+      },
+      "totalScore": 91
+    },
+    {
+      "name": "이진형",
+      "course": "올림프스/록키",
+      "frontNine": {
+        "holes": [0, 1, 1, 1, 2, 2, 2, -1, 0],
+        "score": 44,
+        "courseName": "올림프스"
+      },
+      "backNine": {
+        "holes": [1, 0, 2, 0, 1, 0, 1, 0, 0],
+        "score": 41,
+        "courseName": "록키"
+      },
+      "totalScore": 85
+    },
+    {
+      "name": "권오광",
+      "course": "올림프스/록키",
+      "frontNine": {
+        "holes": [0, 0, 1, 2, 2, 0, 1, 1, 1],
+        "score": 44,
+        "courseName": "올림프스"
+      },
+      "backNine": {
+        "holes": [1, 0, 1, 1, 1, 0, 1, 0, 0],
+        "score": 41,
+        "courseName": "록키"
+      },
+      "totalScore": 85
+    },
+    {
+      "name": "장재숙",
+      "course": "올림프스/록키",
+      "frontNine": {
+        "holes": [0, 2, 1, 2, 1, 1, 1, 0, 1],
+        "score": 45,
+        "courseName": "올림프스"
+      },
+      "backNine": {
+        "holes": [1, 0, 1, 1, 1, 0, 1, 1, 0],
+        "score": 42,
+        "courseName": "록키"
+      },
+      "totalScore": 87
+    },
+    {
+      "name": "노희숙",
+      "course": "올림프스/록키",
+      "frontNine": {
+        "holes": [0, 1, 1, 2, 2, 0, 2, 1, 2],
+        "score": 47,
+        "courseName": "올림프스"
+      },
+      "backNine": {
+        "holes": [1, 1, 1, 0, 2, 1, 1, 1, 0],
+        "score": 44,
+        "courseName": "록키"
+      },
+      "totalScore": 91
+    },
+    {
+      "name": "김형찬",
+      "course": "몽블랑/알프스",
+      "frontNine": {
+        "holes": [0, 0, 0, 0, 0, 1, 4, 2, 1],
+        "score": 44,
+        "courseName": "몽블랑"
+      },
+      "backNine": {
+        "holes": [2, 2, 2, 1, 0, 1, 0, 1, 0],
+        "score": 45,
+        "courseName": "알프스"
+      },
+      "totalScore": 89
+    },
+    {
+      "name": "이동호",
+      "course": "몽블랑/알프스",
+      "frontNine": {
+        "holes": [1, 1, 1, 0, 1, 0, 1, 1, 1],
+        "score": 43,
+        "courseName": "몽블랑"
+      },
+      "backNine": {
+        "holes": [1, 2, 0, 2, 1, 1, 0, 0, 1],
+        "score": 44,
+        "courseName": "알프스"
+      },
+      "totalScore": 87
+    },
+    {
+      "name": "박기홍",
+      "course": "몽블랑/알프스",
+      "frontNine": {
+        "holes": [2, 1, -1, 1, 2, 1, 2, 1, 1],
+        "score": 46,
+        "courseName": "몽블랑"
+      },
+      "backNine": {
+        "holes": [0, 1, 2, 1, 1, 0, 0, 0, 1],
+        "score": 42,
+        "courseName": "알프스"
+      },
+      "totalScore": 88
+    },
+    {
+      "name": "우승훈",
+      "course": "몽블랑/알프스",
+      "frontNine": {
+        "holes": [1, 0, 1, 1, 3, 1, 1, 1, 0],
+        "score": 45,
+        "courseName": "몽블랑"
+      },
+      "backNine": {
+        "holes": [1, 1, 1, 1, 1, 3, 1, -1, 2],
+        "score": 46,
+        "courseName": "알프스"
+      },
+      "totalScore": 91
+    },
+    {
+      "name": "최치영",
+      "course": "올림프스/록키",
+      "frontNine": {
+        "holes": [0, 1, 0, 0, 0, -1, 1, 1, 1],
+        "score": 39,
+        "courseName": "올림프스"
+      },
+      "backNine": {
+        "holes": [0, -1, -1, 1, 0, 0, -1, 1, 0],
+        "score": 35,
+        "courseName": "록키"
+      },
+      "totalScore": 74
+    },
+    {
+      "name": "정윤성",
+      "course": "올림프스/록키",
+      "frontNine": {
+        "holes": [1, 0, 0, 1, 1, 2, 1, 1, 0],
+        "score": 43,
+        "courseName": "올림프스"
+      },
+      "backNine": {
+        "holes": [0, 0, 1, 2, 0, 0, 1, 1, 1],
+        "score": 42,
+        "courseName": "록키"
+      },
+      "totalScore": 85
+    },
+    {
+      "name": "정동균",
+      "course": "올림프스/록키",
+      "frontNine": {
+        "holes": [1, 1, 1, 0, 1, 1, 1, 1, 2],
+        "score": 45,
+        "courseName": "올림프스"
+      },
+      "backNine": {
+        "holes": [1, 0, 1, 0, 0, 0, 2, 1, 1],
+        "score": 42,
+        "courseName": "록키"
+      },
+      "totalScore": 87
+    },
+    {
+      "name": "박지혁",
+      "course": "올림프스/록키",
+      "frontNine": {
+        "holes": [1, 1, 1, 0, 2, 2, 1, 2, 1],
+        "score": 47,
+        "courseName": "올림프스"
+      },
+      "backNine": {
+        "holes": [1, 1, 1, 1, 1, 0, 0, 1, 1],
+        "score": 43,
+        "courseName": "록키"
+      },
+      "totalScore": 90
+    },
+    {
+      "name": "장진원",
+      "course": "알프스/몽블랑",
+      "frontNine": {
+        "holes": [0, 1, 0, 0, 1, 1, 1, 1, 0],
+        "score": 41,
+        "courseName": "알프스"
+      },
+      "backNine": {
+        "holes": [0, 1, 0, 1, 0, -1, 0, 0, 0],
+        "score": 37,
+        "courseName": "몽블랑"
+      },
+      "totalScore": 78
+    },
+    {
+      "name": "김태형",
+      "course": "알프스/몽블랑",
+      "frontNine": {
+        "holes": [0, 2, 1, 1, 2, 0, 1, -1, 0],
+        "score": 42,
+        "courseName": "알프스"
+      },
+      "backNine": {
+        "holes": [0, 1, 0, 1, 1, 0, 0, 1, 0],
+        "score": 40,
+        "courseName": "몽블랑"
+      },
+      "totalScore": 82
+    },
+    {
+      "name": "이항복",
+      "course": "알프스/몽블랑",
+      "frontNine": {
+        "holes": [0, 1, 1, 0, 1, 1, 0, 0, 0],
+        "score": 40,
+        "courseName": "알프스"
+      },
+      "backNine": {
+        "holes": [0, 0, 1, 1, 1, 0, 1, 0, -1],
+        "score": 39,
+        "courseName": "몽블랑"
+      },
+      "totalScore": 79
+    },
+    {
+      "name": "김영호",
+      "course": "알프스/몽블랑",
+      "frontNine": {
+        "holes": [0, 2, 2, 1, 2, 2, 2, 1, 0],
+        "score": 48,
+        "courseName": "알프스"
+      },
+      "backNine": {
+        "holes": [0, 1, 0, 2, 2, 0, 1, 1, 0],
+        "score": 43,
+        "courseName": "몽블랑"
+      },
+      "totalScore": 91
+    },
+    {
+      "name": "임풍화",
+      "course": "록키/올림프스",
+      "frontNine": {
+        "holes": [0, 1, 2, 2, 2, 0, 2, 2, 1],
+        "score": 48,
+        "courseName": "록키"
+      },
+      "backNine": {
+        "holes": [1, 1, 2, 2, 1, 2, 2, 2, 2],
+        "score": 51,
+        "courseName": "올림프스"
+      },
+      "totalScore": 99
+    },
+    {
+      "name": "금인호",
+      "course": "록키/올림프스",
+      "frontNine": {
+        "holes": [0, 1, 1, 1, 2, 0, 2, 3, 1],
+        "score": 47,
+        "courseName": "록키"
+      },
+      "backNine": {
+        "holes": [1, 1, 1, 1, 2, 1, 2, 1, 2],
+        "score": 48,
+        "courseName": "올림프스"
+      },
+      "totalScore": 95
+    },
+    {
+      "name": "윤상호",
+      "course": "록키/올림프스",
+      "frontNine": {
+        "holes": [0, 0, 0, 1, 3, -1, 0, 1, 0],
+        "score": 40,
+        "courseName": "록키"
+      },
+      "backNine": {
+        "holes": [1, 1, 1, 1, 1, 0, 1, 0, 1],
+        "score": 43,
+        "courseName": "올림프스"
+      },
+      "totalScore": 83
+    },
+    {
+      "name": "정연수",
+      "course": "록키/올림프스",
+      "frontNine": {
+        "holes": [0, 2, 1, 1, 2, 1, 2, 1, 1],
+        "score": 47,
+        "courseName": "록키"
+      },
+      "backNine": {
+        "holes": [1, 1, 0, 2, 1, 0, 2, 1, 1],
+        "score": 45,
+        "courseName": "올림프스"
+      },
+      "totalScore": 92
+    },
+    {
+      "name": "이성일",
+      "course": "록키/올림프스",
+      "frontNine": {
+        "holes": [0, 0, 1, 1, 0, 0, 1, 1, 1],
+        "score": 41,
+        "courseName": "록키"
+      },
+      "backNine": {
+        "holes": [1, 1, 0, -1, 1, 1, 1, 1, 0],
+        "score": 41,
+        "courseName": "올림프스"
+      },
+      "totalScore": 82
+    },
+    {
+      "name": "성국현",
+      "course": "록키/올림프스",
+      "frontNine": {
+        "holes": [0, 2, 0, 0, 1, 0, 1, 1, 1],
+        "score": 42,
+        "courseName": "록키"
+      },
+      "backNine": {
+        "holes": [0, 1, 0, 2, 1, -1, 1, 1, 0],
+        "score": 41,
+        "courseName": "올림프스"
+      },
+      "totalScore": 83
+    },
+    {
+      "name": "정인모",
+      "course": "록키/올림프스",
+      "frontNine": {
+        "holes": [0, 0, 1, 0, 1, 0, 2, 0, 1],
+        "score": 41,
+        "courseName": "록키"
+      },
+      "backNine": {
+        "holes": [1, 0, 1, 2, 1, 1, 0, 1, 0],
+        "score": 43,
+        "courseName": "올림프스"
+      },
+      "totalScore": 84
+    },
+    {
+      "name": "안희태",
+      "course": "록키/올림프스",
+      "frontNine": {
+        "holes": [0, 2, 1, 1, 1, 0, 0, 0, 1],
+        "score": 42,
+        "courseName": "록키"
+      },
+      "backNine": {
+        "holes": [1, 1, 1, 1, 1, 0, 0, 1, 0],
+        "score": 42,
+        "courseName": "올림프스"
+      },
+      "totalScore": 84
+    },
+    {
+      "name": "박미신",
+      "course": "몽블랑/알프스",
+      "frontNine": {
+        "holes": [0, 1, 2, 1, 2, 0, 1, 1, 1],
+        "score": 45,
+        "courseName": "몽블랑"
+      },
+      "backNine": {
+        "holes": [1, 0, 2, 0, 2, 1, 1, 1, 0],
+        "score": 44,
+        "courseName": "알프스"
+      },
+      "totalScore": 89
+    },
+    {
+      "name": "류동석",
+      "course": "몽블랑/알프스",
+      "frontNine": {
+        "holes": [0, 1, 1, 1, 2, 0, 0, 0, 0],
+        "score": 41,
+        "courseName": "몽블랑"
+      },
+      "backNine": {
+        "holes": [0, 1, 1, 2, 2, 2, 1, 1, 0],
+        "score": 46,
+        "courseName": "알프스"
+      },
+      "totalScore": 87
+    },
+    {
+      "name": "목삼균",
+      "course": "몽블랑/알프스",
+      "frontNine": {
+        "holes": [0, 1, 2, 1, 2, 0, 1, 2, 1],
+        "score": 46,
+        "courseName": "몽블랑"
+      },
+      "backNine": {
+        "holes": [1, 1, 1, 1, 2, 0, 0, 1, 0],
+        "score": 43,
+        "courseName": "알프스"
+      },
+      "totalScore": 89
+    },
+    {
+      "name": "조영승",
+      "course": "몽블랑/알프스",
+      "frontNine": {
+        "holes": [0, 1, 2, 1, 2, 2, 1, 1, 0],
+        "score": 46,
+        "courseName": "몽블랑"
+      },
+      "backNine": {
+        "holes": [2, 0, 1, 2, 2, 1, 1, 2, 0],
+        "score": 47,
+        "courseName": "알프스"
+      },
+      "totalScore": 93
+    }
+  ]
+}

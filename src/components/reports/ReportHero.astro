@@ -1,0 +1,53 @@
+---
+// Hero Banner 컴포넌트
+interface Props {
+  title: string;
+  date: string;
+  location: string;
+  participants: number;
+  weather: string;
+  temperature: string;
+  backgroundImage?: string;
+}
+
+const { 
+  title, 
+  date, 
+  location, 
+  participants, 
+  weather, 
+  temperature,
+  backgroundImage = `${import.meta.env.BASE_URL}images/golf-course-default.webp`
+} = Astro.props;
+---
+
+<div class="relative overflow-hidden bg-cover bg-center" style={`background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${backgroundImage})`}>
+  <div class="relative px-6 py-24 mx-auto max-w-7xl sm:py-32">
+    <div class="text-center">
+      <h1 class="text-4xl font-black tracking-tight text-white sm:text-6xl md:text-7xl">
+        <span class="block">{title?.split(' ')[0]}</span>
+        <span class="block bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+          {title?.split(' ').slice(1).join(' ')}
+        </span>
+      </h1>
+      <p class="mt-6 text-xl leading-8 text-emerald-100 max-w-2xl mx-auto">
+        {date} • {location}
+      </p>
+      <div class="mt-8 flex items-center justify-center gap-6 text-emerald-100">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+          </svg>
+          <span class="font-medium">{participants}명 참가</span>
+        </div>
+        <div class="w-px h-4 bg-emerald-300/50"></div>
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clip-rule="evenodd"/>
+          </svg>
+          <span class="font-medium">{weather} {temperature}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

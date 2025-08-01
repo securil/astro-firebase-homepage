@@ -8,32 +8,31 @@ import {
   getMembersStats, 
   getScoresStats, 
   getMeetingParticipationStats, 
-  getAwardsStats
+  getAwardsStats,
+  getYearlyBestScoresFromCollection
 } from '../lib/service/stats-util';
 import { db } from '../lib/firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import MeetingScoreDistribution from '../components/stats/MeetingScoreDistribution.jsx';
+import HoleStatistics from '../components/stats/hole-analysis/HoleStatistics.jsx';
 
 function findBestMemberInfo(meetingStatsData, membersData) {
+  // 실제 데이터만 사용, 더미 데이터 제거
   if (!meetingStatsData || !meetingStatsData.length || !membersData || !membersData.rawData) {
-    return { 
-      name: "임진호", 
-      generation: "47기", 
-      memberId: 9, 
-      score: 73,
-      date: "2023-08-18"
-    };
+    return null;
   }
 
-  const bestScoreMeeting = [...meetingStatsData].sort((a, b) => a.bestScore - b.bestScore)[0];
+  const bestScoreMeeting = [...meetingStatsData]
+    .filter(m => m.bestScore && m.bestScore > 0)
+    .sort((a, b) => a.bestScore - b.bestScore)[0];
 
   if (bestScoreMeeting && bestScoreMeeting.bestMemberId) {
     const bestMember = membersData.rawData.find(member => member.memberId === bestScoreMeeting.bestMemberId);
 
     if (bestMember) {
       return {
-        name: bestMember.name || "정보 수집중",
-        generation: bestMember.generation || "",
+        name: bestMember.name || "정보 없음",
+        generation: bestMember.generation || "정보 없음",
         memberId: bestMember.memberId,
         score: bestScoreMeeting.bestScore,
         date: bestScoreMeeting.date
@@ -41,17 +40,20 @@ function findBestMemberInfo(meetingStatsData, membersData) {
     }
   }
 
-  return { 
-    name: "임진호", 
-    generation: "47기", 
-    memberId: 9, 
-    score: bestScoreMeeting ? bestScoreMeeting.bestScore : 73,
-    date: bestScoreMeeting ? bestScoreMeeting.date : "2023-08-18"
-  };
+  return null; // 더미 데이터 제거
 }
 
 const membersData = await getMembersStats();
 const scoresData = await getScoresStats();
+
+// 연도별 베스트 스코어 데이터 서버사이드에서 조회
+let yearlyBestScores = [];
+try {
+  yearlyBestScores = await getYearlyBestScoresFromCollection();
+  console.log('서버사이드 연도별 베스트 스코어:', yearlyBestScores);
+} catch (error) {
+  console.error('서버사이드 연도별 베스트 스코어 조회 실패:', error);
+}
 
 // 모임 데이터 가져오기
 let meetingStatsData = [];
@@ -160,7 +162,7 @@ const bestMemberInfo = findBestMemberInfo(meetingStatsData, membersData);
       <h2 class="text-2xl font-bold mb-6 text-gray-800">성적 분석</h2>
       <div class="border-t border-gray-200 pt-4">
         {scoresData.rawData && scoresData.rawData.length > 0 ? (
-          <ScoreStats client:load scoresData={scoresData} membersData={membersData} meetingStatsData={meetingStatsData} />
+          <ScoreStats client:load scoresData={scoresData} membersData={membersData} meetingStatsData={meetingStatsData} yearlyBestScores={yearlyBestScores} />
         ) : (
           <p class="text-gray-500 italic">성적 데이터를 불러오는 중...</p>
         )}
@@ -176,6 +178,11 @@ const bestMemberInfo = findBestMemberInfo(meetingStatsData, membersData);
           <p class="text-gray-500 italic">성적 분포 데이터를 불러오는 중...</p>
         )}
       </div>
+    </div>
+
+    <!-- 홀별 상세 분석 섹션 (2025년 3월 이후 데이터) -->
+    <div id="hole-analysis" class="mb-16">
+      <HoleStatistics client:load />
     </div>
   </section>
 </MainLayout>

@@ -1,0 +1,1397 @@
+{
+  "title": "2025년 3월 정기모임 리포트",
+  "date": "2025-03-15",
+  "location": "롯데 스카이힐 CC",
+  "weather": "흐림",
+  "temperature": "12°C",
+  "participants": 32,
+  "avgScore": 91.4,
+  "bestScore": 75,
+  "underPar": 0,
+  "eighties": 10,
+  "scores": [
+    {
+      "name": "박세환",
+      "generation": "미상",
+      "course": "록키/올림프스",
+      "front": 35,
+      "back": 40,
+      "totalScore": 75,
+      "holes": {
+        "front": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          -1,
+          0
+        ],
+        "back": [
+          1,
+          -1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      "score": 75,
+      "rank": 1
+    },
+    {
+      "name": "최관호",
+      "generation": "미상",
+      "course": "록키/올림프스",
+      "front": 41,
+      "back": 39,
+      "totalScore": 80,
+      "holes": {
+        "front": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          2,
+          1
+        ],
+        "back": [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ]
+      },
+      "score": 80,
+      "rank": 2
+    },
+    {
+      "name": "오호진",
+      "generation": "미상",
+      "course": "몽블랑/알프스",
+      "front": 41,
+      "back": 40,
+      "totalScore": 81,
+      "holes": {
+        "front": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          2
+        ],
+        "back": [
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      "score": 81,
+      "rank": 3
+    },
+    {
+      "name": "유대균",
+      "generation": "미상",
+      "course": "록키/올림프스",
+      "front": 44,
+      "back": 38,
+      "totalScore": 82,
+      "holes": {
+        "front": [
+          4,
+          0,
+          -1,
+          0,
+          0,
+          1,
+          1,
+          1,
+          2
+        ],
+        "back": [
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "score": 82,
+      "rank": 4
+    },
+    {
+      "name": "권오성",
+      "generation": "미상",
+      "course": "몽블랑/알프스",
+      "front": 39,
+      "back": 43,
+      "totalScore": 82,
+      "holes": {
+        "front": [
+          0,
+          0,
+          0,
+          0,
+          2,
+          1,
+          -1,
+          0,
+          1
+        ],
+        "back": [
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0
+        ]
+      },
+      "score": 82,
+      "rank": 5
+    },
+    {
+      "name": "진양교",
+      "generation": "미상",
+      "course": "록키/올림프스",
+      "front": 40,
+      "back": 43,
+      "totalScore": 83,
+      "holes": {
+        "front": [
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1
+        ],
+        "back": [
+          1,
+          0,
+          2,
+          1,
+          2,
+          0,
+          0,
+          1,
+          0
+        ]
+      },
+      "score": 83,
+      "rank": 6
+    },
+    {
+      "name": "최치영",
+      "generation": "미상",
+      "course": "몽블랑/알프스",
+      "front": 42,
+      "back": 42,
+      "totalScore": 84,
+      "holes": {
+        "front": [
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          1,
+          1,
+          1
+        ],
+        "back": [
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      "score": 84,
+      "rank": 7
+    },
+    {
+      "name": "정윤성",
+      "generation": "미상",
+      "course": "올림프스/록키",
+      "front": 42,
+      "back": 44,
+      "totalScore": 86,
+      "holes": {
+        "front": [
+          0,
+          0,
+          1,
+          1,
+          1,
+          2,
+          1,
+          0,
+          0
+        ],
+        "back": [
+          2,
+          1,
+          0,
+          1,
+          2,
+          1,
+          1,
+          0,
+          0
+        ]
+      },
+      "score": 86,
+      "rank": 8
+    },
+    {
+      "name": "조영승",
+      "generation": "미상",
+      "course": "올림프스/록키",
+      "front": 43,
+      "back": 43,
+      "totalScore": 86,
+      "holes": {
+        "front": [
+          0,
+          0,
+          -1,
+          2,
+          1,
+          1,
+          2,
+          1,
+          1
+        ],
+        "back": [
+          0,
+          2,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0
+        ]
+      },
+      "score": 86,
+      "rank": 9
+    },
+    {
+      "name": "이동호",
+      "generation": "미상",
+      "course": "알프스/몽블랑",
+      "front": 44,
+      "back": 43,
+      "totalScore": 87,
+      "holes": {
+        "front": [
+          3,
+          2,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1
+        ],
+        "back": [
+          0,
+          1,
+          -1,
+          2,
+          1,
+          1,
+          2,
+          0,
+          1
+        ]
+      },
+      "score": 87,
+      "rank": 10
+    },
+    {
+      "name": "안정화",
+      "generation": "여성",
+      "course": "록키/올림프스",
+      "front": 45,
+      "back": 43,
+      "totalScore": 88,
+      "holes": {
+        "front": [
+          0,
+          1,
+          2,
+          0,
+          2,
+          2,
+          0,
+          0,
+          2
+        ],
+        "back": [
+          1,
+          2,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0
+        ]
+      },
+      "score": 88,
+      "rank": 11
+    },
+    {
+      "name": "박기홍",
+      "generation": "미상",
+      "course": "알프스/몽블랑",
+      "front": 45,
+      "back": 45,
+      "totalScore": 90,
+      "holes": {
+        "front": [
+          2,
+          0,
+          0,
+          1,
+          1,
+          3,
+          0,
+          0,
+          2
+        ],
+        "back": [
+          0,
+          0,
+          1,
+          0,
+          3,
+          0,
+          0,
+          2,
+          3
+        ]
+      },
+      "score": 90,
+      "rank": 12
+    },
+    {
+      "name": "장세걸",
+      "generation": "미상",
+      "course": "알프스/몽블랑",
+      "front": 45,
+      "back": 45,
+      "totalScore": 90,
+      "holes": {
+        "front": [
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          2,
+          3
+        ],
+        "back": [
+          2,
+          1,
+          0,
+          2,
+          2,
+          2,
+          0,
+          0,
+          0
+        ]
+      },
+      "score": 90,
+      "rank": 13
+    },
+    {
+      "name": "김진만",
+      "generation": "미상",
+      "course": "올림프스/록키",
+      "front": 48,
+      "back": 43,
+      "totalScore": 91,
+      "holes": {
+        "front": [
+          1,
+          2,
+          0,
+          3,
+          0,
+          1,
+          1,
+          2,
+          2
+        ],
+        "back": [
+          2,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          1,
+          1
+        ]
+      },
+      "score": 91,
+      "rank": 14
+    },
+    {
+      "name": "이인영",
+      "generation": "미상",
+      "course": "알프스/몽블랑",
+      "front": 46,
+      "back": 45,
+      "totalScore": 91,
+      "holes": {
+        "front": [
+          0,
+          1,
+          1,
+          0,
+          2,
+          2,
+          2,
+          1,
+          1
+        ],
+        "back": [
+          1,
+          1,
+          0,
+          1,
+          1,
+          2,
+          1,
+          2,
+          0
+        ]
+      },
+      "score": 91,
+      "rank": 15
+    },
+    {
+      "name": "채웅석",
+      "generation": "미상",
+      "course": "올림프스/록키",
+      "front": 47,
+      "back": 44,
+      "totalScore": 91,
+      "holes": {
+        "front": [
+          0,
+          0,
+          2,
+          2,
+          1,
+          2,
+          1,
+          1,
+          2
+        ],
+        "back": [
+          1,
+          2,
+          1,
+          0,
+          1,
+          0,
+          1,
+          2,
+          0
+        ]
+      },
+      "score": 91,
+      "rank": 16
+    },
+    {
+      "name": "김종만",
+      "generation": "미상",
+      "course": "몽블랑/알프스",
+      "front": 46,
+      "back": 45,
+      "totalScore": 91,
+      "holes": {
+        "front": [
+          2,
+          1,
+          0,
+          1,
+          2,
+          1,
+          1,
+          1,
+          1
+        ],
+        "back": [
+          1,
+          1,
+          1,
+          1,
+          2,
+          1,
+          1,
+          1,
+          0
+        ]
+      },
+      "score": 91,
+      "rank": 17
+    },
+    {
+      "name": "김종국",
+      "generation": "미상",
+      "course": "올림프스/록키",
+      "front": 45,
+      "back": 47,
+      "totalScore": 92,
+      "holes": {
+        "front": [
+          0,
+          0,
+          2,
+          1,
+          1,
+          1,
+          1,
+          2,
+          1
+        ],
+        "back": [
+          2,
+          0,
+          1,
+          2,
+          2,
+          1,
+          1,
+          2,
+          0
+        ]
+      },
+      "score": 92,
+      "rank": 18
+    },
+    {
+      "name": "안희태",
+      "generation": "미상",
+      "course": "몽블랑/알프스",
+      "front": 48,
+      "back": 44,
+      "totalScore": 92,
+      "holes": {
+        "front": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          3,
+          2
+        ],
+        "back": [
+          1,
+          1,
+          1,
+          0,
+          1,
+          2,
+          0,
+          1,
+          1
+        ]
+      },
+      "score": 92,
+      "rank": 19
+    },
+    {
+      "name": "박미신",
+      "generation": "여성",
+      "course": "록키/올림프스",
+      "front": 47,
+      "back": 46,
+      "totalScore": 93,
+      "holes": {
+        "front": [
+          0,
+          2,
+          1,
+          2,
+          1,
+          1,
+          1,
+          2,
+          1
+        ],
+        "back": [
+          2,
+          1,
+          1,
+          2,
+          2,
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "score": 93,
+      "rank": 20
+    },
+    {
+      "name": "김형찬",
+      "generation": "미상",
+      "course": "알프스/몽블랑",
+      "front": 44,
+      "back": 50,
+      "totalScore": 94,
+      "holes": {
+        "front": [
+          0,
+          2,
+          1,
+          0,
+          1,
+          1,
+          3,
+          0,
+          0
+        ],
+        "back": [
+          4,
+          1,
+          2,
+          1,
+          0,
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "score": 94,
+      "rank": 21
+    },
+    {
+      "name": "정연삼",
+      "generation": "미상",
+      "course": "알프스/몽블랑",
+      "front": 46,
+      "back": 48,
+      "totalScore": 94,
+      "holes": {
+        "front": [
+          0,
+          1,
+          1,
+          1,
+          1,
+          2,
+          1,
+          1,
+          2
+        ],
+        "back": [
+          1,
+          2,
+          2,
+          2,
+          1,
+          2,
+          0,
+          2,
+          0
+        ]
+      },
+      "score": 94,
+      "rank": 22
+    },
+    {
+      "name": "원유동",
+      "generation": "미상",
+      "course": "몽블랑/알프스",
+      "front": 49,
+      "back": 46,
+      "totalScore": 95,
+      "holes": {
+        "front": [
+          2,
+          0,
+          1,
+          2,
+          2,
+          0,
+          2,
+          3,
+          1
+        ],
+        "back": [
+          1,
+          1,
+          1,
+          1,
+          2,
+          1,
+          1,
+          2,
+          0
+        ]
+      },
+      "score": 95,
+      "rank": 23
+    },
+    {
+      "name": "박지혁",
+      "generation": "미상",
+      "course": "올림프스/록키",
+      "front": 50,
+      "back": 47,
+      "totalScore": 97,
+      "holes": {
+        "front": [
+          3,
+          1,
+          0,
+          2,
+          3,
+          1,
+          1,
+          1,
+          2
+        ],
+        "back": [
+          0,
+          1,
+          2,
+          1,
+          1,
+          1,
+          2,
+          2,
+          1
+        ]
+      },
+      "score": 97,
+      "rank": 24
+    },
+    {
+      "name": "조민정",
+      "generation": "여성",
+      "course": "록키/올림프스",
+      "front": 51,
+      "back": 46,
+      "totalScore": 97,
+      "holes": {
+        "front": [
+          1,
+          1,
+          3,
+          1,
+          1,
+          1,
+          3,
+          3,
+          1
+        ],
+        "back": [
+          2,
+          1,
+          0,
+          2,
+          2,
+          1,
+          1,
+          1,
+          0
+        ]
+      },
+      "score": 97,
+      "rank": 25
+    },
+    {
+      "name": "김재원",
+      "generation": "미상",
+      "course": "몽블랑/알프스",
+      "front": 52,
+      "back": 46,
+      "totalScore": 98,
+      "holes": {
+        "front": [
+          1,
+          2,
+          2,
+          2,
+          2,
+          1,
+          2,
+          2,
+          2
+        ],
+        "back": [
+          2,
+          2,
+          1,
+          0,
+          2,
+          1,
+          1,
+          1,
+          0
+        ]
+      },
+      "score": 98,
+      "rank": 26
+    },
+    {
+      "name": "이성일",
+      "generation": "미상",
+      "course": "몽블랑/알프스",
+      "front": 50,
+      "back": 49,
+      "totalScore": 99,
+      "holes": {
+        "front": [
+          2,
+          2,
+          1,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1
+        ],
+        "back": [
+          2,
+          1,
+          2,
+          1,
+          2,
+          2,
+          1,
+          2,
+          0
+        ]
+      },
+      "score": 99,
+      "rank": 27
+    },
+    {
+      "name": "정동균",
+      "generation": "미상",
+      "course": "알프스/몽블랑",
+      "front": 53,
+      "back": 48,
+      "totalScore": 101,
+      "holes": {
+        "front": [
+          2,
+          3,
+          2,
+          1,
+          4,
+          2,
+          0,
+          2,
+          1
+        ],
+        "back": [
+          1,
+          1,
+          0,
+          1,
+          2,
+          2,
+          2,
+          0,
+          3
+        ]
+      },
+      "score": 101,
+      "rank": 28
+    },
+    {
+      "name": "이상우",
+      "generation": "미상",
+      "course": "알프스/몽블랑",
+      "front": 49,
+      "back": 52,
+      "totalScore": 101,
+      "holes": {
+        "front": [
+          0,
+          1,
+          1,
+          0,
+          2,
+          3,
+          1,
+          3,
+          2
+        ],
+        "back": [
+          2,
+          2,
+          1,
+          2,
+          2,
+          1,
+          2,
+          3,
+          1
+        ]
+      },
+      "score": 101,
+      "rank": 29
+    },
+    {
+      "name": "김연중",
+      "generation": "미상",
+      "course": "올림프스/록키",
+      "front": 51,
+      "back": 51,
+      "totalScore": 102,
+      "holes": {
+        "front": [
+          3,
+          2,
+          2,
+          1,
+          3,
+          1,
+          1,
+          0,
+          2
+        ],
+        "back": [
+          1,
+          1,
+          2,
+          3,
+          2,
+          1,
+          0,
+          3,
+          2
+        ]
+      },
+      "score": 102,
+      "rank": 30
+    },
+    {
+      "name": "이채명",
+      "generation": "미상",
+      "course": "록키/올림프스",
+      "front": 52,
+      "back": 52,
+      "totalScore": 104,
+      "holes": {
+        "front": [
+          1,
+          1,
+          0,
+          3,
+          2,
+          2,
+          3,
+          3,
+          1
+        ],
+        "back": [
+          3,
+          3,
+          1,
+          3,
+          2,
+          1,
+          1,
+          2,
+          0
+        ]
+      },
+      "score": 104,
+      "rank": 31
+    },
+    {
+      "name": "김현정",
+      "generation": "여성",
+      "course": "올림프스/록키",
+      "front": 51,
+      "back": 56,
+      "totalScore": 107,
+      "holes": {
+        "front": [
+          1,
+          2,
+          2,
+          3,
+          2,
+          1,
+          2,
+          1,
+          1
+        ],
+        "back": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          1,
+          0,
+          2,
+          2
+        ]
+      },
+      "score": 107,
+      "rank": 32
+    }
+  ],
+  "femaleScores": [
+    {
+      "name": "안정화",
+      "generation": "여성",
+      "course": "록키/올림프스",
+      "front": 45,
+      "back": 43,
+      "totalScore": 88,
+      "holes": {
+        "front": [
+          0,
+          1,
+          2,
+          0,
+          2,
+          2,
+          0,
+          0,
+          2
+        ],
+        "back": [
+          1,
+          2,
+          0,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0
+        ]
+      },
+      "rank": 1
+    },
+    {
+      "name": "박미신",
+      "generation": "여성",
+      "course": "록키/올림프스",
+      "front": 47,
+      "back": 46,
+      "totalScore": 93,
+      "holes": {
+        "front": [
+          0,
+          2,
+          1,
+          2,
+          1,
+          1,
+          1,
+          2,
+          1
+        ],
+        "back": [
+          2,
+          1,
+          1,
+          2,
+          2,
+          0,
+          1,
+          1,
+          0
+        ]
+      },
+      "rank": 2
+    },
+    {
+      "name": "조민정",
+      "generation": "여성",
+      "course": "록키/올림프스",
+      "front": 51,
+      "back": 46,
+      "totalScore": 97,
+      "holes": {
+        "front": [
+          1,
+          1,
+          3,
+          1,
+          1,
+          1,
+          3,
+          3,
+          1
+        ],
+        "back": [
+          2,
+          1,
+          0,
+          2,
+          2,
+          1,
+          1,
+          1,
+          0
+        ]
+      },
+      "rank": 3
+    },
+    {
+      "name": "김현정",
+      "generation": "여성",
+      "course": "올림프스/록키",
+      "front": 51,
+      "back": 56,
+      "totalScore": 107,
+      "holes": {
+        "front": [
+          1,
+          2,
+          2,
+          3,
+          2,
+          1,
+          2,
+          1,
+          1
+        ],
+        "back": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          1,
+          0,
+          2,
+          2
+        ]
+      },
+      "rank": 4
+    }
+  ],
+  "courseStats": [
+    {
+      "name": "알프스",
+      "players": 16,
+      "topPlayers": [
+        {
+          "name": "오호진",
+          "generation": "미상",
+          "score": 40
+        },
+        {
+          "name": "최치영",
+          "generation": "미상",
+          "score": 42
+        },
+        {
+          "name": "권오성",
+          "generation": "미상",
+          "score": 43
+        }
+      ]
+    },
+    {
+      "name": "몽블랑",
+      "players": 16,
+      "topPlayers": [
+        {
+          "name": "권오성",
+          "generation": "미상",
+          "score": 39
+        },
+        {
+          "name": "오호진",
+          "generation": "미상",
+          "score": 41
+        },
+        {
+          "name": "최치영",
+          "generation": "미상",
+          "score": 42
+        }
+      ]
+    },
+    {
+      "name": "올림프스",
+      "players": 16,
+      "topPlayers": [
+        {
+          "name": "유대균",
+          "generation": "미상",
+          "score": 38
+        },
+        {
+          "name": "최관호",
+          "generation": "미상",
+          "score": 39
+        },
+        {
+          "name": "박세환",
+          "generation": "미상",
+          "score": 40
+        }
+      ]
+    },
+    {
+      "name": "록키",
+      "players": 16,
+      "topPlayers": [
+        {
+          "name": "박세환",
+          "generation": "미상",
+          "score": 35
+        },
+        {
+          "name": "진양교",
+          "generation": "미상",
+          "score": 40
+        },
+        {
+          "name": "최관호",
+          "generation": "미상",
+          "score": 41
+        }
+      ]
+    }
+  ],
+  "scoreDistribution": [
+    {
+      "range": "70대",
+      "count": 1
+    },
+    {
+      "range": "80대",
+      "count": 10
+    },
+    {
+      "range": "90대",
+      "count": 16
+    },
+    {
+      "range": "100대+",
+      "count": 5
+    }
+  ],
+  "matchReport": {
+    "headline": "박세환, 75타로 3월 정기모임 우승!",
+    "subheadline": "록키/올림프스 코스에서 전반 35타, 후반 40타 기록",
+    "stories": [
+      {
+        "type": "winner",
+        "icon": "🏆",
+        "title": "우승자 스토리",
+        "content": "박세환이 75타로 3월 정기모임 우승을 차지했습니다. 전반 35타, 후반 40타를 기록하며 안정적인 경기를 펼쳤습니다.",
+        "highlight": "총 75타 기록"
+      },
+      {
+        "type": "runner-up",
+        "icon": "🥈",
+        "title": "준우승자 분석",
+        "content": "최관호이 80타로 아쉬운 준우승을 기록했습니다. 우승자와 5타 차이로 아쉬움이 남습니다.",
+        "highlight": "5타 차이"
+      },
+      {
+        "type": "course",
+        "icon": "⛳",
+        "title": "코스별 강자",
+        "content": "록키 코스에서 가장 많은 16명이 플레이했으며, 상위권을 박세환(35타)이 장악했습니다.",
+        "highlight": "최다 16명 참여"
+      },
+      {
+        "type": "difficulty",
+        "icon": "📊",
+        "title": "코스 난이도",
+        "content": "가장 어려운 코스는 평균 타수 기준 알프스 코스로 분석됩니다.",
+        "highlight": "코스별 난이도 분석"
+      },
+      {
+        "type": "surprise",
+        "icon": "⚡",
+        "title": "깜짝 포인트",
+        "content": "이번 경기에서 1명이 70대 스코어를 기록하며 수준 높은 경기력을 보여주었습니다.",
+        "highlight": "70대 1명 기록"
+      }
+    ],
+    "stats": {
+      "totalParticipants": 32,
+      "averageScore": 91.4,
+      "bestScore": 75,
+      "coursesPlayed": 4
+    }
+  },
+  "awards": [
+    {
+      "category": "메달리스트",
+      "name": "박세환",
+      "generation": "미상",
+      "score": "75타",
+      "color": "from-yellow-400 to-orange-500"
+    }
+  ],
+  "gallery": []
+}

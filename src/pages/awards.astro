@@ -2,7 +2,7 @@
 import Layout from '../layouts/MainLayout.astro';
 import Banner from '../components/Banner.astro';
 import AwardCard from '../components/ui/AwardCard.astro';
-import { getYearlyMeetings, getMembersMap, getSpecialAwardsByMeetingId, CATEGORY_MAP } from '../lib/service/awards-util.js';
+import { getYearlyMeetings, getMembersMap, getSpecialAwardsByMeetingId, getAdaptiveCategoryMap } from '../lib/service/awards-util.js';
 
 const { year } = Astro.params;
 const selectedYear = Number(year) || 2024;
@@ -22,14 +22,30 @@ for (let meeting of meetings) {
   const awardsRaw = await getSpecialAwardsByMeetingId(meeting.id);
   meeting.awards = {};
 
-  for (const category of Object.keys(CATEGORY_MAP)) {
+  // 실제 데이터를 기반으로 적절한 카테고리 맵 결정
+  const categoryMap = getAdaptiveCategoryMap(awardsRaw, meeting.type);
+  const awardCategories = Object.keys(categoryMap);
+
+  for (const category of awardCategories) {
     const award = awardsRaw.find(a => a.category === category);
     const memberId = award?.member_id;
     const member = memberId ? membersMap[memberId] : null;
 
+    // 아이콘 경로 매핑
+    let iconPath;
+    if (category === 'medalist') {
+      iconPath = 'medalist_male';
+    } else if (category === 'nearest') {
+      iconPath = 'nearest_male';
+    } else if (category === 'simperio_male' || category === 'simperio_female') {
+      iconPath = 'simperio';
+    } else {
+      iconPath = category;
+    }
+
     meeting.awards[category] = {
-      title: CATEGORY_MAP[category],
-      iconPath: `${import.meta.env.BASE_URL}images/svg/${category}.svg`,
+      title: categoryMap[category],
+      iconPath: `${import.meta.env.BASE_URL}images/svg/${iconPath}.svg`,
       memberName: member?.name || '현재 집계중입니다.',
       generation: member?.generation || '',
       score: award?.score || null
@@ -72,7 +88,10 @@ for (let meeting of meetings) {
                   <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
                   <div class="absolute bottom-0 left-0 w-full p-4 text-white">
                     <h3 class="text-xl font-bold mb-1">{meeting.name}</h3>
-                    <p class="text-sm opacity-90">{new Date(meeting.date).toLocaleDateString('ko-KR')}</p>
+                    <p class="text-sm opacity-90">{new Date(meeting.date).toLocaleDateString('ko-KR', { 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })}</p>
                     <p class="text-xs opacity-80">{meeting.location} {meeting.course || ''}</p>
                   </div>
                 </div>
